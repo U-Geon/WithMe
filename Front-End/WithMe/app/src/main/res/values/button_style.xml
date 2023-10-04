@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MyButtonStyle">
+        <item name="android:background">@drawable/button_layout</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+</resources>

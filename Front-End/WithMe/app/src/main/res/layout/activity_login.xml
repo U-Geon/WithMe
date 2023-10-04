@@ -12,40 +12,56 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="128dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:src="@drawable/home"></ImageView>
+
     <EditText
         android:id="@+id/id"
         android:layout_width="310dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_margin="13dp"
+        android:paddingLeft="10dp"
         android:hint="@string/input_id"
-        android:background="null"
-        android:backgrond=""
+        android:background="@drawable/view_border"
         android:inputType="text" />
-
     <EditText
         android:id="@+id/password"
         android:layout_width="310dp"
         android:layout_height="40dp"
-        android:hint="@string/input_pw"
-        android:inputType="textPersonName"
         android:layout_gravity="center"
-        android:text="" />
+        android:paddingLeft="10dp"
+        android:hint="@string/input_pw"
+        android:background="@drawable/view_border"
+        android:inputType="text" />
 
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="200dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:text="@string/login"
+        style="@style/MyButtonStyle"
+        />
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:orientation="vertical"-->
-<!--        android:layout_marginTop="30dp">-->
+    <TextView
+        android:id="@+id/signUp"
+        android:text="@string/sign_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        />
 
-<!--        -->
+    <TextView
+        android:id="@+id/findAccount"
+        android:text="@string/find_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        />
 
-
-
-
-<!--    </LinearLayout>-->
 
 </LinearLayout>
