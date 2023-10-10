@@ -10,12 +10,9 @@
         <item name="android:background">@drawable/button_layout</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
-
-    <style name="UseActionbar" parent="ThemeOverlay.AppCompat.DayNight.ActionBar">
-        <item name="android:background">@color/icon_color</item>
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">68dp</item>
+    
+    <style name="ActionBar" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="android:tint">#ffffff</item>
     </style>
 
     <style name="Theme.WithMe" parent="Base.Theme.WithMe" />

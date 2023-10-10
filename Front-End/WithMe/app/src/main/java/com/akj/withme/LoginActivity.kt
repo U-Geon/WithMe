@@ -16,7 +16,6 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
         val loginBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(loginBinding.root)
 
@@ -51,8 +50,8 @@ class LoginActivity : AppCompatActivity() {
                             if (success) {
                                 // 로그인 성공 처리
                                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-                                val intent = Intent(this, MainActivity::class.java)
-                                startActivity(intent)
+//                                val intent = Intent(this, MainActivity::class.java)
+//                                startActivity(intent)
                             } else {
                                 // 로그인 실패 처리
                                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
