@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AccountFindActivity"
+    >
+    <Button
+        android:id="@+id/backButton"
+        android:text="<"
+        android:textSize="15pt"
+        android:layout_width="150px"
+        android:layout_height="150px"
+        android:background=""
+        android:layout_marginTop="100px"
+        android:layout_weight="0"
+        />
+    <TextView
+        android:text="아이디 / 비밀번호 찾기"
+        android:textSize="13pt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="125px"
+        android:layout_centerHorizontal="true"
+        android:layout_weight="0"
+        />
+
+    <LinearLayout
+        android:layout_marginTop="500px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
+        <Button
+            android:layout_height="150px"
+            android:layout_width="500px"
+            android:text="아이디 찾기"
+            android:textSize="11pt"
+            android:background=""
+            />
+        <Button
+            android:layout_height="150px"
+            android:layout_width="500px"
+            android:text="비밀번호 찾기"
+            android:textSize="11pt"
+            android:background=""
+            />
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_marginTop="800px"
+        android:layout_width="match_parent"
+        android:layout_height="600px">
+        <TextView
+            android:layout_marginLeft="100px"
+            android:text="· 사용자 인증"
+            android:textSize="7pt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <Button
+            android:layout_width="400px"
+            android:layout_height="500px">
+        </Button>
+        <Button
+            android:layout_width="400px"
+            android:layout_height="500px"
+            android:background="@drawable/button_bottom_outline">
+        </Button>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -13,6 +13,27 @@
         android:theme="@style/Theme.WithMe"
         tools:targetApi="31">
         <activity
+            android:name=".PwFindFragment"
+            android:exported="false" />
+        <activity
+            android:name=".IdFindFragment"
+            android:exported="false" />
+        <activity
+            android:name=".AccountFindActivity"
+            android:exported="false" />
+        <activity
+            android:name=".KidInformationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WebviewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
