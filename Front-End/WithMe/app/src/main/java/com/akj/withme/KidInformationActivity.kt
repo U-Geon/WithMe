@@ -86,8 +86,8 @@ class KidInformationActivity : AppCompatActivity() {
                 Response.Listener { response ->
                     try {
                         // 다음 액티비티로 넘어감.
-                        val intent = Intent(this, nextActivity::class.java)
-                        startActivity(intent)
+//                        val intent = Intent(this, nextActivity::class.java)
+//                        startActivity(intent)
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
