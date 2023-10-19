@@ -25,14 +25,14 @@ class ServiceResultActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true) // 뒤로가기 아이콘 활성화
-        actionBar?.title = ""
+        actionBar?.title = "아동 상태 및 병원 동행 결과"
 
         // 확인 버튼
         val okayButton = binding.okayButton
         okayButton.setOnClickListener {
             // 메인 화면으로 이동? -> 어디로 이동하는거지
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+//            val intent = Intent(this, MainActivity::class.java)
+//            startActivity(intent)
         }
 
         // 아이 정보 받아오기

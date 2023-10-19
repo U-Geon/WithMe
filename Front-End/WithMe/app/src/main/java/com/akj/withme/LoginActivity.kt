@@ -49,8 +49,8 @@ class LoginActivity : AppCompatActivity() {
 
                             if (success) {
                                 // 로그인 성공 후 메인 액티비티로!
-                                val intent = Intent(this, MainActivity::class.java)
-                                startActivity(intent)
+//                                val intent = Intent(this, MainActivity::class.java)
+//                                startActivity(intent)
                             } else {
                                 // 로그인 실패 처리
                             }
