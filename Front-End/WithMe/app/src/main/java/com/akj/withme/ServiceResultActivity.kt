@@ -25,6 +25,7 @@ class ServiceResultActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true) // 뒤로가기 아이콘 활성화
+        actionBar?.setHomeAsUpIndicator(R.drawable.back_button)
         actionBar?.title = "아동 상태 및 병원 동행 결과"
 
         // 확인 버튼

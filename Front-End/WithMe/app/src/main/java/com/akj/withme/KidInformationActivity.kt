@@ -29,6 +29,7 @@ class KidInformationActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true) // 뒤로가기 아이콘 활성화
+        actionBar?.setHomeAsUpIndicator(R.drawable.back_button)
         actionBar?.title = "우리 아이 정보"
 
         // 주민번호 뒷자리 *처리
