@@ -120,3 +120,49 @@ def select_deposit(request):
         json_data = {"예치금목록": [{"날짜": date, "지출": expenditure, "잔액": balance} for date, expenditure, balance in data]}
         json_data = json.dumps(json_data, ensure_ascii=False, indent=4)
         return JsonResponse(json_data, status = 200)
+
+def edit_account_info(request):
+
+    id = request.POST['id']
+    password = request.POST['password']
+    zip_code = request.POST['zip_code']
+    phone_number = request.POST['phone_number']
+
+    with connection.cursor() as cursor:
+        cursor.execute(f"""update account
+                        set password = '{password}'
+                        where id = '{id}' ;
+                        update account
+                        set zip_code = '{zip_code}'
+                        where id = '{id}' ;
+                        update account
+                        set phone_number = '{phone_number}'
+                        where id = '{id}' ;""")
+
+    return JsonResponse({"예치금": 1}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+
+def delete_account(request):
+
+    requestdata = json.loads(request)
+
+    if requestdata[id] == "":
+         return JsonResponse({"success": False, "message": "Invaild ID"}, status = 400)
+    else:     
+        id = requestdata['id']
+        with connection.cursor() as cursor:
+            cursor.execute(f"""DELETE FROM account
+                            WHERE id = {id};""")
+    return JsonResponse({"success": True, "message": "Account deleted"}, status = 200)
+
+def get_faq(request):
+    
+    with connection.cursor() as cursor:
+        cursor.execute(f"""SELECT question, answer
+        FROM faq;""")
+    
+        data = cursor.fetchall()
+
+        json_data = {"Qlist": [{"question": question, "answer": answer} for question, answer in data]}
+        json_data = json.dumps(json_data, ensure_ascii=False, indent=4)
+        
+        return JsonResponse(json_data, status = 200)
