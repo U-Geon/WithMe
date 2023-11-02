@@ -103,30 +103,31 @@ def select_state(request):
 
     return JsonResponse({'states': state}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
+@csrf_exempt
 def select_deposit(request):
     
-    # requestdata = json.loads(request.body)
-    # account_id = requestdata['account_id']
+    requestdata = json.loads(request.body)
+    account_id = requestdata['account_id']
 
-    account_id = request.GET.get['account_id']
+    # account_id = request.GET.get['account_id']
 
     with connection.cursor() as cursor:
-        cursor.execute(f"""SELECT date, change_amount, account_money
-                            FROM account
-                            WRERE account_id = {account_id}
-                            ORDER BY date;""")
+        cursor.execute(f"""SELECT date, change_amount, money
+                            FROM money_history
+                            WHERE account_id = '{account_id}'
+                            ORDER BY 1 ;""")
     
         data = cursor.fetchall()
         json_data = {"예치금목록": [{"날짜": date, "지출": expenditure, "잔액": balance} for date, expenditure, balance in data]}
-        json_data = json.dumps(json_data, ensure_ascii=False, indent=4)
-        return JsonResponse(json_data, status = 200)
+        return JsonResponse(json_data, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
+@csrf_exempt
 def edit_account_info(request):
-
-    id = request.POST['id']
-    password = request.POST['password']
-    zip_code = request.POST['zip_code']
-    phone_number = request.POST['phone_number']
+    data = json.loads(request.body)
+    id = data['id']
+    password = data['password']
+    zip_code = data['zip_code']
+    phone_number = data['phone_number']
 
     with connection.cursor() as cursor:
         cursor.execute(f"""update account
@@ -139,21 +140,23 @@ def edit_account_info(request):
                         set phone_number = '{phone_number}'
                         where id = '{id}' ;""")
 
-    return JsonResponse({"예치금": 1}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+    return JsonResponse({"success": True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
+@csrf_exempt
 def delete_account(request):
 
-    requestdata = json.loads(request)
+    requestdata = json.loads(request.body)
 
-    if requestdata[id] == "":
+    if requestdata['id'] == "":
          return JsonResponse({"success": False, "message": "Invaild ID"}, status = 400)
     else:     
         id = requestdata['id']
         with connection.cursor() as cursor:
             cursor.execute(f"""DELETE FROM account
-                            WHERE id = {id};""")
+                            WHERE id = '{id}';""")
     return JsonResponse({"success": True, "message": "Account deleted"}, status = 200)
 
+@csrf_exempt
 def get_faq(request):
     
     with connection.cursor() as cursor:
@@ -162,7 +165,6 @@ def get_faq(request):
     
         data = cursor.fetchall()
 
-        json_data = {"Qlist": [{"question": question, "answer": answer} for question, answer in data]}
-        json_data = json.dumps(json_data, ensure_ascii=False, indent=4)
+    json_data = {"Qlist": [{"question": question, "answer": answer} for question, answer in data]}
         
-        return JsonResponse(json_data, status = 200)
+    return JsonResponse(json_data, ensure_ascii=False, content_type = 'application/json; charest=utf-8', status = 200)
