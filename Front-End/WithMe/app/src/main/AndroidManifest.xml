@@ -15,24 +15,30 @@
         android:theme="@style/Theme.WithMe"
         tools:targetApi="31">
         <activity
-            android:name=".ServiceResultActivity"
+            android:name=".DepositChargingHistoryActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+        <activity
+            android:name=".ServiceUsageHistoryActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".ServiceResultActivity"
+            android:exported="true">
         </activity>
         <activity
             android:name=".KidInformationActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false" />
     </application>
 
 </manifest>

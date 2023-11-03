@@ -14,8 +14,6 @@ import org.json.JSONObject
 class ServiceResultActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_service_result)
-
         val binding = ActivityServiceResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -38,7 +36,6 @@ class ServiceResultActivity : AppCompatActivity() {
 
         // 아이 정보 받아오기
         val url = "http://127.0.0.1:8080/main/result" // GET 매핑할 URL
-
         val resultText = binding.resultText
 
         val stringRequest = object : StringRequest(
