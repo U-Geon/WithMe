@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from kids_guard.views import register, login, apply_service, select_state, select_deposit, edit_account_info, delete_account, get_faq
+from kids_guard.views import register, login, apply_service, select_state, select_deposit, edit_account_info, delete_account, get_faq, login_manager, accept_service, modify_state, select_kid_info, hospital_result
 
 urlpatterns = [
     path('register/', register, name = 'registar'), 
@@ -26,5 +26,11 @@ urlpatterns = [
     path('edit_account_info/', edit_account_info, name = 'edit_account_info'),
     path('delete_account/', delete_account, name = 'delete_account'),
     path('get_faq/', get_faq, name = 'get_faq'), 
+
+    path('login_manager/', login_manager, name = 'login_manager'),
+    path('accept_service/', accept_service, name = 'accept_service'), 
+    path('modify_state/', modify_state, name = 'modify_state'), 
+    path('select_kid_info/', select_kid_info, name = 'select_kid_info'),
+    path('hospital_result/', hospital_result, name='hospital_result')
 
 ]
