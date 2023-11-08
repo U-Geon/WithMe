@@ -65,7 +65,7 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
             if(bind.startInput.text.isEmpty() or bind.hospitalInput.text.isEmpty() or bind.endInput.text.isEmpty())
                 Toast.makeText(this, "모든 장소를 입력해 주세요.", Toast.LENGTH_SHORT).show()
             else {
-                val url = ""
+                val url = "http://15.164.94.136:8000/"
                 val params = JSONObject()
                 params.put("startPosition", bind.startInput.text.toString())
                 params.put("hospitalPosition", bind.hospitalInput.text.toString())
