@@ -21,8 +21,7 @@
         android:layout_height="480dp"
         android:layout_gravity="center"
         android:layout_marginTop="35dp"
-        android:background="@drawable/view_border"
-        />
+        android:background="@drawable/view_border"/>
 
     <Button
         android:id="@+id/okayButton"

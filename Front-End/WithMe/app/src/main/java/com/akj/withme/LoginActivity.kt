@@ -2,6 +2,7 @@ package com.akj.withme
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.akj.withme.databinding.ActivityLoginBinding
@@ -25,10 +26,10 @@ class LoginActivity : AppCompatActivity() {
 
             if (userId.isNotEmpty() && password.isNotEmpty()) {
                 // 로그인 요청을 보내는 함수 호출
-                val url = "http://127.0.0.1:8080/login" // 로그인 API의 URL로 대체해야 합니다.
+                val url = "http://15.164.94.136:8000/login/" // 로그인 API의 URL로 대체해야 합니다.
 
                 val params = JSONObject()
-                params.put("username", userId)
+                params.put("id", userId)
                 params.put("password", password)
 
                 val request = JsonObjectRequest(
@@ -47,12 +48,17 @@ class LoginActivity : AppCompatActivity() {
                             val success = response.getBoolean("success")
                             val message = response.getString("message")
 
+                            Log.d("success", success.toString());
+                            Log.d("message", message);
+
                             if (success) {
+                                Log.d("성공",success.toString())
                                 // 로그인 성공 후 메인 액티비티로!
 //                                val intent = Intent(this, MainActivity::class.java)
 //                                startActivity(intent)
                             } else {
                                 // 로그인 실패 처리
+                                Toast.makeText(this, "로그인에 실패하였습니다", Toast.LENGTH_SHORT).show()
                             }
                         } catch (e: JSONException) {
                             e.printStackTrace()
