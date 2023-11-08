@@ -67,7 +67,7 @@ class KidInformationActivity : AppCompatActivity() {
         // 다음 버튼
         binding.nextButton.setOnClickListener {
             // 입력된 정보 POST로 전송
-            val url = "http://127.0.0.1:8080/main/status" // 다음 API의 URL로 바꾸기.
+            val url = "http://15.164.94.136:8000/main/status" // 다음 API의 URL로 바꾸기.
 
             val kidName = binding.inputName.text.toString()
             val phoneNumber = binding.inputPhoneNumber.text.toString()

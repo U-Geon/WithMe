@@ -43,7 +43,7 @@ class ServiceUsageHistoryActivity : AppCompatActivity() {
 
         // JSON 데이터 요청
 
-        val url = "https://127.0.0.1:8080/main/serviceUsageHistory" // GET 매핑할 URL
+        val url = "https://15.164.94.136:8000/main/serviceUsageHistory" // GET 매핑할 URL
 
         val stringRequest = object : StringRequest(
             Method.GET, url,
