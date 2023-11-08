@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.akj.withme.databinding.ActivityKidInformationBinding
 
 
-class ㅁㄴKidInformationActivity : AppCompatActivity() {
+class KidInformationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
