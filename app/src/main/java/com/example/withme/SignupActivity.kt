@@ -43,7 +43,7 @@ class SignupActivity : AppCompatActivity() {
 
         // Retrofit 객체 초기화
         retrofit = Retrofit.Builder()
-            .baseUrl("http://52.79.235.151:8000/")
+            .baseUrl("http://15.164.94.136:8000/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
