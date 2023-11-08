@@ -24,12 +24,12 @@ def register(request):
     data = json.loads(request.body)
     id = data['id']
     password = data['password']
-    # name = data['name']
-    # zip_code = data['zip_code']
-    # phone_number = data['phone_number']
-    name = '최선우'
-    zip_code = '12345'
-    phone_number = '01052980568'
+    name = data['name']
+    zip_code = data['zip_code']
+    phone_number = data['phone_number']
+    # name = '최선우'
+    # zip_code = '12345'
+    # phone_number = '01052980568'
 
     with connection.cursor() as cursor:
         cursor.execute(f"""insert into account (id, password, name, zip_code, phone_number)
@@ -171,3 +171,20 @@ def get_faq(request):
     json_data = {"Qlist": [{"question": question, "answer": answer} for question, answer in data]}
         
     return JsonResponse(json_data, ensure_ascii=False, content_type = 'application/json; charest=utf-8', status = 200)
+
+def login_manager(reqeust):
+    return JsonResponse({}, ensure_ascii=False, content_type = 'application/json; charest=utf-8', status = 200)
+
+def accept_service(reqeust):
+    return JsonResponse({}, ensure_ascii=False, content_type = 'application/json; charest=utf-8', status = 200)
+
+def modify_state(reqeust):
+    return JsonResponse({}, ensure_ascii=False, content_type = 'application/json; charest=utf-8', status = 200)
+
+def select_kid_info(reqeust):
+    return JsonResponse({}, ensure_ascii=False, content_type = 'application/json; charest=utf-8', status = 200)
+
+def hospital_result(reqeust):
+    return JsonResponse({}, ensure_ascii=False, content_type = 'application/json; charest=utf-8', status = 200)
+
+
