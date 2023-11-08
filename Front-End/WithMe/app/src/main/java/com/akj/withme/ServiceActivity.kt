@@ -1,6 +1,7 @@
 package com.akj.withme
 
 import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.akj.withme.databinding.ActivityServiceBinding
@@ -14,7 +15,10 @@ import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import android.util.Log
+import android.view.View
 import android.webkit.WebViewClient
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.app.ActivityCompat
@@ -39,6 +43,7 @@ import java.net.URLEncoder
 import java.util.Locale
 import kotlin.concurrent.thread
 import org.json.JSONObject
+import androidx.fragment.app.FragmentManager
 
 class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
@@ -49,6 +54,10 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var bind: ActivityServiceBinding
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
+
+    private var startAddress: String? = null
+    private var hospitalAddress: String? = null
+    private var endAddress: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,50 +100,39 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        val getResult: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val address: String? = result.data?.getStringExtra("address")
+            val name: String? = result.data?.getStringExtra("name")
+            val type: Int? = result.data?.getIntExtra("type", 0)
+            if (type == 1) {
+                bind.startInput.setText(name)
+            } else if (type == 2) {
+                bind.hospitalInput.setText(name)
+            } else {
+                bind.endInput.setText(name)
+            }
+            if (address != null) {
+                createMarker(address)
+            }
+        }
+
         bind.startButton.setOnClickListener {
-            if(bind.startInput.text.isEmpty()) {
-                Toast.makeText(this, "장소를 입력해 주세요.", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                var coordinates : Array<String> = emptyArray()
-                val thr = thread(start = true) {
-                    coordinates = search(bind.startInput.text.toString())
-                    for(elem in coordinates)
-                        Log.d("TEST", elem)
-                }
-
-                thr.join()
-
-                if(!coordinates.isEmpty())
-                    setMarker(coordinates)
-                else
-                    Log.d("TEST", "비어있음")
-            }
+            val intent = Intent(this, AddressSearchActivity::class.java)
+            intent.putExtra("type", 1)
+            getResult.launch(intent)
         }
 
         bind.hospitalButton.setOnClickListener {
-            if(bind.hospitalInput.text.isEmpty()) {
-                Toast.makeText(this, "장소를 입력해 주세요.", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                var coordinates : Array<String> = emptyArray()
-                val thr = thread(start = true) {
-                    coordinates = search(bind.hospitalInput.text.toString())
-                    for(elem in coordinates)
-                        Log.d("TEST", elem)
-                }
-
-                thr.join()
-
-                if(!coordinates.isEmpty())
-                    setMarker(coordinates)
-                else
-                    Log.d("TEST", "비어있음")
-            }
+            val intent = Intent(this, AddressSearchActivity::class.java)
+            intent.putExtra("type", 2)
+            getResult.launch(intent)
         }
 
         bind.endButton.setOnClickListener {
-            if(bind.endInput.text.isEmpty()) {
+            val intent = Intent(this, AddressSearchActivity::class.java)
+            intent.putExtra("type", 3)
+            getResult.launch(intent)
+            /*if(bind.endInput.text.isEmpty()) {
                 Toast.makeText(this, "장소를 입력해 주세요.", Toast.LENGTH_SHORT).show()
             }
             else {
@@ -151,13 +149,28 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                     setMarker(coordinates)
                 else
                     Log.d("TEST", "비어있음")
-            }
+            }*/
         }
     }
 
+    private fun createMarker(target: String){
+        var coordinates : Array<String> = emptyArray()
+        val thr = thread(start = true) {
+            coordinates = search(target)
+            for(elem in coordinates)
+                Log.d("TEST", elem)
+        }
+
+        thr.join()
+
+        if(!coordinates.isEmpty())
+            setMarker(coordinates)
+        else
+            Log.d("TEST", "비어있음")
+    }
 
     // -------------------------------------------------
-    // 주소 검색
+    // 주소 검색 (GeoCode)
 
     private fun search(target: String): Array<String>
     {
