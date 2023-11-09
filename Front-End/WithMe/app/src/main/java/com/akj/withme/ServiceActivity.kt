@@ -10,6 +10,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
@@ -44,6 +45,7 @@ import java.util.Locale
 import kotlin.concurrent.thread
 import org.json.JSONObject
 import androidx.fragment.app.FragmentManager
+import com.naver.maps.map.util.MarkerIcons
 
 class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
@@ -55,9 +57,14 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
 
+    private var startName: String? = null
     private var startAddress: String? = null
     private var hospitalAddress: String? = null
     private var endAddress: String? = null
+
+    private val startColor: Int = Color.GREEN
+    private val hospitalColor: Int = Color.YELLOW
+    private val endColor: Int = Color.CYAN
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,14 +78,24 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         bind.submitButton.setOnClickListener {
-            if(bind.startInput.text.isEmpty() or bind.hospitalInput.text.isEmpty() or bind.endInput.text.isEmpty())
+            bind.checkView.visibility = View.VISIBLE
+            bind.checkView.bringToFront()
+            bind.slidingDrawer.close()
+
+            if(startAddress == null || hospitalAddress == null || endAddress == null)
                 Toast.makeText(this, "모든 장소를 입력해 주세요.", Toast.LENGTH_SHORT).show()
             else {
+                bind.checkNameText.text = startName
+                bind.checkAddressText.text = startAddress
+
+                /*
                 val url = ""
                 val params = JSONObject()
-                params.put("startPosition", bind.startInput.text.toString())
-                params.put("hospitalPosition", bind.hospitalInput.text.toString())
-                params.put("endPosition", bind.endInput.text.toString())
+                params.put("startAddress", startAddress)
+                params.put("hospitalAddress", hospitalAddress)
+                params.put("endAddress", endAddress)
+
+                // 여기 아이 정보까지 넣어야 됨
 
                 val request = JsonObjectRequest(
                     Request.Method.POST,
@@ -87,6 +104,7 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                     {
                         response -> try {
                             Log.d("TEST", "서버에 제출 성공")
+                            requestData()
                         } catch(error: JSONException) {
                             error.printStackTrace()
                         }
@@ -96,7 +114,7 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                             error.printStackTrace()
                         }
                     }
-                )
+                )*/
             }
         }
 
@@ -106,13 +124,17 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
             val type: Int? = result.data?.getIntExtra("type", 0)
             if (type == 1) {
                 bind.startInput.setText(name)
+                startAddress = address
+                startName = name
             } else if (type == 2) {
                 bind.hospitalInput.setText(name)
+                hospitalAddress = address
             } else {
                 bind.endInput.setText(name)
+                endAddress = address
             }
-            if (address != null) {
-                createMarker(address)
+            if (address != null && type != null) {
+                createMarker(address, type)
             }
         }
 
@@ -132,28 +154,31 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
             val intent = Intent(this, AddressSearchActivity::class.java)
             intent.putExtra("type", 3)
             getResult.launch(intent)
-            /*if(bind.endInput.text.isEmpty()) {
-                Toast.makeText(this, "장소를 입력해 주세요.", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                var coordinates : Array<String> = emptyArray()
-                val thr = thread(start = true) {
-                    coordinates = search(bind.endInput.text.toString())
-                    for(elem in coordinates)
-                        Log.d("TEST", elem)
-                }
+        }
 
-                thr.join()
-
-                if(!coordinates.isEmpty())
-                    setMarker(coordinates)
-                else
-                    Log.d("TEST", "비어있음")
-            }*/
+        bind.closeCheckButton.setOnClickListener {
+            closeCheck()
         }
     }
 
-    private fun createMarker(target: String){
+    private fun requestData()
+    {
+        var isAccepted : Boolean = false
+
+        while(true)
+        {
+
+        }
+    }
+
+    private fun closeCheck()
+    {
+        bind.checkView.visibility = View.GONE
+        bind.slidingDrawer.bringToFront()
+        bind.slidingDrawer.open()
+    }
+
+    private fun createMarker(target: String, type: Int){
         var coordinates : Array<String> = emptyArray()
         val thr = thread(start = true) {
             coordinates = search(target)
@@ -163,8 +188,15 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
 
         thr.join()
 
+        var markerColor : Int
+        if(type == 1) markerColor = startColor
+        else if(type == 2) markerColor = hospitalColor
+        else markerColor = endColor
+
         if(!coordinates.isEmpty())
-            setMarker(coordinates)
+        {
+            setMarker(coordinates, markerColor)
+        }
         else
             Log.d("TEST", "비어있음")
     }
@@ -232,11 +264,20 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
 
     // -------------------------------------------------
     // 마커 생성
-    private fun setMarker(target: Array<String>) {
+    private fun setMarker(target: Array<String>, color: Int) {
         val marker = Marker()
         val targetLocation = LatLng(target[1].toDouble(), target[0].toDouble())
         marker.position = targetLocation
         marker.map = naverMap
+        marker.icon = MarkerIcons.BLACK
+        marker.iconTintColor = color
+
+        var markerText: String
+        if(color == startColor) markerText = "출발"
+        else if(color == hospitalColor) markerText = "병원"
+        else markerText = "도착"
+
+        marker.captionText = markerText
 
         val cameraUpdate = CameraUpdate.scrollTo(targetLocation)
         naverMap.moveCamera(cameraUpdate)
@@ -273,7 +314,7 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         this.naverMap = naverMap
         naverMap.locationSource = locationSource
         naverMap.uiSettings.isLocationButtonEnabled = true
-        naverMap.locationTrackingMode = LocationTrackingMode.Face
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
     // -------------------------------------------------
