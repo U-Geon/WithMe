@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from kids_guard.views import register, login, apply_service, select_state, select_deposit, edit_account_info, delete_account, get_faq, login_manager, accept_service, modify_state, select_kid_info, hospital_result
+from kids_guard.views import register, login, apply_service, select_state, select_deposit, edit_account_info, delete_account, get_faq, send_location, modify_state, select_kid_info, hospital_result
 
 urlpatterns = [
+    # 사용자 전용
     path('register/', register, name = 'registar'), 
     path('login/', login, name = 'login'),
     path('apply_service/', apply_service, name='apply_service'), # 출발 장소, 도착 장소를 필수로 입력 받고, 병원 정보, 신청 시점의 아이 정보를 입력으로 받음 -> db에 잘 들어갔으면 response로 신청완료됐다 응답
@@ -27,10 +28,10 @@ urlpatterns = [
     path('delete_account/', delete_account, name = 'delete_account'),
     path('get_faq/', get_faq, name = 'get_faq'), 
 
-    path('login_manager/', login_manager, name = 'login_manager'),
-    path('accept_service/', accept_service, name = 'accept_service'), 
+    # 관리자 전용
+    path('send_location/', send_location, name = 'send_location'), 
     path('modify_state/', modify_state, name = 'modify_state'), 
     path('select_kid_info/', select_kid_info, name = 'select_kid_info'),
-    path('hospital_result/', hospital_result, name='hospital_result')
+    path('hospital_result/', hospital_result, name='hospital_result'), 
 
 ]

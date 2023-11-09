@@ -170,21 +170,44 @@ def get_faq(request):
 
     json_data = {"Qlist": [{"question": question, "answer": answer} for question, answer in data]}
         
-    return JsonResponse(json_data, ensure_ascii=False, content_type = 'application/json; charest=utf-8', status = 200)
+    return JsonResponse(json_data, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
-def login_manager(reqeust):
-    return JsonResponse({}, ensure_ascii=False, content_type = 'application/json; charest=utf-8', status = 200)
+def send_location(request):
+    return JsonResponse({}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
-def accept_service(reqeust):
-    return JsonResponse({}, ensure_ascii=False, content_type = 'application/json; charest=utf-8', status = 200)
+def modify_state(request):
+    return JsonResponse({}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
-def modify_state(reqeust):
-    return JsonResponse({}, ensure_ascii=False, content_type = 'application/json; charest=utf-8', status = 200)
+@csrf_exempt
+def select_kid_info(request):
+    data = json.loads(request.body)
+    account_id = data['account_id']
 
-def select_kid_info(reqeust):
-    return JsonResponse({}, ensure_ascii=False, content_type = 'application/json; charest=utf-8', status = 200)
+    with connection.cursor() as cursor:
+        cursor.execute(f"""select name, age, phone_number, personal_data
+                            from child
+                            where account_id = '{account_id}' ;""")
+        kid_info = cursor.fetchall()[0]
+    print(kid_info)
 
-def hospital_result(reqeust):
-    return JsonResponse({}, ensure_ascii=False, content_type = 'application/json; charest=utf-8', status = 200)
+    return JsonResponse({'name': kid_info[0], 'age': kid_info[1], 'phone_number': kid_info[2], 'personal_data': kid_info[3]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
+
+@csrf_exempt
+def hospital_result(request):
+
+    data = json.loads(request.body)
+    account_id = data['account_id']
+    result = data['result']
+
+    with connection.cursor() as cursor:
+        cursor.execute(f"""update relax_service
+                            set result = '{result}'
+                            where id = (select id
+                                        from (select max(id) id
+                                                from relax_service
+                                                where child_account_id = '{account_id}') tmp) ;""")
+    
+
+    return JsonResponse({'success': True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
 
