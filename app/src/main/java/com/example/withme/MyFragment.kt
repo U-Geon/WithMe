@@ -44,16 +44,14 @@ class MyFragment : Fragment() {
         binding.rvMy.adapter = MyListAdapter(MyList) { item ->
             if (item.mytext == "예치금 입금하기") {
                 val intent = Intent(requireContext(), PaymentActivity::class.java)
-//                intent.putExtra("URL", "file:///android_asset/html/naverPayment.html")
+                startActivity(intent)
+            } else if (item.mytext == "예치금 충전 내역") {
+                val intent = Intent(requireContext(), DepositChargingHistoryActivity::class.java)
+                startActivity(intent)
+            } else if (item.mytext == "아동상태 및 병원동행 결과 모아보기") {
+                val intent = Intent(requireContext(), ServiceUsageHistoryActivity::class.java)
                 startActivity(intent)
             }
-//            } else if (item.mytext == "예치금 충전 내역") {
-//                val intent = Intent(requireContext(), MainActivity2::class.java)
-//                startActivity(intent)
-//            } else if (item.mytext == "아동상태 및 병원동행 결과 모아보기") {
-//                val intent = Intent(requireContext(), MainActivity2::class.java)
-//                startActivity(intent)
-//            }
         }
 
 

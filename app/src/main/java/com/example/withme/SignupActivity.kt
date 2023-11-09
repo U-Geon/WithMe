@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.content.Intent
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -41,43 +42,62 @@ class SignupActivity : AppCompatActivity() {
         setContentView(signupBinding.root)
 //        setContentView(R.layout.activity_signup)
 
-        // Retrofit 객체 초기화
-        retrofit = Retrofit.Builder()
-            .baseUrl("http://52.79.235.151:8000/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        // 회원가입 완료 버튼 클릭 시
+        signupBinding.btnSignupFin.setOnClickListener {
+            val userId = signupBinding.editId.text.toString()
+            val password = signupBinding.editPassword.text.toString()
 
-        // 서비스 인스턴스 생성
-        service = retrofit.create(ApiService::class.java)
+            if (userId.isNotEmpty() && password.isNotEmpty()) {
+                val url = "http://15.164.94.136:8000/login/" // 로그인 API의 URL로 대체해야 합니다.
 
-//        // 회원가입 완료 버튼 눌렀을 때
-//        signupBinding.btnSignupFin.setOnClickListener {
-//            val id = signupBinding.editId.text.toString()
-//            val password = signupBinding.editPassword.text.toString()
-//
-//            if (id.isNotEmpty() && password.isNotEmpty()) {
-//                val signupInfo = SignupInfo(id, password)
-//
-//                // 요청 보내기
-//                service.signup(signupInfo).enqueue(object : Callback<signupInfo> {
-//                    if (response.isSuccessful) {
-//                        // 회원가입 성공 후, 홈 액티비티로 이동
-//                         val intent = Intent(this@SignupActivity, HomeFragment::class.java)
-//                         startActivity(intent)
-//                    } else {
-//                        // 서버 응답이 실패했을 때의 동작
-//                    }
-//                }
-//
-//                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-//                        // 요청 자체가 실패했을 때의 동작
-//                        Toast.makeText(this@SignupActivity, "네트워크 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//            } else {
-//                Toast.makeText(this, "아이디 또는 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
-//            }
-//        }
+                val params = JSONObject()
+                params.put("id", userId)
+                params.put("password", password)
+
+                val request = JsonObjectRequest(
+                    Request.Method.POST,
+                    url,
+                    params,
+                    Response.Listener { response ->
+                        try {
+                            /**
+                             * 회원가입 후 서버에서 json을 전송.
+                             * {
+                             *     "success": true,
+                             *     "message": "회원가입이 성공했습니다."
+                             * }
+                             */
+                            val success = response.getBoolean("success")
+                            val message = response.getString("message")
+
+                            Log.d("success", success.toString());
+                            Log.d("message", message);
+
+                            if (success) {
+                                Log.d("성공",success.toString())
+                                // 회원가입 성공 후 메인 액티비티로!
+                                val intent = Intent(this, MainActivity::class.java)
+                                startActivity(intent)
+                            } else {
+                                // 회원가입 실패 처리
+                                Toast.makeText(this, "회원가입에 실패하였습니다", Toast.LENGTH_SHORT).show()
+                            }
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                        }
+                    },
+                    Response.ErrorListener { error ->
+                        error.printStackTrace()
+                        Toast.makeText(this, "네트워크 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                )
+
+                // Volley 요청을 큐에 추가
+                Volley.newRequestQueue(this).add(request)
+            } else {
+                Toast.makeText(this, "아이디 또는 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            }
+        }
 
 
         // 본인 인증 - 버튼 클릭 시
