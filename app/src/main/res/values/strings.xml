@@ -10,4 +10,6 @@
     <string name="RRN">주민등록번호</string>
     <string name="next">다음</string>
     <string name="okay">확인</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

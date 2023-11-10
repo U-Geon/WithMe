@@ -2,14 +2,13 @@ package com.example.withme
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.withme.databinding.ActivityLoginBinding
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.withme.databinding.ActivityLoginBinding
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -42,20 +41,20 @@ class LoginActivity : AppCompatActivity() {
                              * 로그인 후 서버에서 json을 전송.
                              * {
                              *     "success": true,
-                             *     "message": "로그인이 성공했습니다."
+                             *     "isAdmin": true
                              * }
                              */
                             val success = response.getBoolean("success")
-                            val message = response.getString("message")
+                            val isAdmin = response.getBoolean("isAdmin")
 
-                            Log.d("success", success.toString());
-                            Log.d("message", message);
-
-                            if (success) {
-                                Log.d("성공",success.toString())
+                            if (success && !isAdmin) {
                                 // 로그인 성공 후 메인 액티비티로!
                                 val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
+                            } else if(success && isAdmin) {
+                                // 관리자 로그인
+                                val adminIntent = Intent(this, com.example.withme.administrator.AdminMainActivity::class.java)
+                                startActivity(adminIntent)
                             } else {
                                 // 로그인 실패 처리
                                 Toast.makeText(this, "로그인에 실패하였습니다", Toast.LENGTH_SHORT).show()
