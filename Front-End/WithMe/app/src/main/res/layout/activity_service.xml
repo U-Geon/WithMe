@@ -132,7 +132,7 @@
                         android:layout_marginLeft="60dp"
                         android:text="a" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/startInput"
                         android:layout_width="240dp"
                         android:layout_height="wrap_content"
@@ -190,7 +190,7 @@
                         android:layout_marginLeft="60dp"
                         android:text="a" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/hospitalInput"
                         android:layout_width="240dp"
                         android:layout_height="wrap_content"
@@ -247,7 +247,7 @@
                         android:layout_marginLeft="60dp"
                         android:text="a" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/endInput"
                         android:layout_width="240dp"
                         android:layout_height="wrap_content"

@@ -45,6 +45,7 @@ import java.util.Locale
 import kotlin.concurrent.thread
 import org.json.JSONObject
 import androidx.fragment.app.FragmentManager
+import com.naver.maps.map.overlay.Align
 import com.naver.maps.map.util.MarkerIcons
 
 class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -65,6 +66,10 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     private val startColor: Int = Color.GREEN
     private val hospitalColor: Int = Color.YELLOW
     private val endColor: Int = Color.CYAN
+
+    private var startMarker: Marker? = null
+    private var hospitalMarker: Marker? = null
+    private var endMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,15 +143,33 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        bind.startInput.setOnClickListener {
+            val intent = Intent(this, AddressSearchActivity::class.java)
+            intent.putExtra("type", 1)
+            getResult.launch(intent)
+        }
+
         bind.startButton.setOnClickListener {
             val intent = Intent(this, AddressSearchActivity::class.java)
             intent.putExtra("type", 1)
             getResult.launch(intent)
         }
 
+        bind.hospitalInput.setOnClickListener {
+            val intent = Intent(this, AddressSearchActivity::class.java)
+            intent.putExtra("type", 2)
+            getResult.launch(intent)
+        }
+
         bind.hospitalButton.setOnClickListener {
             val intent = Intent(this, AddressSearchActivity::class.java)
             intent.putExtra("type", 2)
+            getResult.launch(intent)
+        }
+
+        bind.endInput.setOnClickListener {
+            val intent = Intent(this, AddressSearchActivity::class.java)
+            intent.putExtra("type", 3)
             getResult.launch(intent)
         }
 
@@ -273,11 +296,30 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.iconTintColor = color
 
         var markerText: String
-        if(color == startColor) markerText = "출발"
-        else if(color == hospitalColor) markerText = "병원"
-        else markerText = "도착"
+        if(color == startColor) {
+            if(startMarker != null) {
+                startMarker!!.map = null
+            }
+            startMarker = marker
+            markerText = "출발"
+        }
+        else if(color == hospitalColor) {
+            if(hospitalMarker != null) {
+                hospitalMarker!!.map = null
+            }
+            hospitalMarker = marker
+            markerText = "병원"
+        }
+        else {
+            if(endMarker != null) {
+                endMarker!!.map = null
+            }
+            endMarker = marker
+            markerText = "도착"
+        }
 
         marker.captionText = markerText
+        marker.setCaptionAligns(Align.Top)
 
         val cameraUpdate = CameraUpdate.scrollTo(targetLocation)
         naverMap.moveCamera(cameraUpdate)
