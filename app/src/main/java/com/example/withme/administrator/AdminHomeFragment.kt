@@ -1,12 +1,15 @@
 package com.example.withme.administrator
 
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Response
@@ -130,7 +133,28 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
         holder.button.setOnClickListener {
             // 모달 띄우는 로직을 여기에 추가
-            showCustomDialog(service, holder)
+            val dialogBuilder = AlertDialog.Builder(holder.itemView.context)
+            val start = service.startLocation
+            val middle = service.middleLocation
+            val final = service.finalLocation
+
+            val kidName = service.kidName
+            val phoneNumber = service.phoneNumber
+            val rrn = service.rrn
+
+            val status = service.status
+
+
+            dialogBuilder.setMessage("동행 정보\n$start - $middle - $final\n\n 아이 인적사항\n이름:$kidName\n전화번호:$phoneNumber\n주민등록번호:$rrn\n\n아이 상태\n$status")
+                .setCancelable(true)
+                .setPositiveButton("동행") { dialog, _ ->
+                    // 버튼 눌렀을 때 동작
+                    val intent = Intent(holder.itemView.context, AdminMainActivity::class.java)
+                    holder.itemView.context.startActivity(intent)
+                }
+
+            val alertDialog = dialogBuilder.create()
+            alertDialog.show()
         }
     }
 
@@ -144,15 +168,7 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
     }
 
     fun showCustomDialog(itemName: Service, holder: ViewHolder) {
-        val dialogBuilder = AlertDialog.Builder(holder.itemView.context)
-        dialogBuilder.setMessage("Clicked on $itemName")
-            .setCancelable(true)
-            .setPositiveButton("동행") { dialog, _ ->
-                // 버튼 눌렀을 때 동작
-            }
 
-        val alertDialog = dialogBuilder.create()
-        alertDialog.show()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
