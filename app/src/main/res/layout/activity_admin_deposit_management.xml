@@ -18,24 +18,41 @@
         app:titleTextColor="@color/white" />
 
     <TextView
-        android:id="@+id/tv_user"
+        android:id="@+id/tv_user_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="rogoeka\n(개해담, 010-1234-5678)"
+        android:text="rogoeka"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <TextView
+        android:id="@+id/tv_user_name_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="(개해담, 010-1234-5678)"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_id" />
 
     <TextView
         android:id="@+id/tv_current_deposit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="60dp"
         android:text="현재 예치금: 30000원"
+        android:textColor="@color/black"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_user" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_name_phone" />
 
     <EditText
         android:id="@+id/et_plus_deposit"
@@ -45,22 +62,25 @@
         android:layout_marginTop="32dp"
         android:ems="10"
         android:inputType="text"
-        android:text="더할 금액을 입력해주세요."
+        android:hint="더할 금액을 입력해주세요."
+        android:textSize="16sp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:background="@drawable/edit_setting"
+        android:lineSpacingExtra="6sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_current_deposit" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_plus_deposit"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="65dp"
+        android:layout_height="40dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/button_setting"
         android:text="+"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/et_plus_deposit"
         app:layout_constraintTop_toBottomOf="@+id/tv_current_deposit" />
 
     <EditText
@@ -71,31 +91,36 @@
         android:layout_marginTop="32dp"
         android:ems="10"
         android:inputType="text"
-        android:text="뺼 금액을 입력해주세요."
+        android:hint="뺄 금액을 입력해주세요."
+        android:textSize="16sp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:background="@drawable/edit_setting"
+        android:lineSpacingExtra="6sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_plus_deposit" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_minus_deposit"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="65dp"
-        android:layout_marginTop="32dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/button_setting"
         android:text="-"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/et_minus_deposit"
         app:layout_constraintTop_toBottomOf="@+id/btn_plus_deposit" />
 
     <TextView
         android:id="@+id/tv_expectation_deposit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="152dp"
         android:layout_marginTop="32dp"
         android:text="최종 예치금: 25000원"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_minus_deposit" />
 
