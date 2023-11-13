@@ -73,7 +73,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".AdminDepositManagementActivity"
             android:exported="false" />
         <activity
             android:name=".DepositChargingHistoryActivity"
@@ -112,7 +112,7 @@
             android:value="u51ixkqodc" />
 
         <activity
-            android:name=".AdminDepositManagementActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
