@@ -125,7 +125,7 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val getResult: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val address: String? = result.data?.getStringExtra("address")
-            val name: String? = result.data?.getStringExtra("name")
+            val name: String? = result.data?.getStringExtra("n  ame")
             val type: Int? = result.data?.getIntExtra("type", 0)
             if (type == 1) {
                 bind.startInput.setText(name)
