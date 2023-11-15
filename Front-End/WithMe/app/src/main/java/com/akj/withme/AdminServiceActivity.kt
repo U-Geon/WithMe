@@ -17,6 +17,7 @@ import com.android.volley.toolbox.Volley
 import org.json.JSONObject
 import org.json.JSONException
 import kotlinx.coroutines.*
+import kotlin.concurrent.thread
 
 class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
@@ -30,6 +31,8 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var currentLat: Double = 0.0
     private var currentLon: Double = 0.0
+    // adminStatus -1 : 시작 안함 / 0 : 픽업 중 / 1 : 병원 데려다주는 중 / 2 : 집 데려다주는 중 / 3 : 서비스 완료
+    private var adminStatus: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +47,26 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
             initMapView()
         }
 
-        bind.testButton.setOnClickListener {
-            sendCoroutine()
+        bind.proceedButton.setOnClickListener {
+            if(adminStatus == -1) {
+                bind.proceedButton.text = "픽업 완료"
+                bind.statusText.text= "아이를 데리러 가는 중"
+                thread(start = true) {
+                    while (true) {
+                        sendLocation(currentLat, currentLon, adminStatus)
+                        Thread.sleep(2000)
+                    }
+                }
+            } else if(adminStatus == 0) {
+                bind.proceedButton.text = "병원 호송 완료"
+                bind.statusText.text= "아이를 병원에 데려가는 중"
+            } else if(adminStatus == 1) {
+                bind.statusText.text= "아이를 귀가시키는 중"
+                bind.proceedButton.text = "귀가 완료"
+            } else {
+                // 서비스 종료하기
+            }
+            adminStatus++
         }
     }
 
@@ -93,23 +114,12 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     // ---------------------------------
     // 서버로 위치 전송
 
-    private fun sendCoroutine()
-    {
-        runBlocking {
-            launch {
-                while (true) {
-                    sendLocation(currentLat, currentLon)
-                    delay(1000)
-                }
-            }
-        }
-    }
-
-    private fun sendLocation(lat: Double, lon: Double) {
-        val url = "http://10.0.2.2:8888/test"
+    private fun sendLocation(lat: Double, lon: Double, status: Int) {
+        val url = "http://10.0.2.2:5000/test"
         val params = JSONObject()
         params.put("lat", lat.toString())
         params.put("lan", lon.toString())
+        params.put("status", status);
 
         val request = JsonObjectRequest(
             Request.Method.POST,
