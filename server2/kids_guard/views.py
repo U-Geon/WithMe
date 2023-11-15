@@ -123,6 +123,20 @@ def select_deposit(request):
         data = cursor.fetchall()
         json_data = {"예치금목록": [{"날짜": date, "지출": expenditure, "잔액": balance} for date, expenditure, balance in data]}
         return JsonResponse(json_data, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
+    
+@csrf_exempt
+def select_name_money_count(request):
+    data = json.loads(request.body)
+    id = data['id']
+    with connection.cursor() as cursor:
+        cursor.execute(f"""select account.name, account.money, count(relax_service.id) count
+                            from account
+                            join relax_service on account.id = relax_service.child_account_id
+                            where account.id = "{id}" ;""")
+        data = cursor.fetchall()[0]
+    print(data)
+    return JsonResponse({'name':data[0], 'money':data[1], 'uses':data[2]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
+
 
 @csrf_exempt
 def edit_account_info(request):
