@@ -280,4 +280,32 @@ def complete_service(request):
 
     return JsonResponse({'success': True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
+def modify_deposit(request):
+    requestdata = json.loads(request.body)
+    id = requestdata['id']
+    amount = requestdata['amount']
+
+    with connection.cursor() as cursor:
+        cursor.execute(f"""insert into money_history (date, money, change_amount, account_id)
+                            values (NOW() , ((SELECT money FROM account WHERE id = '{id}') + '{amount}'), '{amount}', '{id}');""")
+        
+        cursor.execute(f"""UPDATE account SET money = money + '{amount}' WHERE id = '{id}';""")
+
+        return JsonResponse({"success": True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+    
+def get_location(request):
+    
+    requestdata = json.loads(request.body)
+    id = requestdata['id']
+    latitude = requestdata['latitude']
+    longitude = requestdata['longitude']
+
+        
+    with connection.cursor() as cursor:
+        cursor.execute(f"""insert into real_time_location (time, status_status, status_relax_service_id, latitude, longitude)
+                            values (NOW() , (SELECT status FROM status WHERE time = (SELECT MAX(time) FROM status WHERE relax_service_id = (SELECT MAX(id) FROM relax_service WHERE child_account_id = '{id}'))), (SELECT MAX(id) FROM relax_service WHERE child_account_id = '{id}'), '{latitude}', '{longitude}');""")
+        
+
+        return JsonResponse({"success": True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+
 
