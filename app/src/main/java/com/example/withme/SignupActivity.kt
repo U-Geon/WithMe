@@ -46,13 +46,19 @@ class SignupActivity : AppCompatActivity() {
         signupBinding.btnSignupFin.setOnClickListener {
             val userId = signupBinding.editId.text.toString()
             val password = signupBinding.editPassword.text.toString()
+            val name = signupBinding.editName.text.toString()
+            val phonenum = signupBinding.editPhonenum.text.toString()
+            val address = signupBinding.editAddress.text.toString()
 
             if (userId.isNotEmpty() && password.isNotEmpty()) {
-                val url = "http://15.164.94.136:8000/login/" // 로그인 API의 URL로 대체해야 합니다.
+                val url = "http://192.168.80.102:8000/register/"
 
                 val params = JSONObject()
                 params.put("id", userId)
                 params.put("password", password)
+                params.put("name", name)
+                params.put("phone_number", phonenum)
+                params.put("zip_code", address)
 
                 val request = JsonObjectRequest(
                     Request.Method.POST,
@@ -60,28 +66,9 @@ class SignupActivity : AppCompatActivity() {
                     params,
                     Response.Listener { response ->
                         try {
-                            /**
-                             * 회원가입 후 서버에서 json을 전송.
-                             * {
-                             *     "success": true,
-                             *     "message": "회원가입이 성공했습니다."
-                             * }
-                             */
-                            val success = response.getBoolean("success")
-                            val message = response.getString("message")
-
-                            Log.d("success", success.toString());
-                            Log.d("message", message);
-
-                            if (success) {
-                                Log.d("성공",success.toString())
-                                // 회원가입 성공 후 메인 액티비티로!
-                                val intent = Intent(this, MainActivity::class.java)
-                                startActivity(intent)
-                            } else {
-                                // 회원가입 실패 처리
-                                Toast.makeText(this, "회원가입에 실패하였습니다", Toast.LENGTH_SHORT).show()
-                            }
+                            // 회원가입 성공 후 메인 액티비티로
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
                         } catch (e: JSONException) {
                             e.printStackTrace()
                         }
@@ -95,7 +82,7 @@ class SignupActivity : AppCompatActivity() {
                 // Volley 요청을 큐에 추가
                 Volley.newRequestQueue(this).add(request)
             } else {
-                Toast.makeText(this, "아이디 또는 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "모든 필드를 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
         }
 
