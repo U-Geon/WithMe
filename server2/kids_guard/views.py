@@ -125,17 +125,17 @@ def select_deposit(request):
         return JsonResponse(json_data, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
     
 @csrf_exempt
-def select_name_money_count(request):
+def select_name_money_count_phone_number(request):
     data = json.loads(request.body)
     id = data['id']
     with connection.cursor() as cursor:
-        cursor.execute(f"""select account.name, account.money, count(relax_service.id) count
+        cursor.execute(f"""select account.name, account.money, count(relax_service.id) count, account.phone_number
                             from account
                             join relax_service on account.id = relax_service.child_account_id
                             where account.id = "{id}" ;""")
         data = cursor.fetchall()[0]
     print(data)
-    return JsonResponse({'name':data[0], 'money':data[1], 'uses':data[2]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
+    return JsonResponse({'name':data[0], 'money':data[1], 'uses':data[2], 'phone_number':data[3]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
 
 @csrf_exempt
@@ -186,11 +186,46 @@ def get_faq(request):
         
     return JsonResponse(json_data, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
+# test 아직 안함
+@csrf_exempt
 def send_location(request):
-    return JsonResponse({}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
+    requestdata = json.loads(request.body)
+
+    id = requestdata['id']
+
+
+    with connection.cursor() as cursor:
+        cursor.execute(f"""SELECT latitude, longitude
+                            FROM real_time_location
+                            WHERE status_relax_service_id = (SELECT MAX(id) FROM relax_service WHERE id = (SELECT id FROM relax_service WHERaccount_id = '{id}'));""")
+
+        data = cursor.fetchall()
+
+        if data == ():
+            json_data = {"success" : False}
+
+        else:
+            json_data = {"success" : True, "latitude": data[0]['latitude'], "longitude": data[0]['longitude']}
+
+        return JsonResponse(json_data, status = 200, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+
+#test 아직 안함
+@csrf_exempt
 def modify_state(request):
-    return JsonResponse({}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
+
+    requestdata = json.loads(request.body)
+
+    id = requestdata['id']
+    status = requestdata['status']
+
+    with connection.cursor() as cursor:
+        # cursor.execute(f"""UPDATE status SET status = '{status}' WHERE relax_service_id = (SELECT MAX(id) FROM relax_service WHERE id = (SELECT id FROM relax_service WHERE account_id = '{account_id}'));""")
+        cursor.execute(f"""insert into status (status, time, relax_service_id)
+                            values ('{status}', NOW() ,(SELECT MAX(id) FROM relax_service WHERE child_account_id = '{id}'));""")
+        json_data = {"success" : True}
+
+    return JsonResponse(json_data, status = 200, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
 @csrf_exempt
 def select_kid_info(request):
@@ -221,6 +256,27 @@ def hospital_result(request):
                                                 from relax_service
                                                 where child_account_id = '{account_id}') tmp) ;""")
     
+
+    return JsonResponse({'success': True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
+
+
+def complete_service(request):
+
+    data = json.loads(request.body)
+    id = data['id']
+    status = data['status']
+
+    with connection.cursor() as cursor:
+        # cursor.execute(f"""UPDATE status SET status = '{status}' WHERE relax_service_id = (SELECT MAX(id) FROM relax_service WHERE id = (SELECT id FROM relax_service WHERE account_id = '{account_id}'));""")
+        cursor.execute(f"""insert into status (status, time, relax_service_id)
+                            values ('{status}', NOW() ,(SELECT MAX(id) FROM relax_service WHERE child_account_id = '{id}'));""")
+        cursor.execute(f"""update relax_service
+                            set finish = 1
+                            where id = (select id
+                                        from (select max(id) id
+                                                from relax_service
+                                                where child_account_id = 'abcde') tmp) ;""")
+    json_data = {"success" : True}
 
     return JsonResponse({'success': True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
