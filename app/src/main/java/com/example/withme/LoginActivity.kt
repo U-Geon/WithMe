@@ -31,6 +31,7 @@ class LoginActivity : AppCompatActivity() {
                 params.put("id", userId)
                 params.put("password", password)
 
+
                 val request = JsonObjectRequest(
                     Request.Method.POST,
                     url,
@@ -49,8 +50,16 @@ class LoginActivity : AppCompatActivity() {
 
                             if (success && !isAdmin) {
                                 // 로그인 성공 후 메인 액티비티로!
+
+                                val sharedPreference = getSharedPreferences("other", 0)
+                                val editor = sharedPreference.edit()
+                                editor.putString("id", userId)
+                                editor.apply()
+
                                 val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
+
+
                             } else if(success && isAdmin) {
                                 // 관리자 로그인
                                 val adminIntent = Intent(this, com.example.withme.administrator.AdminMainActivity::class.java)
