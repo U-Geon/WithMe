@@ -4,37 +4,35 @@ import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
-import android.net.Uri
-import android.provider.OpenableColumns
-import android.util.Log
+import android.content.pm.PackageManager
+import android.provider.MediaStore
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import com.example.withme.PersonalAuthActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.withme.databinding.ActivitySignupBinding
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.example.withme.AddressActivity
-import com.example.withme.R
-import okhttp3.ResponseBody
 import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.POST
+import android.Manifest
+
 
 class SignupActivity : AppCompatActivity() {
     private val READ_REQUEST_CODE: Int = 42   // 사용자 정의 코드
 
     private lateinit var retrofit: Retrofit
-    private lateinit var service: ApiService
+//    private lateinit var service: ApiService
+
+    private val PERMISSION_Album = 101 // 앨범 권한 처리
+    private val PICK_IMAGE = 102 // 이미지 선택 요청 코드
+    private val imageView: ImageView by lazy { findViewById(R.id.iv_family) }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +40,7 @@ class SignupActivity : AppCompatActivity() {
         setContentView(signupBinding.root)
 //        setContentView(R.layout.activity_signup)
 
-        // 회원가입 완료 버튼 클릭 시
+        // 회원가입 완료 버튼 클릭 시, 서버에 정보 보내기
         signupBinding.btnSignupFin.setOnClickListener {
             val userId = signupBinding.editId.text.toString()
             val password = signupBinding.editPassword.text.toString()
@@ -94,13 +92,13 @@ class SignupActivity : AppCompatActivity() {
             val intent = Intent(this, PersonalAuthActivity::class.java)
             startActivity(intent)
         }
-
         // 본인 인증 - 이미지 클릭 시
         val phoneImage: ImageView = findViewById(R.id.img_auth)
         phoneImage.setOnClickListener {
             val intent = Intent(this, PersonalAuthActivity::class.java)
             startActivity(intent)
         }
+
 
         // 우편번호, 주소, 상세주소 클릭 시
         val addressButton: EditText = findViewById(R.id.edit_address)
@@ -119,57 +117,89 @@ class SignupActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // 파일 첨부 클릭 시 -> 파일 첨부 창은 잘 열리는데, 파일 첨부 후에 어떻게 되는지 확인 필요함
-        val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                val fileName = getFileName(it)   // fileName을 이용하여 업로드 등의 작업 수행
-            }
+
+        // 파일 첨부 - 이미지 창 클릭 시
+        val albumImage: ImageView = findViewById(R.id.iv_family)
+        albumImage.setOnClickListener {
+            requirePermissions(
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                PERMISSION_Album
+            )
         }
-        val fileButton: Button = findViewById(R.id.btn_file_upload)
-        fileButton.setOnClickListener {
-            getContent.launch("*/*")
+        // 파일 첨부 - 버튼 클릭 시
+        val albumImage2: ImageView = findViewById(R.id.btn_file_upload)
+        albumImage2.setOnClickListener {
+            requirePermissions(
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                PERMISSION_Album
+            )
+        }
+
+    }
+
+
+    private fun requirePermissions(permissions: Array<String>, requestCode: Int) {
+        val permissionCheck = ContextCompat.checkSelfPermission(this, permissions[0])
+
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            // 이미 권한이 허용된 경우
+            permissionGranted(requestCode)
+        } else {
+            // 권한이 없는 경우
+            ActivityCompat.requestPermissions(this, permissions, requestCode)
         }
     }
+
+    /** 사용자가 권한을 승인하거나 거부한 다음에 호출되는 메서드
+     * @param requestCode 요청한 주체를 확인하는 코드
+     * @param permissions 요청한 권한 목록
+     * @param grantResults 권한 목록에 대한 승인/미승인 값, 권한 목록의 개수와 같은 수의 결괏값이 전달된다.
+     * */
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+            permissionGranted(requestCode)
+        } else {
+            permissionDenied(requestCode)
+        }
+    }
+
+    private fun permissionGranted(requestCode: Int) {
+        when (requestCode) {
+            PERMISSION_Album -> openGallery()
+        }
+    }
+
+    private fun permissionDenied(requestCode: Int) {
+        when (requestCode) {
+            PERMISSION_Album -> Toast.makeText(
+                this,
+                "저장소 권한을 승인해야 앨범에서 이미지를 불러올 수 있습니다.",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, PICK_IMAGE)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val uri: Uri? = data?.data
-            if (uri != null) {
-                val fileName = getFileName(uri)
-                // fileName을 이용하여 업로드 등의 작업 수행
-            }
-        }
-    }
-    private fun getFileName(uri: Uri): String {
-        var result: String? = null
-        if (uri.scheme == "content") {
-            val cursor = contentResolver.query(uri, null, null, null, null)
-            cursor?.use {
-                if (it.moveToFirst()) {
-                    val displayNameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    if (displayNameIndex != -1) {
-                        result = it.getString(displayNameIndex)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                PICK_IMAGE -> {
+                    data?.data?.let { uri ->
+                        imageView.setImageURI(uri)
                     }
                 }
             }
         }
-        if (result == null) {
-            result = uri.path
-            val cut = result?.lastIndexOf('/')
-            if (cut != null && cut != -1) {
-                result = result?.substring(cut + 1)
-            }
-        }
-        return result ?: ""
     }
-}
 
-// 회원가입 정보를 나타내는 데이터 클래스
-data class SignupInfo(val id: String, val password: String)
-
-// Retrofit 서비스 인터페이스 정의
-interface ApiService {
-    @POST("/signup")
-    fun signup(@Body signupInfo: SignupInfo): Call<ResponseBody>
 }
