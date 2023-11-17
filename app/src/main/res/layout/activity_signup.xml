@@ -268,10 +268,10 @@
             android:id="@+id/tv_terms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="70dp"
             android:gravity="center"
             android:text="약관 동의"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_address3" />
 
@@ -304,10 +304,10 @@
             android:id="@+id/tv_family"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="70dp"
             android:gravity="center"
             android:text="가족 관계 증명서"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/check" />
 

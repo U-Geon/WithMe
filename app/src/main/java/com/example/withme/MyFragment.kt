@@ -2,7 +2,6 @@ package com.example.withme
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,6 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.example.withme.MyList
-import com.example.withme.MyListAdapter
 import com.example.withme.databinding.FragmentMyBinding
 import org.json.JSONException
 import org.json.JSONObject
@@ -31,10 +28,7 @@ class MyFragment : Fragment() {
     }
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMyBinding.inflate(inflater, container, false)
         val view = binding.root
 
@@ -87,8 +81,6 @@ class MyFragment : Fragment() {
 
         binding.rvMy.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMy.setHasFixedSize(true)
-
-//        binding.rvMy.adapter = MyListAdapter(profileList)
 
         binding.rvMy.adapter = MyListAdapter(MyList) { item ->
             if (item.mytext == "예치금 입금하기") {

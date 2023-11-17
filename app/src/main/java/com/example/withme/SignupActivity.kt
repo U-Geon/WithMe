@@ -1,26 +1,31 @@
 package com.example.withme
 
-import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.withme.databinding.ActivitySignupBinding
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.withme.databinding.ActivitySignupBinding
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.TedPermission
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Retrofit
-import android.Manifest
+import java.io.File
+
+
+
 
 
 class SignupActivity : AppCompatActivity() {
@@ -29,9 +34,7 @@ class SignupActivity : AppCompatActivity() {
     private lateinit var retrofit: Retrofit
 //    private lateinit var service: ApiService
 
-    private val PERMISSION_Album = 101 // 앨범 권한 처리
-    private val PICK_IMAGE = 102 // 이미지 선택 요청 코드
-    private val imageView: ImageView by lazy { findViewById(R.id.iv_family) }
+    private val PICK_IMAGE = 1001
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,84 +124,109 @@ class SignupActivity : AppCompatActivity() {
         // 파일 첨부 - 이미지 창 클릭 시
         val albumImage: ImageView = findViewById(R.id.iv_family)
         albumImage.setOnClickListener {
-            requirePermissions(
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                PERMISSION_Album
-            )
+            when {
+                ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED -> {
+                    // READ_EXTERNAL_STORAGE의 권한이 PERMISSION_GRANTED와 같다면..
+                    //TODO 권한이 잘 부여되었을 때 상황, 갤러리에서 사진을 선택하는 코드 구현
+                    navigatePhotos()
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+                    // 권한을 명시적으로 거부한 경우 true
+                    // 처음보거나, 다시묻지 않음을 선택한 경우 false
+                    //TODO 교육용 팝업 확인 후 권한 팝업을 띄우는 기능
+                    showPermissionContextPopup()
+                }
+                else -> {
+                    // 권한을 요청하는 코드를 추가
+                    requestPermissions(
+                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                        1000)
+                }
+            }
         }
-        // 파일 첨부 - 버튼 클릭 시
-        val albumImage2: ImageView = findViewById(R.id.btn_file_upload)
-        albumImage2.setOnClickListener {
-            requirePermissions(
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                PERMISSION_Album
-            )
+
+            // 파일 첨부 - 버튼 클릭 시
+//        val albumImage2: ImageView = findViewById(R.id.btn_file_upload)
+//        albumImage2.setOnClickListener {
+//        when {
+//                ContextCompat.checkSelfPermission(this,
+//                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED -> {
+//                    // READ_EXTERNAL_STORAGE의 권한이 PERMISSION_GRANTED와 같다면..
+//                    //TODO 권한이 잘 부여되었을 때 상황, 갤러리에서 사진을 선택하는 코드 구현
+//                    navigatePhotos()
+//                }
+//                shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+//                    // 권한을 명시적으로 거부한 경우 true
+//                    // 처음보거나, 다시묻지 않음을 선택한 경우 false
+//                    //TODO 교육용 팝업 확인 후 권한 팝업을 띄우는 기능
+//                    showPermissionContextPopup()
+//                }
+//                else -> {
+//                    // 권한을 요청하는 코드를 추가
+//                    requestPermissions(
+//                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+//                        1000)
+//                }
+//            }
+//        }
+
+        if (ContextCompat.checkSelfPermission(this,
+            Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            // READ_EXTERNAL_STORAGE의 권한이 PERMISSION_GRANTED와 같다면..
+            //TODO 권한이 잘 부여되었을 때상황, 갤러리에서 사진을 선택하는 코드 구현
+            navigatePhotos()
         }
+
+        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) run {
+            // 권한을 명시적으로 거부한 경우 true
+            // 처음보거나, 다시묻지 않음을 선택한 경우 false
+            //TODO 교육용 팝업 확인 후 권한 팝업을 띄우는 기능
+            showPermissionContextPopup()
+        }
+
+
 
     }
 
-
-    private fun requirePermissions(permissions: Array<String>, requestCode: Int) {
-        val permissionCheck = ContextCompat.checkSelfPermission(this, permissions[0])
-
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            // 이미 권한이 허용된 경우
-            permissionGranted(requestCode)
-        } else {
-            // 권한이 없는 경우
-            ActivityCompat.requestPermissions(this, permissions, requestCode)
-        }
+    private fun navigatePhotos() {
+        // 갤러리에서 사진을 선택하는 코드를 추가
+        val photoPickerIntent = Intent(Intent.ACTION_PICK)
+        photoPickerIntent.type = "image/*"
+        startActivityForResult(photoPickerIntent, PICK_IMAGE)
     }
 
-    /** 사용자가 권한을 승인하거나 거부한 다음에 호출되는 메서드
-     * @param requestCode 요청한 주체를 확인하는 코드
-     * @param permissions 요청한 권한 목록
-     * @param grantResults 권한 목록에 대한 승인/미승인 값, 권한 목록의 개수와 같은 수의 결괏값이 전달된다.
-     * */
+    private fun showPermissionContextPopup() {
+        AlertDialog.Builder(this)
+            .setTitle("권한이 필요합니다")
+            .setMessage("전자액자에서 사진을 선택하려면 권한이 필요합니다.")
+            .setPositiveButton("동의하기", {_, _ ->
+                requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),1000)
+            })
+            .setNegativeButton("취소하기",{ _,_ ->})
+            .create()
+            .show()
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-            permissionGranted(requestCode)
-        } else {
-            permissionDenied(requestCode)
-        }
-    }
-
-    private fun permissionGranted(requestCode: Int) {
-        when (requestCode) {
-            PERMISSION_Album -> openGallery()
-        }
-    }
-
-    private fun permissionDenied(requestCode: Int) {
-        when (requestCode) {
-            PERMISSION_Album -> Toast.makeText(
-                this,
-                "저장소 권한을 승인해야 앨범에서 이미지를 불러올 수 있습니다.",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-
-    fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, PICK_IMAGE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                PICK_IMAGE -> {
-                    data?.data?.let { uri ->
-                        imageView.setImageURI(uri)
-                    }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            1000 -> {
+                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    // 권한이 부여 된 것입니다.
+                    // 허용 클릭 시
+                    navigatePhotos()
+                } else {
+                    // 거부 클릭시
+                    Toast.makeText(this,"권한을 거부했습니다.",Toast.LENGTH_SHORT).show()
                 }
-            }
+            } else -> {
+            //Do Nothing
+        }
         }
     }
 
