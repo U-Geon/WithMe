@@ -33,7 +33,7 @@ class AdminDepositManagementActivity : AppCompatActivity() {
         val userId = "csw1234"
 
         if (userId.isNotEmpty()) {
-            val url = "http://192.168.80.102:8000/select_name_money_count/"
+            val url = "http://192.168.80.102:8000/select_name_money_count_phone_number/"
 
             val params = JSONObject()
             params.put("id", userId)
