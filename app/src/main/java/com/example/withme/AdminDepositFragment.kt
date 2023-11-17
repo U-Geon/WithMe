@@ -22,17 +22,21 @@ import org.json.JSONObject
 
 
 class AdminDepositFragment : Fragment() {
-    private var _binding : FragmentAdminDepositBinding? = null
+    private var _binding: FragmentAdminDepositBinding? = null
 
     companion object {
-        fun newInstance() : AdminDepositFragment {
+        fun newInstance(): AdminDepositFragment {
             return AdminDepositFragment()
         }
     }
 
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentAdminDepositBinding.inflate(inflater, container, false)
         val view = binding.root
 
@@ -62,12 +66,16 @@ class AdminDepositFragment : Fragment() {
                         binding.rvAdmindeposit.layoutManager = LinearLayoutManager(requireContext())
                         binding.rvAdmindeposit.setHasFixedSize(true)
 
-                        binding.rvAdmindeposit.adapter = AdminDepositAdapter(AdminDepositList) { item ->
-                            if (item.admindeposit == "$userId ($name)") {
-                                val intent = Intent(requireContext(), AdminDepositManagementActivity::class.java)
-                                startActivity(intent)
+                        binding.rvAdmindeposit.adapter =
+                            AdminDepositAdapter(AdminDepositList) { item ->
+                                if (item.admindeposit == "$userId ($name)") {
+                                    val intent = Intent(
+                                        requireContext(),
+                                        AdminDepositManagementActivity::class.java
+                                    )
+                                    startActivity(intent)
+                                }
                             }
-                        }
 
                     } catch (e: JSONException) {
                         e.printStackTrace()
@@ -86,7 +94,7 @@ class AdminDepositFragment : Fragment() {
         }
         return view
     }
-}
+
 
 //    private fun initSearchView() {
 //        // init SearchView
@@ -103,5 +111,5 @@ class AdminDepositFragment : Fragment() {
 //            }
 //        })
 //    }
-
+    
 }
