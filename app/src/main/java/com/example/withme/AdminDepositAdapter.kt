@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.withme.databinding.AdmindepositListItemBinding
 
 
-class AdminDepositAdapter(private val adminList: ArrayList<AdminDepositList>, private val onItemClick: (MyList) -> Unit) : RecyclerView.Adapter<AdminDepositAdapter.MyListViewHolder>() {
+class AdminDepositAdapter(private val adminList: ArrayList<AdminDepositList>, private val onItemClick: (AdminDepositList) -> Unit) : RecyclerView.Adapter<AdminDepositAdapter.MyListViewHolder>() {
 
     class MyListViewHolder(val binding: AdmindepositListItemBinding) : RecyclerView.ViewHolder(binding.root)
 

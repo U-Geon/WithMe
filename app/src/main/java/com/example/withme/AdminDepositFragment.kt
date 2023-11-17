@@ -13,14 +13,10 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-//import com.example.withme.AdminDepositList
-import com.example.withme.DepositChargingHistoryActivity
-import com.example.withme.MyList
-import com.example.withme.MyListAdapter
-import com.example.withme.PaymentActivity
-import com.example.withme.ServiceUsageHistoryActivity
+import com.example.withme.AdminDepositAdapter
+import com.example.withme.AdminDepositList
+import com.example.withme.AdminDepositManagementActivity
 import com.example.withme.databinding.FragmentAdminDepositBinding
-import com.example.withme.databinding.FragmentMyBinding
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -57,19 +53,18 @@ class AdminDepositFragment : Fragment() {
                 Response.Listener { response ->
                     try {
                         val name = response.getString("name")
-                        binding.tvAdmindeposit.text = "$id ($name)"
 
                         // 마이 페이지 리스트
                         val AdminDepositList = arrayListOf(
-                            AdminDepositList("$id ($name)")
+                            AdminDepositList("$userId ($name)")
                         )
 
                         binding.rvAdmindeposit.layoutManager = LinearLayoutManager(requireContext())
                         binding.rvAdmindeposit.setHasFixedSize(true)
 
-                        binding.rvAdmindeposit.adapter = MyListAdapter(MyList) { item ->
-                            if (item.admindeposit == "$id ($name)") {
-                                val intent = Intent(requireContext(), PaymentActivity::class.java)
+                        binding.rvAdmindeposit.adapter = AdminDepositAdapter(AdminDepositList) { item ->
+                            if (item.admindeposit == "$userId ($name)") {
+                                val intent = Intent(requireContext(), AdminDepositManagementActivity::class.java)
                                 startActivity(intent)
                             }
                         }
