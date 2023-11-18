@@ -18,6 +18,7 @@
             android:layout_marginLeft="40dp"
             android:layout_centerVertical="true"/>
         <EditText
+            android:id="@+id/idText"
             android:layout_width="150dp"
             android:layout_height="45dp"
             android:layout_alignParentRight="true"
@@ -36,6 +37,7 @@
             android:layout_marginLeft="40dp"
             android:layout_centerVertical="true"/>
         <EditText
+            android:id="@+id/nameText"
             android:layout_width="150dp"
             android:layout_height="45dp"
             android:layout_alignParentRight="true"
@@ -55,6 +57,7 @@
             android:layout_marginLeft="40dp"
             android:layout_centerVertical="true"/>
         <EditText
+            android:id="@+id/phoneText"
             android:layout_width="150dp"
             android:layout_height="45dp"
             android:inputType="phone"
@@ -64,6 +67,7 @@
     </RelativeLayout>
 
     <Button
+        android:id="@+id/pwFindButton"
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:text="비밀번호 찾기"
