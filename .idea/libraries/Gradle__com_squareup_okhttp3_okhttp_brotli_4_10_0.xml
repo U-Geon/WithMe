@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.squareup.okhttp3:okhttp-brotli:4.10.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp-brotli/4.10.0/e8048fbe5a8bbb49d9e9e0582ddaaceeacc6db28/okhttp-brotli-4.10.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp-brotli/4.10.0/c214a6bfb11a4397d2ef53915b95a158b65c9a64/okhttp-brotli-4.10.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp-brotli/4.10.0/87f99e9dd1be9362de81873956a6f3e097483bfa/okhttp-brotli-4.10.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
