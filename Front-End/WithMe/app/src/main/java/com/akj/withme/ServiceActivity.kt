@@ -17,12 +17,14 @@ import android.location.Location
 import android.os.Build
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebViewClient
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.app.ActivityCompat
+import androidx.core.view.get
 import com.google.android.gms.location.*
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.util.FusedLocationSource
@@ -70,6 +72,7 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     private var startMarker: Marker? = null
     private var hospitalMarker: Marker? = null
     private var endMarker: Marker? = null
+    private var serviceMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,15 +86,16 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         bind.submitButton.setOnClickListener {
-            bind.checkView.visibility = View.VISIBLE
-            bind.checkView.bringToFront()
-            bind.slidingDrawer.close()
-
             if(startAddress == null || hospitalAddress == null || endAddress == null)
                 Toast.makeText(this, "모든 장소를 입력해 주세요.", Toast.LENGTH_SHORT).show()
             else {
+                bind.checkView.visibility = View.VISIBLE
+                bind.checkView.bringToFront()
+                bind.slidingDrawer.close()
                 bind.checkNameText.text = startName
                 bind.checkAddressText.text = startAddress
+
+                naverMap.moveCamera(CameraUpdate.scrollTo(startMarker!!.position))
             }
         }
 
@@ -109,14 +113,14 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                 { response ->
                     Log.d("submittest", response.getString("OK"))
                     try {
-                    Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show()
-                    requestData()
-                } catch(error: JSONException) {
-                    error.printStackTrace()
-                }
+                        Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show()
+                        setSliderStatus(bind.slider)
+                        requestData()
+                    } catch(error: JSONException) {
+                        error.printStackTrace()
+                    }
                 },
-                {
-                        error -> {
+                { error -> {
                     error.printStackTrace()
                 }
                 })
@@ -185,10 +189,29 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun setSliderStatus(target: ViewGroup)
+    {
+        bind.checkView.visibility = View.GONE
+        bind.slidingDrawer.bringToFront()
+
+        for(i in 0 until target.childCount)
+        {
+            val child: View = target.getChildAt(i)
+            child.visibility = View.GONE
+        }
+
+        bind.serviceStatusLayout.visibility = View.VISIBLE
+        val layout = bind.slidingDrawer.layoutParams as? ViewGroup.MarginLayoutParams
+        layout?.apply {
+            topMargin = (500 * resources.displayMetrics.density).toInt()
+        }
+    }
+
     private fun requestData()
     {
         thread(start = true) {
             while (true) {
+                Log.d("test", "실시간 위치 요청")
                 val url = "http://10.0.2.2:9001/status"
                 val params = JSONObject()
                 val request = JsonObjectRequest(
@@ -196,8 +219,18 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                     url,
                     params,
                     Response.Listener { response -> try {
-                        val lat = response.getString("result")
-                        Log.d("test", lat)
+                        val result = response.getString("result")
+                        Log.d("resulttest", result)
+                        if(result == "NO")
+                        {
+                            Toast.makeText(this, "관리자가 요청을 수락하지 않음", Toast.LENGTH_SHORT).show()
+                        } else {
+                            val lat = response.getString("lat")
+                            val lon = response.getString("lon")
+                            val status = response.getString("status")
+                            Toast.makeText(this, "관리자 위치 : $lat . $lon", Toast.LENGTH_SHORT).show()
+                            movePosition(lat, lon)
+                        }
                     } catch(error: JSONException) {
                         error.printStackTrace()
                     }
@@ -212,6 +245,26 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                 Thread.sleep(2000)
             }
         }
+    }
+
+    private fun movePosition(lat: String, lon: String){
+        val position = LatLng(lat.toDouble(), lon.toDouble())
+
+        if(serviceMarker == null) {
+            val marker = Marker()
+            marker.position = position
+            marker.map = naverMap
+            marker.icon = MarkerIcons.BLACK
+            marker.iconTintColor = Color.WHITE
+            marker.captionText = "관리자"
+            marker.setCaptionAligns(Align.Top)
+
+            serviceMarker = marker
+        } else {
+            serviceMarker!!.position = position
+        }
+
+        naverMap.moveCamera(CameraUpdate.scrollTo(position))
     }
 
     private fun closeCheck()

@@ -100,6 +100,34 @@
             android:background="@drawable/slider"
             android:orientation="vertical">
             <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/serviceStatusLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/walking_to_school_1"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="현재 동행 중"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"/>
+                <Button
+                    android:layout_height="50dp"
+                    android:layout_width="250dp"
+                    android:text="다른 동행 신청하기"
+                    android:textColor="@color/white"
+                    android:background="@drawable/button_layout"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_marginTop="20dp"
