@@ -92,40 +92,41 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
             else {
                 bind.checkNameText.text = startName
                 bind.checkAddressText.text = startAddress
-
-                /*
-                val url = ""
-                val params = JSONObject()
-                params.put("startAddress", startAddress)
-                params.put("hospitalAddress", hospitalAddress)
-                params.put("endAddress", endAddress)
-
-                // 여기 아이 정보까지 넣어야 됨
-
-                val request = JsonObjectRequest(
-                    Request.Method.POST,
-                    url,
-                    params,
-                    {
-                        response -> try {
-                            Log.d("TEST", "서버에 제출 성공")
-                            requestData()
-                        } catch(error: JSONException) {
-                            error.printStackTrace()
-                        }
-                    },
-                    {
-                        error -> {
-                            error.printStackTrace()
-                        }
-                    }
-                )*/
             }
+        }
+
+        bind.finalSubmitButton.setOnClickListener {
+            val url = "http://10.0.2.2:9001/submit"
+            val params = JSONObject()
+            params.put("startAddress", startAddress)
+            params.put("hospitalAddress", hospitalAddress)
+            params.put("endAddress", endAddress)
+
+            val request = JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                params,
+                { response ->
+                    Log.d("submittest", response.getString("OK"))
+                    try {
+                    Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show()
+                    requestData()
+                } catch(error: JSONException) {
+                    error.printStackTrace()
+                }
+                },
+                {
+                        error -> {
+                    error.printStackTrace()
+                }
+                })
+
+            Volley.newRequestQueue(this).add(request)
         }
 
         val getResult: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val address: String? = result.data?.getStringExtra("address")
-            val name: String? = result.data?.getStringExtra("n  ame")
+            val name: String? = result.data?.getStringExtra("name")
             val type: Int? = result.data?.getIntExtra("type", 0)
             if (type == 1) {
                 bind.startInput.setText(name)
@@ -186,11 +187,30 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun requestData()
     {
-        var isAccepted : Boolean = false
+        thread(start = true) {
+            while (true) {
+                val url = "http://10.0.2.2:9001/status"
+                val params = JSONObject()
+                val request = JsonObjectRequest(
+                    Request.Method.GET,
+                    url,
+                    params,
+                    Response.Listener { response -> try {
+                        val lat = response.getString("result")
+                        Log.d("test", lat)
+                    } catch(error: JSONException) {
+                        error.printStackTrace()
+                    }
+                    },
+                    {
+                            error -> {
+                        error.printStackTrace()
+                    }
+                    })
 
-        while(true)
-        {
-
+                Volley.newRequestQueue(this).add(request)
+                Thread.sleep(2000)
+            }
         }
     }
 

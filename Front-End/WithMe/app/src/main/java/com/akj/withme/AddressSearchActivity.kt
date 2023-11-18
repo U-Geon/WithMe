@@ -35,7 +35,7 @@ class AddressSearchActivity : AppCompatActivity() {
             webChromeClient = chromeClient
         }
 
-        webView.loadUrl("http://10.0.2.2:8888/daum_address.html")
+        webView.loadUrl("http://10.0.2.2:9001/daum_address.html")
 
         setContentView(bind.root)
     }
