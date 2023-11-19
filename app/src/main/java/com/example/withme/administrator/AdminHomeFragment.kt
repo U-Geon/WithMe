@@ -1,7 +1,6 @@
 package com.example.withme.administrator
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.core.content.ContextCompat.startActivity
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Response
@@ -127,9 +126,9 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
         val service = itemList[position]
 
         // 버튼 제목 설정
-        val text = service.startLocation + " - " + service.middleLocation + " - " + service.finalLocation
+        val title = service.startLocation + " - " + service.middleLocation + " - " + service.finalLocation
 
-        holder.button.text = text
+        holder.textView!!.text = title
 
         holder.button.setOnClickListener {
             // 모달 띄우는 로직을 여기에 추가
@@ -149,7 +148,11 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
                 .setCancelable(true)
                 .setPositiveButton("동행") { dialog, _ ->
                     // 버튼 눌렀을 때 동작
-                    val intent = Intent(holder.itemView.context, AdminMainActivity::class.java)
+                    val intent = Intent(holder.itemView.context, ::class.java) // 지도 액티비티로 이동!
+                    intent.putExtra("kidName",kidName)
+                    intent.putExtra("phoneNumber",phoneNumber)
+                    intent.putExtra("rrn",rrn)
+                    intent.putExtra("status",status)
                     holder.itemView.context.startActivity(intent)
                 }
 
@@ -173,5 +176,7 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val button: Button = itemView.findViewById(R.id.service_result_button)
+        val textView: TextView? = itemView.findViewById(R.id.service_result_text)
+
     }
 }
