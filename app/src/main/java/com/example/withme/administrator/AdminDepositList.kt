@@ -1,3 +1,3 @@
-package com.example.withme
+package com.example.withme.administrator
 
 class AdminDepositList(val admindeposit: String)
