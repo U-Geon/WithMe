@@ -39,6 +39,6 @@ urlpatterns = [
     path('modify_deposit/', modify_deposit, name='modify_deposit'),
     
     # 주소 검색을 위한 api
-    path('/daum_address.html', daum_address, name='daum_address')
+    path('daum_address.html/', daum_address, name='daum_address'),
 
 ]

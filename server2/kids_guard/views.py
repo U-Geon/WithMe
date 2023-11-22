@@ -4,7 +4,6 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import authenticate, login
 from django.views.decorators.csrf import csrf_exempt
 import json
-from django.shortcuts import render
 
 # from .models import Account
 
