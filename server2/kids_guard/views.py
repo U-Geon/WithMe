@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import authenticate, login
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.shortcuts import render
 
 # from .models import Account
 
@@ -27,6 +28,8 @@ def register(request):
     name = data['name']
     zip_code = data['zip_code']
     phone_number = data['phone_number']
+    family = data['family']
+    print(family)
     # name = '최선우'
     # zip_code = '12345'
     # phone_number = '01052980568'
@@ -309,3 +312,5 @@ def get_location(request):
         return JsonResponse({"success": True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
 
+def daum_address(request):
+    return render(request, 'main/daum_address.html')
