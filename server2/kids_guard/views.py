@@ -65,6 +65,23 @@ def login(request):
     else :
         return JsonResponse({'success': False, 'admin': False}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
+def find_password(request):
+    #request
+    #id, name, phone
+    data = json.loads(request.body) 
+    id = data['id']
+
+    with connection.cursor() as cursor:
+        cursor.execute(f"""select password
+                            from account
+                            where id = "{id}" ;""")
+        password = (cursor.fetchone())[0]
+
+    #response
+    #password
+
+    return JsonResponse({'password' : password}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+
 @csrf_exempt
 def apply_service(request):
 
