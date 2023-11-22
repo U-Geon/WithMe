@@ -1,6 +1,8 @@
 package com.example.withme
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.withme.databinding.ActivityServiceBinding
@@ -209,6 +211,9 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun requestData()
     {
+        val sharedPrefs: SharedPreferences = getSharedPreferences("status", Context.MODE_PRIVATE)
+        sharedPrefs.edit().putBoolean("status", true).apply()
+
         thread(start = true) {
             var over: Boolean = false
             while (!over) {
@@ -259,6 +264,8 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                 Thread.sleep(2000)
             }
         }
+
+        sharedPrefs.edit().putBoolean("status", false).apply()
     }
 
     private fun movePosition(lat: String, lon: String){

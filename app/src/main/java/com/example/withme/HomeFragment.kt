@@ -1,10 +1,14 @@
 package com.example.withme
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.withme.databinding.FragmentHomeBinding
 
@@ -33,6 +37,16 @@ class HomeFragment : Fragment() {
             // 다음 액티비티로 이동하는 인텐트 생성
             val intent = Intent(requireActivity(), PaymentActivity::class.java)
             startActivity(intent)
+        }
+
+        binding?.btnSituation?.setOnClickListener {
+            val sharedPrefs: SharedPreferences = (activity as AppCompatActivity).getSharedPreferences("status", Context.MODE_PRIVATE)
+            if(sharedPrefs.getBoolean("status", false)) {
+                val intent = Intent(ServiceActivity(), PaymentActivity::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(activity, "서비스 사용 중이 아닙니다.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         return binding!!.root
