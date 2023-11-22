@@ -2,9 +2,6 @@ package com.example.withme
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
-import com.example.withme.MyFragment
-import com.example.withme.SettingFragment
 import com.example.withme.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

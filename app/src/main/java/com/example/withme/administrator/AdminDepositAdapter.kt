@@ -4,17 +4,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.withme.R
-import com.example.withme.databinding.AdmindepositListItemBinding
+import com.example.withme.databinding.AdminDepositListItemBinding
 
 
 class AdminDepositAdapter(private val adminList: ArrayList<AdminDepositList>, private val onItemClick: (AdminDepositList) -> Unit) : RecyclerView.Adapter<AdminDepositAdapter.MyListViewHolder>() {
 
-    class MyListViewHolder(val binding: AdmindepositListItemBinding) : RecyclerView.ViewHolder(binding.root)
+    class MyListViewHolder(val binding: AdminDepositListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyListViewHolder {
         // 변수 view: list_item의 정보를 가져와서 어뎁터와 연결.
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.admindeposit_list_item, parent, false)
-        val viewHolder = MyListViewHolder(AdmindepositListItemBinding.bind(view))
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.admin_deposit_list_item, parent, false)
+        val viewHolder = MyListViewHolder(AdminDepositListItemBinding.bind(view))
 
         view.setOnClickListener {
 //            onItemClick.invoke(adminList[viewHolder.adapterPosition])

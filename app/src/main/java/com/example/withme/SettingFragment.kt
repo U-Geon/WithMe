@@ -7,7 +7,6 @@ import android.content.SharedPreferences.Editor
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
@@ -18,8 +17,10 @@ class SettingFragment : Fragment() {
     lateinit var pref: SharedPreferences
     lateinit var editor : Editor
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    companion object {
+        fun newInstance() : SettingFragment {
+            return SettingFragment()
+        }
     }
 
     override fun onCreateView(

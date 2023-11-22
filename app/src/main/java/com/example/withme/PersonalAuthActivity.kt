@@ -6,7 +6,6 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.withme.R
 
 class PersonalAuthActivity : AppCompatActivity() {
     private lateinit var webView: WebView

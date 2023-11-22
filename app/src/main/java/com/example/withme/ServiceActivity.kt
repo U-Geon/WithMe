@@ -1,6 +1,5 @@
 package com.example.withme
 
-import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,26 +8,16 @@ import android.widget.Toast
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import android.content.pm.PackageManager
-import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Color
-import android.location.Address
-import android.location.Geocoder
-import android.location.Location
-import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebViewClient
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.app.ActivityCompat
-import androidx.core.view.get
-import com.google.android.gms.location.*
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.util.FusedLocationSource
-import androidx.fragment.app.FragmentActivity
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.Volley
@@ -36,17 +25,14 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.OverlayImage
 import org.json.JSONException
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
-import java.util.Locale
 import kotlin.concurrent.thread
 import org.json.JSONObject
-import androidx.fragment.app.FragmentManager
 import com.naver.maps.map.overlay.Align
 import com.naver.maps.map.util.MarkerIcons
 

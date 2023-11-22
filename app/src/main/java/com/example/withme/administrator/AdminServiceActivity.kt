@@ -1,22 +1,20 @@
-package com.example.withme
+package com.example.withme.administrator
 
+import com.example.withme.R
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.withme.databinding.ActivityAdminServiceBinding
-import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.util.FusedLocationSource
 import com.android.volley.Request
-import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
 import org.json.JSONException
-import kotlinx.coroutines.*
 import kotlin.concurrent.thread
 
 class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
