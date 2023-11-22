@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <queries>
+
         <!-- 신용카드 -->
         <package android:name="kr.co.samsungcard.mpocket" /> <!-- 삼성 앱카드, 삼성 앱카드 공동인증서 -->
         <package android:name="com.shcard.smartpay" /> <!-- 신한 페이판 -->
@@ -69,24 +70,40 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WithMe"
-        tools:targetApi="31"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
+        <activity
+            android:name=".administrator.AdminServiceResultWriteActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".administrator.AdminKidInformationActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-    <activity
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".administrator.AdminMainActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".DepositChargingHistoryActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".ServiceUsageHistoryActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".ServiceResultActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".KidInformationActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".PersonalAuthActivity"
             android:exported="false" />
@@ -103,6 +120,7 @@
         <activity
             android:name=".ServiceActivity"
             android:exported="true" />
+
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="u51ixkqodc" />
@@ -110,11 +128,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
