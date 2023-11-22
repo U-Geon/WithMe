@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
 import com.android.volley.Response
@@ -15,10 +16,14 @@ import com.android.volley.toolbox.Volley
 import com.example.withme.databinding.FragmentAdminDepositBinding
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.Locale
 
 
 class AdminDepositFragment : Fragment() {
     private var _binding: FragmentAdminDepositBinding? = null
+
+    private var originalAdminDepositList: ArrayList<AdminDepositList> = arrayListOf()
+    private var filteredAdminDepositList: ArrayList<AdminDepositList> = arrayListOf()
 
     companion object {
         fun newInstance(): AdminDepositFragment {
@@ -36,76 +41,96 @@ class AdminDepositFragment : Fragment() {
         _binding = FragmentAdminDepositBinding.inflate(inflater, container, false)
         val view = binding.root
 
-
         // id, 사용자 이름 통신 코드
-        val userId = "csw1234"
+        val url = "http://192.168.80.102:8000//"
 
-        if (userId.isNotEmpty()) {
-            val url = "http://192.168.80.102:8000/select_name_money_count_phone_number/"
+        val params = JSONObject()
 
-            val params = JSONObject()
-            params.put("id", userId)
+        val request = JsonObjectRequest(
+            Request.Method.POST,
+            url,
+            params,
+            Response.Listener { response ->
+                try {
+                    val userId = response.getString("name")
+                    val name = response.getString("name")
 
-            val request = JsonObjectRequest(
-                Request.Method.POST,
-                url,
-                params,
-                Response.Listener { response ->
-                    try {
-                        val name = response.getString("name")
+                    // 마이 페이지 리스트
+                    val AdminDepositList = arrayListOf(
+                        AdminDepositList("$userId ($name)")
+                    )
 
-                        // 마이 페이지 리스트
-                        val AdminDepositList = arrayListOf(
-                            AdminDepositList("$userId ($name)")
-                        )
+                    filteredAdminDepositList.addAll(originalAdminDepositList)
 
-                        binding.rvAdmindeposit.layoutManager = LinearLayoutManager(requireContext())
-                        binding.rvAdmindeposit.setHasFixedSize(true)
+                    binding.rvAdmindeposit.layoutManager = LinearLayoutManager(requireContext())
+                    binding.rvAdmindeposit.setHasFixedSize(true)
 
-                        binding.rvAdmindeposit.adapter =
-                            AdminDepositAdapter(AdminDepositList) { item ->
-                                if (item.admindeposit == "$userId ($name)") {
-                                    val intent = Intent(
-                                        requireContext(),
-                                        AdminDepositManagementActivity::class.java
-                                    )
-                                    startActivity(intent)
-                                }
+                    binding.rvAdmindeposit.adapter =
+                        AdminDepositAdapter(AdminDepositList) { item ->
+                            if (item.admindeposit == "$userId ($name)") {
+                                val intent = Intent(
+                                    requireContext(),
+                                    AdminDepositManagementActivity::class.java
+                                )
+                                startActivity(intent)
                             }
+                        }
 
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
-                },
-                Response.ErrorListener { error ->
-                    error.printStackTrace()
-                    Toast.makeText(requireContext(), "네트워크 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                } catch (e: JSONException) {
+                    e.printStackTrace()
                 }
-            )
-            // Volley 요청을 큐에 추가
-            Volley.newRequestQueue(requireContext()).add(request)
-        } else {
-            Toast.makeText(requireContext(), "모든 필드를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            },
+            Response.ErrorListener { error ->
+                error.printStackTrace()
+                Toast.makeText(requireContext(), "네트워크 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        )
+        // Volley 요청을 큐에 추가
+        Volley.newRequestQueue(requireContext()).add(request)
 
-        }
+        initSearchView()  // SearchView 초기화
+
         return view
     }
 
+    // 검색창 부분
+    private fun initSearchView() {
+        binding.search.isSubmitButtonEnabled = true
+        binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // 사용자가 검색 버튼을 눌렀을 때의 동작 추가해야 함
+                return true
+            }
 
-//    private fun initSearchView() {
-//        // init SearchView
-//        binding.search.isSubmitButtonEnabled = true
-//        binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                // @TODO
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                // @TODO
-//                return true
-//            }
-//        })
-//    }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // 검색어가 변경될 때 호출되는 부분
+                filterAdminDepositList(newText)
+                return true
+            }
+        })
+    }
+
+    private fun filterAdminDepositList(query: String?) {
+        filteredAdminDepositList.clear()
+
+        if (query.isNullOrBlank()) {
+            filteredAdminDepositList.addAll(originalAdminDepositList)
+        } else {
+            val lowerCaseQuery = query.toLowerCase(Locale.getDefault())
+
+            for (item in originalAdminDepositList) {
+                if (item.admindeposit.toLowerCase(Locale.getDefault()).contains(lowerCaseQuery)) {
+                    filteredAdminDepositList.add(item)
+                }
+            }
+        }
+
+        updateRecyclerView()
+    }
+
+    private fun updateRecyclerView() {
+        binding.rvAdmindeposit.adapter?.notifyDataSetChanged()
+    }
+
 
 }
