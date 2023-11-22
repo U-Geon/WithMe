@@ -22,6 +22,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.Volley
 import com.android.volley.toolbox.JsonObjectRequest
+import com.example.withme.administrator.AdminServiceResultWriteActivity
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -83,6 +84,11 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 naverMap.moveCamera(CameraUpdate.scrollTo(startMarker!!.position))
             }
+        }
+
+        bind.checkResultButton.setOnClickListener {
+            val intent = Intent(this, ServiceResultActivity::class.java)
+            startActivity(intent)
         }
 
         val sharedPreference = getSharedPreferences("other", 0)
@@ -204,7 +210,8 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun requestData()
     {
         thread(start = true) {
-            while (true) {
+            var over: Boolean = false
+            while (!over) {
                 Log.d("test", "실시간 위치 요청")
                 val url = "http://10.0.2.2:9001/status"
                 val params = JSONObject()
@@ -229,8 +236,11 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                                 bind.currentStatus.text = "병원 이동 중"
                             else if(status.toInt() == 2)
                                 bind.currentStatus.text = "아이 귀가 중"
-                            else
+                            else {
                                 bind.currentStatus.text = "귀가 완료"
+                                bind.checkResultButton.visibility = View.VISIBLE
+                                over = true
+                            }
 
                             Toast.makeText(this, "관리자 위치 : $lat . $lon", Toast.LENGTH_SHORT).show()
                             movePosition(lat, lon)

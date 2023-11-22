@@ -121,9 +121,11 @@
                     android:textStyle="bold"
                     android:layout_gravity="center"/>
                 <Button
+                    android:id="@+id/checkResultButton"
+                    android:visibility="gone"
                     android:layout_height="50dp"
                     android:layout_width="250dp"
-                    android:text="다른 동행 신청하기"
+                    android:text="결과 확인하기"
                     android:textColor="@color/white"
                     android:background="@drawable/button_layout"
                     android:layout_gravity="center"/>

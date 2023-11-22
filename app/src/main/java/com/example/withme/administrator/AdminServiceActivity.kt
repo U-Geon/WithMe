@@ -1,5 +1,6 @@
 package com.example.withme.administrator
 
+import android.content.Intent
 import com.example.withme.R
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.withme.MainActivity
 import org.json.JSONObject
 import org.json.JSONException
 import kotlin.concurrent.thread
@@ -53,6 +55,11 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                     while (true) {
                         sendLocation(currentLat, currentLon, adminStatus)
                         Thread.sleep(2000)
+
+                        if(adminStatus == 3) {
+                            val intent = Intent(this, AdminServiceResultWriteActivity::class.java)
+                            startActivity(intent)
+                        }
                     }
                 }
             } else if(adminStatus == 0) {
