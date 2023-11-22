@@ -28,7 +28,7 @@ class PwFindFragment : Fragment() {
             if(bind.idText.text.toString() == "" || bind.nameText.text.toString() == "" || bind.phoneText.text.toString() == "") {
                 Toast.makeText(activity, "모든 정보를 입력해 주세요!", Toast.LENGTH_SHORT).show()
             } else {
-                val url = ""
+                val url = "http://15.164.94.136:8000/pwFind"
                 val params = JSONObject()
                 params.put("id", bind.idText.text.toString())
                 params.put("name", bind.nameText.text.toString())

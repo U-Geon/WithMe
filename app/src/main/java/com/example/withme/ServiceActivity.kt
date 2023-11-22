@@ -86,7 +86,7 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         bind.finalSubmitButton.setOnClickListener {
-            val url = "http://10.0.2.2:9001/submit"
+            val url = "http://15.164.94.136:8000/submit"
             val params = JSONObject()
             params.put("startAddress", startAddress)
             params.put("hospitalAddress", hospitalAddress)
