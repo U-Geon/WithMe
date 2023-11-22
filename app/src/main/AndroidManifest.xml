@@ -2,61 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-<!--    <queries>-->
-
-<!--        &lt;!&ndash; 신용카드 &ndash;&gt;-->
-<!--        <package android:name="kr.co.samsungcard.mpocket" /> &lt;!&ndash; 삼성 앱카드, 삼성 앱카드 공동인증서 &ndash;&gt;-->
-<!--        <package android:name="com.shcard.smartpay" /> &lt;!&ndash; 신한 페이판 &ndash;&gt;-->
-<!--        <package android:name="com.shinhancard.smartshinhan" /> &lt;!&ndash; 신한(ARS/일반결제/Smart결제), 신한 공동인증서 &ndash;&gt;-->
-<!--        <package android:name="com.kbcard.cxh.appcard" /> &lt;!&ndash; KBPay &ndash;&gt;-->
-<!--        <package android:name="com.kbstar.liivbank" /> &lt;!&ndash; LiiV(국민은행) &ndash;&gt;-->
-<!--        <package android:name="com.kbstar.kbbank" /> &lt;!&ndash; KB스타뱅킹(국민은행) &ndash;&gt;-->
-<!--        <package android:name="com.kbstar.reboot" /> &lt;!&ndash; new liib &ndash;&gt;-->
-<!--        <package android:name="kvp.jjy.MispAndroid320" /> &lt;!&ndash; 페이북/ISP &ndash;&gt;-->
-<!--        <package android:name="com.hanaskcard.paycla" /> &lt;!&ndash; 하나카드 원큐페이 &ndash;&gt;-->
-<!--        <package android:name="kr.co.hanamembers.hmscustomer" /> &lt;!&ndash; 하나멤버스 &ndash;&gt;-->
-<!--        <package android:name="com.lcacApp" /> &lt;!&ndash; 롯데 앱카드 &ndash;&gt;-->
-<!--        <package android:name="nh.smart.nhallonepay" /> &lt;!&ndash; NH 올원페이, NH 올원페이 공동인증서 &ndash;&gt;-->
-<!--        <package android:name="com.wooricard.smartapp" /> &lt;!&ndash; 우리 WON 카드 &ndash;&gt;-->
-<!--        <package android:name="com.hyundaicard.appcard" /> &lt;!&ndash; 현대 앱카드 &ndash;&gt;-->
-<!--        <package android:name="kr.co.citibank.citimobile" /> &lt;!&ndash; 씨티카드 &ndash;&gt;-->
-
-
-<!--        &lt;!&ndash; 공인인증 &ndash;&gt;-->
-<!--        <package android:name="com.hanaskcard.rocomo.potal" /> &lt;!&ndash; 모아사인 &ndash;&gt;-->
-<!--        <package android:name="com.lumensoft.touchenappfree" /> &lt;!&ndash; 공동인증서 &ndash;&gt;-->
-
-
-<!--        &lt;!&ndash; 백신 &ndash;&gt;-->
-<!--        <package android:name="com.TouchEn.mVaccine.webs" /> &lt;!&ndash; TouchEn mVaccine(신한) &ndash;&gt;-->
-<!--        <package android:name="com.ahnlab.v3mobileplus" /> &lt;!&ndash; V3(NH, 현대) &ndash;&gt;-->
-<!--        <package android:name="kr.co.shiftworks.vguardweb" /> &lt;!&ndash; V-Guard(삼성) &ndash;&gt;-->
-
-
-<!--        &lt;!&ndash; 간편결제 &ndash;&gt;-->
-<!--        <package android:name="com.samsung.android.spay" /> &lt;!&ndash; 삼성페이(삼성, 농협, KB) &ndash;&gt;-->
-<!--        <package android:name="com.samsung.android.spaylite" /> &lt;!&ndash; 삼성페이 미니(삼성, KB) &ndash;&gt;-->
-<!--        <package android:name="com.kakao.talk" /> &lt;!&ndash; 카카오페이 &ndash;&gt;-->
-<!--        <package android:name="com.nhn.android.search" /> &lt;!&ndash; 네이버페이 &ndash;&gt;-->
-<!--        <package android:name="com.ssg.serviceapp.android.egiftcertificate" /> &lt;!&ndash; SSGPay(현대) &ndash;&gt;-->
-<!--        <package android:name="com.nhnent.payapp" /> &lt;!&ndash; 페이코(삼성, 농협, KB) &ndash;&gt;-->
-<!--        <package android:name="com.lge.lgpay" /> &lt;!&ndash; 엘지페이(삼성, KB) &ndash;&gt;-->
-<!--        <package android:name="com.lottemembers.android" /> &lt;!&ndash; LPay &ndash;&gt;-->
-<!--        <package android:name="com.tencent.mm" /> &lt;!&ndash; 위쳇페이 &ndash;&gt;-->
-<!--        <package android:name="viva.republica.toss" /> &lt;!&ndash; 토스 &ndash;&gt;-->
-
-
-<!--        &lt;!&ndash; 계좌이체 &ndash;&gt;-->
-<!--        <package android:name="com.kftc.bankpay.android" /> &lt;!&ndash; 금결원 &ndash;&gt;-->
-<!--        <package android:name="com.kbankwith.smartbank" /> &lt;!&ndash; 케이뱅크 &ndash;&gt;-->
-
-
-<!--        &lt;!&ndash; 본인인증 &ndash;&gt;-->
-<!--        <package android:name="com.sktelecom.tauth" /> &lt;!&ndash; SKT &ndash;&gt;-->
-<!--        <package android:name="com.kt.ktauth" /> &lt;!&ndash; KT &ndash;&gt;-->
-<!--        <package android:name="com.lguplus.smartotp" /> &lt;!&ndash; LGT &ndash;&gt;-->
-<!--    </queries>-->
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -80,8 +25,6 @@
         <activity
             android:name=".administrator.AdminDepositManagementActivity"
             android:exported="false" />
-
-        tools:targetApi="31">
         <activity
             android:name=".administrator.AdminServiceResultWriteActivity"
             android:exported="true">

@@ -148,7 +148,7 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
                 .setCancelable(true)
                 .setPositiveButton("동행") { dialog, _ ->
                     // 버튼 눌렀을 때 동작
-                    val intent = Intent(holder.itemView.context, ::class.java) // 지도 액티비티로 이동!
+                    val intent = Intent(holder.itemView.context, AdminServiceActivity::class.java) // 지도 액티비티로 이동!
                     intent.putExtra("kidName",kidName)
                     intent.putExtra("phoneNumber",phoneNumber)
                     intent.putExtra("rrn",rrn)
