@@ -42,7 +42,7 @@ class SignupActivity : AppCompatActivity() {
             val family = base64Image
 
             if (userId.isNotEmpty() && password.isNotEmpty()) {
-                val url = "http://192.168.1.72:8000/register/"
+                val url = "http://192.168.1.72:8000/register"
 
                 val params = JSONObject()
                 params.put("id", userId)

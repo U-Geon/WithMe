@@ -85,19 +85,27 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        val sharedPreference = getSharedPreferences("other", 0)
+        val userId = sharedPreference.getString("id", "")
+
         bind.finalSubmitButton.setOnClickListener {
-            val url = "http://15.164.94.136:8000/submit"
+            val url = "http://15.164.94.136:8000/apply_service"
             val params = JSONObject()
             params.put("startAddress", startAddress)
             params.put("hospitalAddress", hospitalAddress)
             params.put("endAddress", endAddress)
+            params.put("kidName", intent.getStringExtra("kidName"))
+            params.put("phoneNumber", intent.getStringExtra("phoneNumber"))
+            params.put("rrn", intent.getStringExtra("rrn"))
+            params.put("status", intent.getStringExtra("status"))
+            params.put("userId", userId)
+
 
             val request = JsonObjectRequest(
                 Request.Method.POST,
                 url,
                 params,
                 { response ->
-                    Log.d("submittest", response.getString("OK"))
                     try {
                         Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show()
                         setSliderStatus(bind.slider)

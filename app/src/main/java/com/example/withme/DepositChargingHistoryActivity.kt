@@ -39,7 +39,7 @@ class DepositChargingHistoryActivity : AppCompatActivity() {
 
         // JSON 데이터 요청
 
-        val url = "https://15.164.94.136:8000/deposit"
+        val url = "https://15.164.94.136:8000/select_deposit"
 
         val stringRequest = object : StringRequest (
             Method.GET, url,
@@ -47,7 +47,20 @@ class DepositChargingHistoryActivity : AppCompatActivity() {
                 // 응답 처리
                 try {
                     val jsonObject = JSONObject(response)
-                    val usageHistory = jsonObject.getJSONArray("deposit") // jsonArray 받아오기
+                    val usageHistory = jsonObject.getJSONArray("예치금목록") // jsonArray 받아오기
+
+                    /**
+                     * {
+                     *     "" : [
+                     *     {
+                     *      "date" : ,
+                     *      "balance" : ,
+                     *      "amount" :
+                     *     },
+                     *     ...
+                     *    ]
+                     *  }
+                     */
 
                     val adapter = DepositAdapter()
 
@@ -55,9 +68,9 @@ class DepositChargingHistoryActivity : AppCompatActivity() {
                         val usageObject = usageHistory.getJSONObject(i)
                         adapter.addItem(
                             DepositChargeHistory(
-                                usageObject.getString("date"), // 날짜
-                                usageObject.getInt("balance"), // 잔액
-                                usageObject.getInt("amount") // 사용 금액
+                                usageObject.getString("날짜"), // 날짜
+                                usageObject.getInt("잔액"), // 잔액
+                                usageObject.getInt("지출") // 사용 금액
                             )
                         )
                     }

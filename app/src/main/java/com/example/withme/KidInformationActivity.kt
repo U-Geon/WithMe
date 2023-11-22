@@ -88,6 +88,11 @@ class KidInformationActivity : AppCompatActivity() {
                     try {
                         // 다음 액티비티로 넘어감.
                         val intent = Intent(this, ServiceActivity::class.java)
+                        intent.putExtra("kidName", kidName)
+                        intent.putExtra("phoneNumber", phoneNumber)
+                        intent.putExtra("rrn", rrn)
+                        intent.putExtra("status", status)
+
                         startActivity(intent)
                     } catch (e: JSONException) {
                         e.printStackTrace()
