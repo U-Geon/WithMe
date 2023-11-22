@@ -30,8 +30,8 @@ class ServiceResultActivity : AppCompatActivity() {
         val okayButton = binding.okayButton
         okayButton.setOnClickListener {
             // 메인 화면으로 이동? -> 어디로 이동하는거지
-//            val intent = Intent(this, MainActivity::class.java)
-//            startActivity(intent)
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
 
         // 아이 정보 받아오기

@@ -77,8 +77,7 @@ class SignupActivity : AppCompatActivity() {
                 Toast.makeText(this, "모든 필드를 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
         }
-
-
+        
         // 본인 인증 - 버튼 클릭 시
         val phoneButton: Button = findViewById(R.id.btn_phone)
         phoneButton.setOnClickListener {
