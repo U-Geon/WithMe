@@ -313,3 +313,20 @@ def get_location(request):
 
 def daum_address(request):
     return render(request, 'main/daum_address.html')
+
+def main_result(request):
+    requestdata = json.loads(request.body)
+    id = requestdata['id']
+
+    with connection.cursor() as cursor:
+        cursor.execute(f"""SELECT result
+                       from relax_service
+                       WHERE id = (select MAX(id)
+                            from relax_service
+                            where child_account_id = '{id}');""")
+        
+        result = cursor.fetchall()[0]
+
+        return JsonResponse({"result": result[0]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+    
+    
