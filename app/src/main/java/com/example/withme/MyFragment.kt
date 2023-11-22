@@ -1,11 +1,13 @@
 package com.example.withme
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
@@ -34,10 +36,11 @@ class MyFragment : Fragment() {
 
 
         // 사용자 이름, 이용 횟수, 현재 예치금 통신 코드
-        val userId = "csw1234"
+        val sharedPreference : SharedPreferences = (activity as AppCompatActivity).getSharedPreferences("other", 0)
+        val userId = sharedPreference.getString("id", "")
 
-        if (userId.isNotEmpty()) {
-            val url = "http://192.168.80.102:8000/select_name_money_count/"
+        if (userId!!.isNotEmpty()) {
+            val url = "http://15.164.94.136:8000/select_name_money_count/"
 
             val params = JSONObject()
             params.put("id", userId)
