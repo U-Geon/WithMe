@@ -24,7 +24,7 @@ class HomeFragment : Fragment() {
         // 안심동행 신청 버튼 클릭 시
         binding?.btnEnroll?.setOnClickListener {
             // 다음 액티비티로 이동하는 인텐트 생성
-            val intent = Intent(requireActivity(), ServiceActivity::class.java)
+            val intent = Intent(requireActivity(), KidInformationActivity::class.java)
             startActivity(intent)
         }
 

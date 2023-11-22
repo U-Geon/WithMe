@@ -39,6 +39,9 @@ class PwFindFragment : Fragment() {
                     url,
                     params,
                     { response -> try {
+                        val password = response.getJSONObject("password")
+                        // { password : 값 }
+                        Toast.makeText(requireContext(), password.toString(), Toast.LENGTH_SHORT).show()
 
                     } catch(error: JSONException) {
                         error.printStackTrace()
