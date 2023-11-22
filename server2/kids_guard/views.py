@@ -46,34 +46,57 @@ def login(request):
     print(id)
     print(password)
     with connection.cursor() as cursor:
-        cursor.execute(f"""select count(*)
+        cursor.execute(f"""select count(id), case when manager is NULL then 0
+                            when manager is not NULL then 1 end
                             from account
                             where id = '{id}' and password = '{password}' ;""")
-        login = (cursor.fetchone())[0]
-        print(login)
+        result = cursor.fetchone()
+        login = result[0]
+        admin = result[1]
+        # print(login)
+        # print(admin)
+        print(result)
     # return HttpResponse("OK", status = 200)
     if login == 1 :
-        return JsonResponse({'success': True, 'message': '로그인이 성공했습니다.'}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+        if admin == 1:
+            return JsonResponse({'success': True, 'admin': True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+        else:
+            return JsonResponse({'success': True, 'admin': False}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
     else :
-        return JsonResponse({'success': False, 'message': '로그인에 실패했습니다.'}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+        return JsonResponse({'success': False, 'admin': False}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
 @csrf_exempt
 def apply_service(request):
+
+    # 이름, 아이 핸드폰 번호, 부모 id
     requestdata = json.loads(request.body)
-    start_location = requestdata['start_location']
-    arrival_location = requestdata['arrival_location']
-    # hospital = requestdata['hospital']
-    # real_time_personal_data = requestdata['real_time_personal_data']
-    child_account_id = requestdata['child_account_id']
+
+    startAddress = requestdata['startAddress']
+    hospitalAddress = requestdata['hospitalAddress']
+    endAddress = requestdata['endAddress']
+    kidName = requestdata['kidName']
+    phoneNumber = requestdata['phoneNumber']
+    # 주민등록번호
+    rrn = requestdata['rrn']
+    status = requestdata['status']
+    userId = requestdata['userId']
+
+    with connection.cursor() as cursor:
+        cursor.execute(f"""select count(*)
+                            from child
+                            where account_id = '{userId}' ;""")
+        if (cursor.fetchone())[0] == 0:
+            cursor.execute(f"""insert into child (name, age, resident_registration_number, phone_number, approval, account_id)
+                            values ('{kidName}', 0, '{rrn}', '{phoneNumber}', "{status}", '{userId}') ;""")
     
 
-    if (start_location == "") or (arrival_location == "") or (child_account_id == ""):
+    if (startAddress == "") or (endAddress == "") or (userId == ""):
         return JsonResponse({"success": False, "message": "Invaild Data."}, status = 400)
 
     else:
         with connection.cursor() as cursor:
-            cursor.execute(f"""insert into relax_service (start_location, arrival_location, child_name, child_account_id)
-                            values ('{start_location}','{arrival_location}',(SELECT name FROM child WHERE account_id = '{child_account_id}'),'{child_account_id}');""")
+            cursor.execute(f"""insert into relax_service (start_location, arrival_location, hospital, child_name, child_account_id)
+                            values ('{startAddress}','{endAddress}', '{hospitalAddress}',(SELECT name FROM child WHERE account_id = '{userId}'),'{userId}');""")
             cursor.execute(f"""insert into status (status, time, relax_service_id)
                             values ('승인전', NOW() ,(SELECT MAX(id) FROM relax_service));""")
         return JsonResponse({"success": True, "message": "Service Applied."}, status = 200)
