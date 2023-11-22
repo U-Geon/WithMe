@@ -46,22 +46,26 @@
         style="@style/MyButtonStyle"
         />
 
-    <TextView
+    <Button
         android:id="@+id/signUp"
         android:text="@string/sign_up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="15dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
+        android:textSize="12dp"
+        android:background="@android:color/transparent"
         />
 
-    <TextView
+    <Button
         android:id="@+id/findAccount"
         android:text="@string/find_account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="108dp"
+        android:layout_height="15dp"
+        android:textSize="12dp"
         android:layout_gravity="center"
+        android:background="@android:color/transparent"
         />
 
 

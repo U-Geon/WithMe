@@ -19,6 +19,15 @@ class LoginActivity : AppCompatActivity() {
         val loginBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(loginBinding.root)
 
+        loginBinding.signUp.setOnClickListener {
+            val intent = Intent(this, SignupActivity::class.java)
+            startActivity(intent)
+        }
+        loginBinding.findAccount.setOnClickListener {
+            val intent = Intent(this, AccountFindActivity::class.java)
+            startActivity(intent)
+        }
+
         loginBinding.loginButton.setOnClickListener {
             val userId = loginBinding.loginId.text.toString()
             val password = loginBinding.loginPassword.text.toString()
