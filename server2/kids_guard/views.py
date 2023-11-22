@@ -95,8 +95,8 @@ def apply_service(request):
 
     else:
         with connection.cursor() as cursor:
-            cursor.execute(f"""insert into relax_service (start_location, arrival_location, hospital, child_name, child_account_id)
-                            values ('{startAddress}','{endAddress}', '{hospitalAddress}',(SELECT name FROM child WHERE account_id = '{userId}'),'{userId}');""")
+            cursor.execute(f"""insert into relax_service (start_location, arrival_location, hospital, child_name, child_account_id, real_time_personal_data)
+                            values ('{startAddress}','{endAddress}', '{hospitalAddress}',(SELECT name FROM child WHERE account_id = '{userId}'),'{userId}', '{status}');""")
             cursor.execute(f"""insert into status (status, time, relax_service_id)
                             values ('승인전', NOW() ,(SELECT MAX(id) FROM relax_service));""")
         return JsonResponse({"success": True, "message": "Service Applied."}, status = 200)
