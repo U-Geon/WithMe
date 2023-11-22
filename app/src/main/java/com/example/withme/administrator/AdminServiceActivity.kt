@@ -121,11 +121,12 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     // 서버로 위치 전송
 
     private fun sendLocation(lat: Double, lon: Double, status: Int) {
-        val url = "http://15.164.94.136:8000/test"
+        val url = resources.getString(R.string.ip) + "/get_location/"
         val params = JSONObject()
         params.put("lat", lat.toString())
-        params.put("lan", lon.toString())
+        params.put("lon", lon.toString())
         params.put("status", status);
+
 
         val request = JsonObjectRequest(
             Request.Method.POST,

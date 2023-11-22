@@ -34,8 +34,9 @@ class AddressSearchActivity : AppCompatActivity() {
             webViewClient = client
             webChromeClient = chromeClient
         }
+        val url = resources.getString(R.string.ip) + "/daum_address.html/"
 
-        webView.loadUrl("http://15.164.94.136:8000/daum_address.html")
+        webView.loadUrl(url)
 
         setContentView(bind.root)
     }

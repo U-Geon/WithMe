@@ -67,44 +67,16 @@ class KidInformationActivity : AppCompatActivity() {
         // 다음 버튼
         binding.nextButton.setOnClickListener {
             // 입력된 정보 POST로 전송
-            val url = "http://15.164.94.136:8000/main/status" // 다음 API의 URL로 바꾸기.
-
             val kidName = binding.inputName.text.toString()
             val phoneNumber = binding.inputPhoneNumber.text.toString()
             val rrn = binding.inputRRN.text.toString()
             val status = binding.status.text.toString()
-
-            val params = JSONObject()
-            params.put("kidName", kidName) // 아이 이름
-            params.put("phoneNumber", phoneNumber) // 전화번호
-            params.put("rrn", rrn) // 주민등록번호
-            params.put("status", status) // 아이 상태
-
-            val request = JsonObjectRequest(
-                Request.Method.POST,
-                url,
-                params,
-                Response.Listener { response ->
-                    try {
-                        // 다음 액티비티로 넘어감.
-                        val intent = Intent(this, ServiceActivity::class.java)
-                        intent.putExtra("kidName", kidName)
-                        intent.putExtra("phoneNumber", phoneNumber)
-                        intent.putExtra("rrn", rrn)
-                        intent.putExtra("status", status)
-
-                        startActivity(intent)
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
-                },
-                Response.ErrorListener { error ->
-                    error.printStackTrace()
-                    Toast.makeText(this, "네트워크 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
-                }
-            )
-            // requestQueue에 저장.
-            Volley.newRequestQueue(this).add(request)
+            val intent = Intent(this, ServiceActivity::class.java)
+            intent.putExtra("kidName", kidName)
+            intent.putExtra("phoneNumber", phoneNumber)
+            intent.putExtra("rrn", rrn)
+            intent.putExtra("status", status)
+            startActivity(intent)
         }
     }
 

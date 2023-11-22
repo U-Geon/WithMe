@@ -40,7 +40,7 @@ class MyFragment : Fragment() {
         val userId = sharedPreference.getString("id", "")
 
         if (userId!!.isNotEmpty()) {
-            val url = "http://15.164.94.136:8000/select_name_money_count/"
+            val url = resources.getString(R.string.ip) + "/select_name_money_count_phone_number/"
 
             val params = JSONObject()
             params.put("id", userId)

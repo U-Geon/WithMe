@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
 
             if (userId.isNotEmpty() && password.isNotEmpty()) {
                 // 로그인 요청을 보내는 함수 호출
-                val url = "http://15.164.94.136:8000/login/" // 로그인 API의 URL로 대체해야 합니다.
+                val url = resources.getString(R.string.ip) + "/login/"
 
                 val params = JSONObject()
                 params.put("id", userId)
@@ -66,12 +66,16 @@ class LoginActivity : AppCompatActivity() {
                                 editor.apply()
 
                                 val intent = Intent(this, MainActivity::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 startActivity(intent)
 
 
                             } else if(success && isAdmin) {
                                 // 관리자 로그인
                                 val adminIntent = Intent(this, com.example.withme.administrator.AdminMainActivity::class.java)
+                                adminIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                adminIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 startActivity(adminIntent)
                             } else {
                                 // 로그인 실패 처리
