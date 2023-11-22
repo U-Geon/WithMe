@@ -314,7 +314,7 @@ def get_location(request):
 def daum_address(request):
     return render(request, 'main/daum_address.html')
 
-def main_result(request):
+def main_result(request): #get
     requestdata = json.loads(request.body)
     id = requestdata['id']
 
@@ -329,4 +329,18 @@ def main_result(request):
 
         return JsonResponse({"result": result[0]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
     
+def find_all_account(request):
+    requestdata = json.loads(request.body)
+
+    with connection.cursor() as cursor:
+        cursor.execute(f"""SELECT id, name
+                            FROM account
+                            WHERE id != 'admin'
+                            ORDER BY 1 ;""")
+        
+        result = cursor.fetchall()
+
+        json_data = {"예치금목록": [{"id": id, "name": name} for id, name in result]}
+
+        return JsonResponse(json_data, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
     
