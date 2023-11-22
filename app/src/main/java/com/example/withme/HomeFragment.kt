@@ -23,6 +23,13 @@ class HomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        // 안심동행 신청 버튼 클릭 시
+        binding?.btnEnroll?.setOnClickListener {
+            // 다음 액티비티로 이동하는 인텐트 생성
+            val intent = Intent(requireActivity(), ServiceActivity::class.java)
+            startActivity(intent)
+        }
+
         // 예치금 입금 바로가기 버튼 클릭 시
         binding?.btnDeposit?.setOnClickListener {
             // 다음 액티비티로 이동하는 인텐트 생성

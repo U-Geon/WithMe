@@ -1,85 +1,83 @@
 package com.example.withme
 
+import android.Manifest
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
-import android.provider.OpenableColumns
+import android.os.Bundle
+import android.util.Base64
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import com.example.withme.PersonalAuthActivity
-import com.example.withme.databinding.ActivitySignupBinding
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.example.withme.AddressActivity
-import com.example.withme.R
-import okhttp3.ResponseBody
+import com.example.withme.databinding.ActivitySignupBinding
 import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.POST
+
 
 class SignupActivity : AppCompatActivity() {
-    private val READ_REQUEST_CODE: Int = 42   // 사용자 정의 코드
-
-    private lateinit var retrofit: Retrofit
-    private lateinit var service: ApiService
+    private val PICK_IMAGE = 1001
+    private var base64Image: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val signupBinding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(signupBinding.root)
-//        setContentView(R.layout.activity_signup)
 
-        // Retrofit 객체 초기화
-        retrofit = Retrofit.Builder()
-            .baseUrl("http://15.164.94.136:8000/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        // 회원가입 완료 버튼 클릭 시, 서버에 정보 보내기
+        signupBinding.btnSignupFin.setOnClickListener {
+            val userId = signupBinding.editId.text.toString()
+            val password = signupBinding.editPassword.text.toString()
+            val name = signupBinding.editName.text.toString()
+            val phonenum = signupBinding.editPhonenum.text.toString()
+            val address = signupBinding.editAddress.text.toString()
+            val family = base64Image
 
-        // 서비스 인스턴스 생성
-        service = retrofit.create(ApiService::class.java)
+            if (userId.isNotEmpty() && password.isNotEmpty()) {
+                val url = "http://192.168.1.72:8000/register/"
 
-//        // 회원가입 완료 버튼 눌렀을 때
-//        signupBinding.btnSignupFin.setOnClickListener {
-//            val id = signupBinding.editId.text.toString()
-//            val password = signupBinding.editPassword.text.toString()
-//
-//            if (id.isNotEmpty() && password.isNotEmpty()) {
-//                val signupInfo = SignupInfo(id, password)
-//
-//                // 요청 보내기
-//                service.signup(signupInfo).enqueue(object : Callback<signupInfo> {
-//                    if (response.isSuccessful) {
-//                        // 회원가입 성공 후, 홈 액티비티로 이동
-//                         val intent = Intent(this@SignupActivity, HomeFragment::class.java)
-//                         startActivity(intent)
-//                    } else {
-//                        // 서버 응답이 실패했을 때의 동작
-//                    }
-//                }
-//
-//                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-//                        // 요청 자체가 실패했을 때의 동작
-//                        Toast.makeText(this@SignupActivity, "네트워크 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//            } else {
-//                Toast.makeText(this, "아이디 또는 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
-//            }
-//        }
+                val params = JSONObject()
+                params.put("id", userId)
+                params.put("password", password)
+                params.put("name", name)
+                params.put("phone_number", phonenum)
+                params.put("zip_code", address)
+                params.put("family", family)
 
+                val request = JsonObjectRequest(
+                    Request.Method.POST,
+                    url,
+                    params,
+                    Response.Listener { response ->
+                        try {
+                            // 회원가입 성공 후 메인 액티비티로
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                        }
+                    },
+                    Response.ErrorListener { error ->
+                        error.printStackTrace()
+                        Toast.makeText(this, "네트워크 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                )
 
+                // Volley 요청을 큐에 추가
+                Volley.newRequestQueue(this).add(request)
+            } else {
+                Toast.makeText(this, "모든 필드를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            }
+        }
+        
         // 본인 인증 - 버튼 클릭 시
         val phoneButton: Button = findViewById(R.id.btn_phone)
         phoneButton.setOnClickListener {
@@ -87,13 +85,13 @@ class SignupActivity : AppCompatActivity() {
             val intent = Intent(this, PersonalAuthActivity::class.java)
             startActivity(intent)
         }
-
         // 본인 인증 - 이미지 클릭 시
         val phoneImage: ImageView = findViewById(R.id.img_auth)
         phoneImage.setOnClickListener {
             val intent = Intent(this, PersonalAuthActivity::class.java)
             startActivity(intent)
         }
+
 
         // 우편번호, 주소, 상세주소 클릭 시
         val addressButton: EditText = findViewById(R.id.edit_address)
@@ -112,57 +110,118 @@ class SignupActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // 파일 첨부 클릭 시 -> 파일 첨부 창은 잘 열리는데, 파일 첨부 후에 어떻게 되는지 확인 필요함
-        val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                val fileName = getFileName(it)   // fileName을 이용하여 업로드 등의 작업 수행
-            }
-        }
-        val fileButton: Button = findViewById(R.id.btn_file_upload)
-        fileButton.setOnClickListener {
-            getContent.launch("*/*")
-        }
-    }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val uri: Uri? = data?.data
-            if (uri != null) {
-                val fileName = getFileName(uri)
-                // fileName을 이용하여 업로드 등의 작업 수행
-            }
-        }
-    }
-    private fun getFileName(uri: Uri): String {
-        var result: String? = null
-        if (uri.scheme == "content") {
-            val cursor = contentResolver.query(uri, null, null, null, null)
-            cursor?.use {
-                if (it.moveToFirst()) {
-                    val displayNameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    if (displayNameIndex != -1) {
-                        result = it.getString(displayNameIndex)
-                    }
+        // 파일 첨부 - 이미지 창 클릭 시
+        val albumButton: ImageView = findViewById(R.id.iv_family)
+        albumButton.setOnClickListener {
+            when {
+                ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED -> {
+                    navigatePhotos()
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES) -> {
+                    showPermissionContextPopup()
+                }
+                else -> {
+                    // 권한을 요청하는 코드를 추가
+                    requestPermissions(
+                        arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
+                        1000)
                 }
             }
         }
-        if (result == null) {
-            result = uri.path
-            val cut = result?.lastIndexOf('/')
-            if (cut != null && cut != -1) {
-                result = result?.substring(cut + 1)
+        // 파일 첨부 - 버튼 클릭 시
+        val albumImage2: Button = findViewById(R.id.btn_file_upload)
+        albumImage2.setOnClickListener {
+        when {
+                ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED -> {
+                    navigatePhotos()
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES) -> {
+                    showPermissionContextPopup()
+                }
+                else -> {
+                    requestPermissions(
+                        arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
+                        1000)
+                }
             }
         }
-        return result ?: ""
+
+        if (ContextCompat.checkSelfPermission(this,
+            Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+            navigatePhotos()
+        }
+
+        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES)) run {
+            // 권한을 명시적으로 거부한 경우 true
+            // 처음 보거나, 다시 묻지 않음을 선택한 경우 false
+            showPermissionContextPopup()
+        }
+
     }
-}
 
-// 회원가입 정보를 나타내는 데이터 클래스
-data class SignupInfo(val id: String, val password: String)
 
-// Retrofit 서비스 인터페이스 정의
-interface ApiService {
-    @POST("/signup")
-    fun signup(@Body signupInfo: SignupInfo): Call<ResponseBody>
+    private fun showPermissionContextPopup() {
+        AlertDialog.Builder(this)
+            .setTitle("권한이 필요합니다")
+            .setMessage("전자 액자에서 사진을 선택하려면 권한이 필요합니다.")
+            .setPositiveButton("동의하기", {_, _ ->
+                requestPermissions(arrayOf(Manifest.permission.READ_MEDIA_IMAGES),1000)
+            })
+            .setNegativeButton("취소하기",{ _,_ ->})
+            .create()
+            .show()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            1000 -> {
+                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    // 허용 클릭 시
+                    navigatePhotos()
+                } else {
+                    // 거부 클릭시
+                    Toast.makeText(this,"권한을 거부했습니다.",Toast.LENGTH_SHORT).show()
+                }
+            } else -> {
+            // Do Nothing
+        }
+        }
+    }
+
+    private fun navigatePhotos() {
+        val photoPickerIntent = Intent(Intent.ACTION_PICK)
+        photoPickerIntent.type = "image/*"
+
+        startActivityForResult(photoPickerIntent, PICK_IMAGE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+            val selectedImageUri = data?.data
+
+            // 선택한 이미지를 Base64로 변환
+            base64Image = encodeImage(selectedImageUri)
+
+            // 선택한 이미지를 이미지뷰에 설정
+            val albumImage: ImageView = findViewById(R.id.iv_family)
+            albumImage.setImageURI(selectedImageUri)
+        }
+    }
+
+    private fun encodeImage(selectedImageUri: Uri?): String {
+        val inputStream = contentResolver.openInputStream(selectedImageUri!!)
+        val bytes = inputStream?.readBytes()
+        return Base64.encodeToString(bytes, Base64.DEFAULT)
+    }
+
 }
