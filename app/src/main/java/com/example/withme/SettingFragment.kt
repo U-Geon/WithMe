@@ -12,22 +12,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.withme.databinding.FragmentHomeBinding
 import com.example.withme.databinding.FragmentSettingBinding
 
 class SettingFragment : Fragment() {
     lateinit var pref: SharedPreferences
     lateinit var editor : Editor
 
-    companion object {
-        fun newInstance() : SettingFragment {
-            return SettingFragment()
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,11 +44,11 @@ class SettingFragment : Fragment() {
                 .setMessage("회원님의 모든 계정 정보가 삭제됩니다.")
                 .setPositiveButton("예",
                     DialogInterface.OnClickListener {
-                        dialog, id ->
+                            dialog, id ->
                     })
                 .setNegativeButton("아니요",
                     DialogInterface.OnClickListener {
-                        dialog, id ->
+                            dialog, id ->
                     })
             builder.show()
         }

@@ -1,6 +1,7 @@
 package com.example.withme
 
 import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.withme.databinding.ActivityServiceBinding
@@ -9,15 +10,21 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebViewClient
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.app.ActivityCompat
+import androidx.core.view.get
 import com.google.android.gms.location.*
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.util.FusedLocationSource
@@ -39,6 +46,9 @@ import java.net.URLEncoder
 import java.util.Locale
 import kotlin.concurrent.thread
 import org.json.JSONObject
+import androidx.fragment.app.FragmentManager
+import com.naver.maps.map.overlay.Align
+import com.naver.maps.map.util.MarkerIcons
 
 class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
@@ -49,6 +59,20 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var bind: ActivityServiceBinding
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
+
+    private var startName: String? = null
+    private var startAddress: String? = null
+    private var hospitalAddress: String? = null
+    private var endAddress: String? = null
+
+    private val startColor: Int = Color.GREEN
+    private val hospitalColor: Int = Color.YELLOW
+    private val endColor: Int = Color.CYAN
+
+    private var startMarker: Marker? = null
+    private var hospitalMarker: Marker? = null
+    private var endMarker: Marker? = null
+    private var serviceMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,102 +86,229 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         bind.submitButton.setOnClickListener {
-            if(bind.startInput.text.isEmpty() or bind.hospitalInput.text.isEmpty() or bind.endInput.text.isEmpty())
+            if(startAddress == null || hospitalAddress == null || endAddress == null)
                 Toast.makeText(this, "모든 장소를 입력해 주세요.", Toast.LENGTH_SHORT).show()
             else {
-                val url = "http://15.164.94.136:8000/"
-                val params = JSONObject()
-                params.put("startPosition", bind.startInput.text.toString())
-                params.put("hospitalPosition", bind.hospitalInput.text.toString())
-                params.put("endPosition", bind.endInput.text.toString())
+                bind.checkView.visibility = View.VISIBLE
+                bind.checkView.bringToFront()
+                bind.slidingDrawer.close()
+                bind.checkNameText.text = startName
+                bind.checkAddressText.text = startAddress
 
-                val request = JsonObjectRequest(
-                    Request.Method.POST,
-                    url,
-                    params,
-                    {
-                        response -> try {
-                            Log.d("TEST", "서버에 제출 성공")
-                        } catch(error: JSONException) {
-                            error.printStackTrace()
-                        }
-                    },
-                    {
-                        error -> {
-                            error.printStackTrace()
-                        }
-                    }
-                )
+                naverMap.moveCamera(CameraUpdate.scrollTo(startMarker!!.position))
             }
+        }
+
+        bind.finalSubmitButton.setOnClickListener {
+            val url = "http://10.0.2.2:9001/submit"
+            val params = JSONObject()
+            params.put("startAddress", startAddress)
+            params.put("hospitalAddress", hospitalAddress)
+            params.put("endAddress", endAddress)
+
+            val request = JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                params,
+                { response ->
+                    Log.d("submittest", response.getString("OK"))
+                    try {
+                        Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show()
+                        setSliderStatus(bind.slider)
+                        requestData()
+                    } catch(error: JSONException) {
+                        error.printStackTrace()
+                    }
+                },
+                { error -> {
+                    error.printStackTrace()
+                }
+                })
+
+            Volley.newRequestQueue(this).add(request)
+        }
+
+        val getResult: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val address: String? = result.data?.getStringExtra("address")
+            val name: String? = result.data?.getStringExtra("name")
+            val type: Int? = result.data?.getIntExtra("type", 0)
+            if (type == 1) {
+                bind.startInput.setText(name)
+                startAddress = address
+                startName = name
+            } else if (type == 2) {
+                bind.hospitalInput.setText(name)
+                hospitalAddress = address
+            } else {
+                bind.endInput.setText(name)
+                endAddress = address
+            }
+            if (address != null && type != null) {
+                createMarker(address, type)
+            }
+        }
+
+        bind.startInput.setOnClickListener {
+            val intent = Intent(this, AddressSearchActivity::class.java)
+            intent.putExtra("type", 1)
+            getResult.launch(intent)
         }
 
         bind.startButton.setOnClickListener {
-            if(bind.startInput.text.isEmpty()) {
-                Toast.makeText(this, "장소를 입력해 주세요.", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                var coordinates : Array<String> = emptyArray()
-                val thr = thread(start = true) {
-                    coordinates = search(bind.startInput.text.toString())
-                    for(elem in coordinates)
-                        Log.d("TEST", elem)
-                }
+            val intent = Intent(this, AddressSearchActivity::class.java)
+            intent.putExtra("type", 1)
+            getResult.launch(intent)
+        }
 
-                thr.join()
-
-                if(!coordinates.isEmpty())
-                    setMarker(coordinates)
-                else
-                    Log.d("TEST", "비어있음")
-            }
+        bind.hospitalInput.setOnClickListener {
+            val intent = Intent(this, AddressSearchActivity::class.java)
+            intent.putExtra("type", 2)
+            getResult.launch(intent)
         }
 
         bind.hospitalButton.setOnClickListener {
-            if(bind.hospitalInput.text.isEmpty()) {
-                Toast.makeText(this, "장소를 입력해 주세요.", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                var coordinates : Array<String> = emptyArray()
-                val thr = thread(start = true) {
-                    coordinates = search(bind.hospitalInput.text.toString())
-                    for(elem in coordinates)
-                        Log.d("TEST", elem)
-                }
+            val intent = Intent(this, AddressSearchActivity::class.java)
+            intent.putExtra("type", 2)
+            getResult.launch(intent)
+        }
 
-                thr.join()
-
-                if(!coordinates.isEmpty())
-                    setMarker(coordinates)
-                else
-                    Log.d("TEST", "비어있음")
-            }
+        bind.endInput.setOnClickListener {
+            val intent = Intent(this, AddressSearchActivity::class.java)
+            intent.putExtra("type", 3)
+            getResult.launch(intent)
         }
 
         bind.endButton.setOnClickListener {
-            if(bind.endInput.text.isEmpty()) {
-                Toast.makeText(this, "장소를 입력해 주세요.", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                var coordinates : Array<String> = emptyArray()
-                val thr = thread(start = true) {
-                    coordinates = search(bind.endInput.text.toString())
-                    for(elem in coordinates)
-                        Log.d("TEST", elem)
-                }
+            val intent = Intent(this, AddressSearchActivity::class.java)
+            intent.putExtra("type", 3)
+            getResult.launch(intent)
+        }
 
-                thr.join()
+        bind.closeCheckButton.setOnClickListener {
+            closeCheck()
+        }
+    }
 
-                if(!coordinates.isEmpty())
-                    setMarker(coordinates)
-                else
-                    Log.d("TEST", "비어있음")
+    private fun setSliderStatus(target: ViewGroup)
+    {
+        bind.checkView.visibility = View.GONE
+        bind.slidingDrawer.bringToFront()
+
+        for(i in 0 until target.childCount)
+        {
+            val child: View = target.getChildAt(i)
+            child.visibility = View.GONE
+        }
+
+        bind.serviceStatusLayout.visibility = View.VISIBLE
+        val layout = bind.slidingDrawer.layoutParams as? ViewGroup.MarginLayoutParams
+        layout?.apply {
+            topMargin = (500 * resources.displayMetrics.density).toInt()
+        }
+    }
+
+    private fun requestData()
+    {
+        thread(start = true) {
+            while (true) {
+                Log.d("test", "실시간 위치 요청")
+                val url = "http://10.0.2.2:9001/status"
+                val params = JSONObject()
+                val request = JsonObjectRequest(
+                    Request.Method.GET,
+                    url,
+                    params,
+                    Response.Listener { response -> try {
+                        val result = response.getString("result")
+                        Log.d("resulttest", result)
+                        if(result == "NO")
+                        {
+                            Toast.makeText(this, "관리자가 요청을 수락하지 않음", Toast.LENGTH_SHORT).show()
+                        } else {
+                            val lat = response.getString("lat")
+                            val lon = response.getString("lon")
+                            val status = response.getString("status")
+
+                            if(status.toInt() == 0)
+                                bind.currentStatus.text = "픽업하는 중"
+                            else if(status.toInt() == 1)
+                                bind.currentStatus.text = "병원 이동 중"
+                            else if(status.toInt() == 2)
+                                bind.currentStatus.text = "아이 귀가 중"
+                            else
+                                bind.currentStatus.text = "귀가 완료"
+
+                            Toast.makeText(this, "관리자 위치 : $lat . $lon", Toast.LENGTH_SHORT).show()
+                            movePosition(lat, lon)
+                        }
+                    } catch(error: JSONException) {
+                        error.printStackTrace()
+                    }
+                    },
+                    {
+                            error -> {
+                        error.printStackTrace()
+                    }
+                    })
+
+                Volley.newRequestQueue(this).add(request)
+                Thread.sleep(2000)
             }
         }
     }
 
+    private fun movePosition(lat: String, lon: String){
+        val position = LatLng(lat.toDouble(), lon.toDouble())
+
+        if(serviceMarker == null) {
+            val marker = Marker()
+            marker.position = position
+            marker.map = naverMap
+            marker.icon = MarkerIcons.BLACK
+            marker.iconTintColor = Color.BLUE
+            marker.captionText = "관리자"
+            marker.setCaptionAligns(Align.Top)
+
+            serviceMarker = marker
+        } else {
+            serviceMarker!!.position = position
+        }
+
+        naverMap.moveCamera(CameraUpdate.scrollTo(position))
+    }
+
+    private fun closeCheck()
+    {
+        bind.checkView.visibility = View.GONE
+        bind.slidingDrawer.bringToFront()
+        bind.slidingDrawer.open()
+    }
+
+    private fun createMarker(target: String, type: Int){
+        var coordinates : Array<String> = emptyArray()
+        val thr = thread(start = true) {
+            coordinates = search(target)
+            for(elem in coordinates)
+                Log.d("TEST", elem)
+        }
+
+        thr.join()
+
+        var markerColor : Int
+        if(type == 1) markerColor = startColor
+        else if(type == 2) markerColor = hospitalColor
+        else markerColor = endColor
+
+        if(!coordinates.isEmpty())
+        {
+            setMarker(coordinates, markerColor)
+        }
+        else
+            Log.d("TEST", "비어있음")
+    }
 
     // -------------------------------------------------
-    // 주소 검색
+    // 주소 검색 (GeoCode)
 
     private fun search(target: String): Array<String>
     {
@@ -219,11 +370,39 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
 
     // -------------------------------------------------
     // 마커 생성
-    private fun setMarker(target: Array<String>) {
+    private fun setMarker(target: Array<String>, color: Int) {
         val marker = Marker()
         val targetLocation = LatLng(target[1].toDouble(), target[0].toDouble())
         marker.position = targetLocation
         marker.map = naverMap
+        marker.icon = MarkerIcons.BLACK
+        marker.iconTintColor = color
+
+        var markerText: String
+        if(color == startColor) {
+            if(startMarker != null) {
+                startMarker!!.map = null
+            }
+            startMarker = marker
+            markerText = "출발"
+        }
+        else if(color == hospitalColor) {
+            if(hospitalMarker != null) {
+                hospitalMarker!!.map = null
+            }
+            hospitalMarker = marker
+            markerText = "병원"
+        }
+        else {
+            if(endMarker != null) {
+                endMarker!!.map = null
+            }
+            endMarker = marker
+            markerText = "도착"
+        }
+
+        marker.captionText = markerText
+        marker.setCaptionAligns(Align.Top)
 
         val cameraUpdate = CameraUpdate.scrollTo(targetLocation)
         naverMap.moveCamera(cameraUpdate)
@@ -260,7 +439,7 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         this.naverMap = naverMap
         naverMap.locationSource = locationSource
         naverMap.uiSettings.isLocationButtonEnabled = true
-        naverMap.locationTrackingMode = LocationTrackingMode.Face
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
     // -------------------------------------------------
