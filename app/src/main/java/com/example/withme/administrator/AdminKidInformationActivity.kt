@@ -35,7 +35,7 @@ class AdminKidInformationActivity : AppCompatActivity() {
          */
 
         // 아이 정보 받아오기
-        val url = resources.getString(R.string.ip) + "/admin_kid_info"
+        val url = "http://15.164.94.136:8000/admin/info" // GET 매핑할 URL
 
         val phoneNumber = binding.phoneNumber
         val kidName = binding.kidName
