@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -41,6 +42,13 @@ class AdminHomeFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentAdminHomeBinding.inflate(inflater, container, false)
 
+        val adapter = ItemAdapter()
+        binding!!.serviceRecyclerView.adapter = adapter
+
+        // RecyclerView에 LinearLayoutManager 설정
+        val layoutManager = LinearLayoutManager(requireContext())
+        binding!!.serviceRecyclerView.layoutManager = layoutManager
+
         // JSON 데이터 요청
         val url = "https://15.164.94.136:8000/admin" // GET 매핑할 URL
 
@@ -70,8 +78,6 @@ class AdminHomeFragment: Fragment() {
                     val jsonObject = JSONObject(response)
                     val serviceResult = jsonObject.getJSONArray("result") // jsonArray 받아오기
 
-                    val adapter = ItemAdapter()
-
                     for (i in 0 until serviceResult.length()) {
                         val serviceResultObject = serviceResult.getJSONObject(i)
                         adapter.addItem(
@@ -87,8 +93,7 @@ class AdminHomeFragment: Fragment() {
                         )
                     }
 
-                    // RecyclerView를 뷰에 추가
-                    binding!!.serviceRecyclerView.adapter = adapter
+                    adapter.notifyDataSetChanged()
 
                 } catch (e: JSONException) {
                     // json 객체 에러
@@ -177,6 +182,5 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val button: Button = itemView.findViewById(R.id.service_result_button)
         val textView: TextView? = itemView.findViewById(R.id.service_result_text)
-
     }
 }

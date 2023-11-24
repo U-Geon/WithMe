@@ -7,11 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.withme.databinding.ActivityDepositChargingHistoryBinding
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.withme.administrator.ItemAdapter
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -39,6 +42,13 @@ class DepositChargingHistoryActivity : AppCompatActivity() {
 
         // JSON 데이터 요청
 
+        val adapter = DepositAdapter()
+        binding!!.depositRecyclerView.adapter = adapter
+
+        // RecyclerView에 LinearLayoutManager 설정
+        val layoutManager = LinearLayoutManager(this)
+        binding!!.depositRecyclerView.layoutManager = layoutManager
+
         val url = "https://15.164.94.136:8000/select_deposit"
 
         val stringRequest = object : StringRequest (
@@ -51,7 +61,7 @@ class DepositChargingHistoryActivity : AppCompatActivity() {
 
                     /**
                      * {
-                     *     "" : [
+                     *     "예치금목록" : [
                      *     {
                      *      "date" : ,
                      *      "balance" : ,
@@ -75,8 +85,7 @@ class DepositChargingHistoryActivity : AppCompatActivity() {
                         )
                     }
 
-                    // RecyclerView를 뷰에 추가
-                    binding.depositRecyclerView.adapter = adapter
+                    adapter.notifyDataSetChanged()
 
                 } catch (e: JSONException) {
                     // json 객체 에러

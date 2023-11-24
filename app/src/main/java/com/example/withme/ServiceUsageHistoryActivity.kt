@@ -11,11 +11,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.withme.databinding.ActivityServiceUsageHistoryBinding
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.withme.administrator.ItemAdapter
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -43,6 +46,13 @@ class ServiceUsageHistoryActivity : AppCompatActivity() {
 
         // JSON 데이터 요청
 
+        val adapter = UsageHistoryAdapter(this)
+        binding!!.recyclerView.adapter = adapter
+
+        // RecyclerView에 LinearLayoutManager 설정
+        val layoutManager = LinearLayoutManager(this)
+        binding!!.recyclerView.layoutManager = layoutManager
+
         val url = "https://15.164.94.136:8000/main/serviceUsageHistory" // GET 매핑할 URL
 
         val stringRequest = object : StringRequest(
@@ -52,8 +62,6 @@ class ServiceUsageHistoryActivity : AppCompatActivity() {
                 try {
                     val jsonObject = JSONObject(response)
                     val usageHistory = jsonObject.getJSONArray("service") // jsonArray 받아오기
-
-                    val adapter = UsageHistoryAdapter(this)
 
                     for (i in 0 until usageHistory.length()) {
                         val usageObject = usageHistory.getJSONObject(i)
@@ -66,8 +74,7 @@ class ServiceUsageHistoryActivity : AppCompatActivity() {
                         )
                     }
 
-                    // RecyclerView를 뷰에 추가
-                    binding.recyclerView.adapter = adapter
+                    adapter.notifyDataSetChanged()
 
                 } catch (e: JSONException) {
                     // json 객체 에러
@@ -112,6 +119,7 @@ class UsageHistoryAdapter(private val activity: Activity) : RecyclerView.Adapter
 
     fun addItem(item: UsageHistoryItem) {
         usageHistoryList.add(item)
+        notifyDataSetChanged()
     }
 
     // 세부 내역을 보여주는 팝업 창을 띄우는 메서드
