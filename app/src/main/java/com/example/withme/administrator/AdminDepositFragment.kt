@@ -13,6 +13,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.withme.R
 import com.example.withme.databinding.FragmentAdminDepositBinding
 import org.json.JSONException
 import org.json.JSONObject
@@ -27,6 +28,12 @@ class AdminDepositFragment : Fragment() {
     private var userId: String = ""
     private var name: String = ""
 
+    companion object {
+        fun newInstance() : AdminDepositFragment {
+            return AdminDepositFragment()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +43,7 @@ class AdminDepositFragment : Fragment() {
         val view = binding.root
 
         // id, 사용자 이름 전체를 받아오기
-        val url = "http://192.168.80.102:8000/find_all_account/"
+        val url = resources.getString(R.string.ip) + "/find_all_account/"
         val params = JSONObject()
 
         val request = JsonObjectRequest(

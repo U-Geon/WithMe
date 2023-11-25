@@ -35,7 +35,7 @@ class ServiceResultActivity : AppCompatActivity() {
         }
 
         // 아이 정보 받아오기
-        val url = "http://15.164.94.136:8000/main_result" // GET 매핑할 URL
+        val url = resources.getString(R.string.ip) + "/main_result"
         val resultText = binding.resultText
 
         val stringRequest = object : StringRequest(
