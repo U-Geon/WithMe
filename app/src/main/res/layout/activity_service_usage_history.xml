@@ -12,13 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="68dp"
         android:background="@color/icon_color"
-        app:titleTextColor="@color/white"
-        android:gravity="center_vertical|center_horizontal"/>
+        app:titleTextColor="@color/white"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="77dp"
-        android:layout_height="205dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="54dp" />
 

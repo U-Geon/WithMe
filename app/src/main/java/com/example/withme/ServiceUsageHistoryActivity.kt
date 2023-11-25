@@ -3,6 +3,7 @@ package com.example.withme
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,14 +12,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.withme.databinding.ActivityServiceUsageHistoryBinding
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.withme.administrator.ItemAdapter
+import com.example.withme.administrator.AdminServiceActivity
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -53,8 +53,7 @@ class ServiceUsageHistoryActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         binding!!.recyclerView.layoutManager = layoutManager
 
-        val url = "https://15.164.94.136:8000/main/serviceUsageHistory" // GET 매핑할 URL
-
+        val url = resources.getString(R.string.ip) + "/main/serviceUsageHistory"
         val stringRequest = object : StringRequest(
             Method.GET, url,
             Response.Listener { response ->
@@ -109,7 +108,17 @@ class UsageHistoryAdapter(private val activity: Activity) : RecyclerView.Adapter
         // 세 번째 값은 화살표를 누르면 세부적으로 볼 수 있게끔 한다.
         holder.detailButton.setOnClickListener {
             // 세부 내역을 보여주는 팝업 창을 띄운다.
-            showModalDialog(usage.detail)
+            val dialogBuilder = AlertDialog.Builder(holder.itemView.context)
+
+            dialogBuilder.setMessage(usage.detail)
+                .setTitle("세부 내역")
+                .setCancelable(true)
+                .setPositiveButton("닫기") { dialog, _ ->
+                    dialog.dismiss() // 다이얼로그를 닫습니다.
+                }
+
+            val alertDialog = dialogBuilder.create()
+            alertDialog.show()
         }
     }
 
@@ -120,25 +129,6 @@ class UsageHistoryAdapter(private val activity: Activity) : RecyclerView.Adapter
     fun addItem(item: UsageHistoryItem) {
         usageHistoryList.add(item)
         notifyDataSetChanged()
-    }
-
-    // 세부 내역을 보여주는 팝업 창을 띄우는 메서드
-    private fun showModalDialog(detail: String) {
-        // 팝업 창을 생성한다.
-        val alertDialog: AlertDialog? = activity?.let {
-            val builder = AlertDialog.Builder(it)
-            builder.apply {
-                setNegativeButton("닫기",
-                    DialogInterface.OnClickListener { dialog, id ->
-                        // User cancelled the dialog
-                    })
-            }
-            // Set other dialog properties
-            builder?.setMessage(detail)?.setTitle("세부 내역")
-
-            // Create the AlertDialog
-            builder.create()
-        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

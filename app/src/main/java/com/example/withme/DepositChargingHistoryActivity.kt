@@ -7,14 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.withme.databinding.ActivityDepositChargingHistoryBinding
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.withme.administrator.ItemAdapter
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -43,13 +41,13 @@ class DepositChargingHistoryActivity : AppCompatActivity() {
         // JSON 데이터 요청
 
         val adapter = DepositAdapter()
-        binding!!.depositRecyclerView.adapter = adapter
+        binding.depositRecyclerView.adapter = adapter
 
         // RecyclerView에 LinearLayoutManager 설정
         val layoutManager = LinearLayoutManager(this)
-        binding!!.depositRecyclerView.layoutManager = layoutManager
+        binding.depositRecyclerView.layoutManager = layoutManager
 
-        val url = "https://15.164.94.136:8000/select_deposit"
+        val url = resources.getString(R.string.ip) + "/select_deposit"
 
         val stringRequest = object : StringRequest (
             Method.GET, url,
@@ -63,16 +61,14 @@ class DepositChargingHistoryActivity : AppCompatActivity() {
                      * {
                      *     "예치금목록" : [
                      *     {
-                     *      "date" : ,
-                     *      "balance" : ,
-                     *      "amount" :
+                     *      "날짜" : ,
+                     *      "잔액" : ,
+                     *      "지출" :
                      *     },
                      *     ...
                      *    ]
                      *  }
                      */
-
-                    val adapter = DepositAdapter()
 
                     for (i in 0 until usageHistory.length()) {
                         val usageObject = usageHistory.getJSONObject(i)
@@ -115,9 +111,9 @@ class DepositAdapter : RecyclerView.Adapter<DepositAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val depositChargeHistory = depositHistoryList[position]
 
-        holder.dateTextView.text = depositChargeHistory.date
-        holder.balanceTextView.text = depositChargeHistory.balance.toString()
-        holder.amountTextView.text = depositChargeHistory.amount.toString()
+        holder.chargeDateTime.text = depositChargeHistory.date
+        holder.balanceTextView.text = "잔액 " + depositChargeHistory.balance.toString() + "원"
+        holder.amountTextView.text = depositChargeHistory.amount.toString() + "원"
     }
 
     override fun getItemCount(): Int {
@@ -130,7 +126,7 @@ class DepositAdapter : RecyclerView.Adapter<DepositAdapter.ViewHolder>() {
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val dateTextView: TextView = itemView.findViewById(R.id.dateTextView)
+        val chargeDateTime: TextView = itemView.findViewById(R.id.chargeDateTime)
         val balanceTextView: TextView = itemView.findViewById(R.id.balanceTextView)
         val amountTextView: TextView = itemView.findViewById(R.id.amountTextView)
     }

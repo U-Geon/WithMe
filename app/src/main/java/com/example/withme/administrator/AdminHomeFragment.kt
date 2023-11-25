@@ -50,7 +50,7 @@ class AdminHomeFragment: Fragment() {
         binding!!.serviceRecyclerView.layoutManager = layoutManager
 
         // JSON 데이터 요청
-        val url = "https://15.164.94.136:8000/admin" // GET 매핑할 URL
+        val url = resources.getString(R.string.ip) + "/admin"
 
         val stringRequest = object : StringRequest(
             Method.GET, url,
