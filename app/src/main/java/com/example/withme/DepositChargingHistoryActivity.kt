@@ -1,5 +1,6 @@
 package com.example.withme
 
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONException
 import org.json.JSONObject
+import android.app.Activity
 
 data class DepositChargeHistory (
     val date: String,
@@ -47,7 +49,10 @@ class DepositChargingHistoryActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         binding.depositRecyclerView.layoutManager = layoutManager
 
-        val url = resources.getString(R.string.ip) + "/select_deposit"
+        val sharedPreference = getSharedPreferences("other", 0)
+        val userId = sharedPreference.getString("id", "")
+
+        val url = resources.getString(R.string.ip) + "/select_deposit" + "?userId=" + userId
 
         val stringRequest = object : StringRequest (
             Method.GET, url,
