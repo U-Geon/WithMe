@@ -36,7 +36,7 @@ class DepositChargingHistoryActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true) // 뒤로 가기 아이콘 활성화
         actionBar?.setHomeAsUpIndicator(R.drawable.back_button)
-        actionBar?.title = "예치금 충전 내역"
+        actionBar?.title = "예치금 내역"
 
         // JSON 데이터 요청
 
