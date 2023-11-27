@@ -3,7 +3,6 @@ package com.example.withme
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.withme.databinding.ActivityKidInformationBinding
 import com.example.withme.databinding.ActivityServiceResultBinding
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -29,7 +28,6 @@ class ServiceResultActivity : AppCompatActivity() {
         // 확인 버튼
         val okayButton = binding.okayButton
         okayButton.setOnClickListener {
-            // 메인 화면으로 이동? -> 어디로 이동하는거지
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
