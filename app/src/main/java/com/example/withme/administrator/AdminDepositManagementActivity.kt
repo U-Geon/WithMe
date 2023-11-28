@@ -85,7 +85,7 @@ class AdminDepositManagementActivity : AppCompatActivity() {
 
                             val money = response.getString("money")
                             moneyInt = money.toInt()
-                            binding.tvCurrentDeposit.text = "현재 예치금: ${money}원"
+                            binding.tvCurrentDeposit.text = "현재 예치금: ${moneyInt}원"
                         } catch (e: JSONException) {
                             e.printStackTrace()
                         }
@@ -111,6 +111,7 @@ class AdminDepositManagementActivity : AppCompatActivity() {
             if (depositAmountText.isNotEmpty()) {
                 val depositAmount: Int = depositAmountText.toInt()
                 moneyInt += depositAmount
+                binding.tvCurrentDeposit.text = "현재 예치금: ${moneyInt}원"
             }
         }
 
@@ -123,6 +124,7 @@ class AdminDepositManagementActivity : AppCompatActivity() {
             if (depositAmountText.isNotEmpty() && moneyInt - depositAmountText.toInt() >= 0) {
                 val depositAmount: Int = depositAmountText.toInt()
                 moneyInt -= depositAmount
+                binding.tvCurrentDeposit.text = "현재 예치금: ${moneyInt}원"
             }
         }
 
