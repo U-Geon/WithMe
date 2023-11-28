@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -53,7 +54,10 @@ class ServiceUsageHistoryActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         binding!!.recyclerView.layoutManager = layoutManager
 
-        val url = resources.getString(R.string.ip) + "/main/serviceUsageHistory"
+        val sharedPreference = getSharedPreferences("other", 0)
+        val userId = sharedPreference.getString("id", "")
+
+        val url = resources.getString(R.string.ip) + "/service_history" + "?userId=" + userId
         val stringRequest = object : StringRequest(
             Method.GET, url,
             Response.Listener { response ->
