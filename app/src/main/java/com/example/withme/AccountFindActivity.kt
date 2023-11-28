@@ -17,6 +17,10 @@ class AccountFindActivity : AppCompatActivity() {
         bind = ActivityAccountFindBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
+        bind.imgbtnBack.setOnClickListener {
+            finish()
+        }
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.accountFind, IdFindFragment())
             .commit()
