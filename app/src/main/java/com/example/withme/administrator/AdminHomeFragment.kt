@@ -109,7 +109,7 @@ class AdminHomeFragment: Fragment() {
         // 요청 대기열에 요청 추가
         Volley.newRequestQueue(requireContext()).add(stringRequest)
 
-        return binding!!.root
+        return binding?.root
     }
 
     override fun onDestroyView() {
@@ -159,6 +159,9 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
                     intent.putExtra("rrn",rrn)
                     intent.putExtra("status",status)
                     holder.itemView.context.startActivity(intent)
+                }
+                .setNegativeButton("취소") { dialog, _ ->
+                    dialog.dismiss() // 다이얼로그를 닫습니다.
                 }
 
             val alertDialog = dialogBuilder.create()
