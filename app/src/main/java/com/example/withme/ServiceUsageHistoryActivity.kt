@@ -113,7 +113,7 @@ class UsageHistoryAdapter(private val activity: Activity) : RecyclerView.Adapter
             dialogBuilder.setMessage(usage.detail)
                 .setTitle("세부 내역")
                 .setCancelable(true)
-                .setPositiveButton("닫기") { dialog, _ ->
+                .setNegativeButton("닫기") { dialog, _ ->
                     dialog.dismiss() // 다이얼로그를 닫습니다.
                 }
 
