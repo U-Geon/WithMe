@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +17,10 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.withme.R
+import com.example.withme.databinding.ActivityKidInformationBinding
 import com.example.withme.databinding.FragmentAdminHomeBinding
+import com.example.withme.databinding.FragmentHomeBinding
+import com.example.withme.databinding.FragmentSettingBinding
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -48,6 +52,12 @@ class AdminHomeFragment: Fragment() {
         // RecyclerView에 LinearLayoutManager 설정
         val layoutManager = LinearLayoutManager(requireContext())
         binding!!.serviceRecyclerView.layoutManager = layoutManager
+
+//        val binding = FragmentAdminHomeBinding.inflate(layoutInflater)
+//        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
+//        val actionBar = (activity as AppCompatActivity).supportActionBar
+//        actionBar?.setDisplayShowTitleEnabled(false)
+//        actionBar?.setDisplayHomeAsUpEnabled(true)
 
         // JSON 데이터 요청
         val url = resources.getString(R.string.ip) + "/admin"
@@ -131,7 +141,11 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
         val service = itemList[position]
 
         // 버튼 제목 설정
-        val title = service.startLocation + " - " + service.middleLocation + " - " + service.finalLocation
+        val utf8Start = String(service.startLocation.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
+        val utf8Middle = String(service.middleLocation.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
+        val utf8Final = String(service.finalLocation.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
+        val title = utf8Start + " - " + utf8Middle + " - " + utf8Final
+
 
         holder.textView!!.text = title
 
@@ -139,17 +153,22 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
             // 모달 띄우는 로직을 여기에 추가
             val dialogBuilder = AlertDialog.Builder(holder.itemView.context)
             val start = service.startLocation
+            val utf8Start = String(start.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
             val middle = service.middleLocation
+            val utf8Middle = String(middle.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
             val final = service.finalLocation
+            val utf8Final = String(final.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
 
             val kidName = service.kidName
             val phoneNumber = service.phoneNumber
             val rrn = service.rrn
 
             val status = service.status
+            val utf8Status = String(status.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
 
 
-            dialogBuilder.setMessage("동행 정보\n$start - $middle - $final\n\n 아이 인적사항\n이름:$kidName\n전화번호:$phoneNumber\n주민등록번호:$rrn\n\n아이 상태\n$status")
+
+            dialogBuilder.setMessage("동행 정보\n$utf8Start - $utf8Middle - $utf8Final\n\n아이 인적사항\n이름: $kidName\n전화번호: $phoneNumber\n주민등록번호: $rrn\n\n아이 상태\n$utf8Status")
                 .setCancelable(true)
                 .setPositiveButton("동행") { dialog, _ ->
                     // 버튼 눌렀을 때 동작
@@ -157,7 +176,7 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
                     intent.putExtra("kidName",kidName)
                     intent.putExtra("phoneNumber",phoneNumber)
                     intent.putExtra("rrn",rrn)
-                    intent.putExtra("status",status)
+                    intent.putExtra("status",utf8Status)
                     holder.itemView.context.startActivity(intent)
                 }
 
