@@ -62,24 +62,6 @@ class AdminHomeFragment: Fragment() {
             Response.Listener { response ->
                 // 응답 처리
                 try {
-
-                    /**
-                     * {
-                     *   "result" : [
-                     *      {
-                     *          "start" : 출발 장소 이름,
-                     *          "middle" : 중간 장소 이름,
-                     *          "final" : 도착 장소 이름,
-                     *          "kidName": 아이 이름,
-                     *          "phoneNumber": 전화번호,
-                     *          "rrn": 주민등록번호,
-                     *          "status": 아이 상태
-                     *       }
-                     *       ...
-                     *   ],
-                     * }
-                     */
-
                     val jsonObject = JSONObject(response)
                     val serviceResult = jsonObject.getJSONArray("result") // jsonArray 받아오기
 
@@ -139,7 +121,7 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
         val utf8Start = String(service.startLocation.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
         val utf8Middle = String(service.middleLocation.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
         val utf8Final = String(service.finalLocation.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
-        val title = utf8Start + " - " + utf8Middle + " - " + utf8Final
+        val title = "$utf8Start - $utf8Middle - $utf8Final"
 
 
         holder.textView!!.text = title
@@ -197,7 +179,6 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        val button: Button = itemView.findViewById(R.id.service_result_button)
         val layout: ConstraintLayout = itemView.findViewById(R.id.list_item)
         val textView: TextView? = itemView.findViewById(R.id.service_result_text)
     }
