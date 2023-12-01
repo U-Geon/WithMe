@@ -62,19 +62,6 @@ class DepositChargingHistoryActivity : AppCompatActivity() {
                     val jsonObject = JSONObject(response)
                     val usageHistory = jsonObject.getJSONArray("예치금목록") // jsonArray 받아오기
 
-                    /**
-                     * {
-                     *     "예치금목록" : [
-                     *     {
-                     *      "날짜" : ,
-                     *      "잔액" : ,
-                     *      "지출" :
-                     *     },
-                     *     ...
-                     *    ]
-                     *  }
-                     */
-
                     for (i in 0 until usageHistory.length()) {
                         val usageObject = usageHistory.getJSONObject(i)
                         adapter.addItem(

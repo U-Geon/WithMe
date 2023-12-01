@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,12 +53,6 @@ class AdminHomeFragment: Fragment() {
         // RecyclerView에 LinearLayoutManager 설정
         val layoutManager = LinearLayoutManager(requireContext())
         binding!!.serviceRecyclerView.layoutManager = layoutManager
-
-//        val binding = FragmentAdminHomeBinding.inflate(layoutInflater)
-//        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
-//        val actionBar = (activity as AppCompatActivity).supportActionBar
-//        actionBar?.setDisplayShowTitleEnabled(false)
-//        actionBar?.setDisplayHomeAsUpEnabled(true)
 
         // JSON 데이터 요청
         val url = resources.getString(R.string.ip) + "/admin"
@@ -119,7 +114,7 @@ class AdminHomeFragment: Fragment() {
         // 요청 대기열에 요청 추가
         Volley.newRequestQueue(requireContext()).add(stringRequest)
 
-        return binding!!.root
+        return binding?.root
     }
 
     override fun onDestroyView() {
@@ -149,7 +144,7 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
         holder.textView!!.text = title
 
-        holder.button.setOnClickListener {
+        holder.layout.setOnClickListener {
             // 모달 띄우는 로직을 여기에 추가
             val dialogBuilder = AlertDialog.Builder(holder.itemView.context)
             val start = service.startLocation
@@ -168,8 +163,8 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
 
 
-            dialogBuilder.setMessage("동행 정보\n$utf8Start - $utf8Middle - $utf8Final\n\n아이 인적사항\n이름: $kidName\n전화번호: $phoneNumber\n주민등록번호: $rrn\n\n아이 상태\n$utf8Status")
-                .setCancelable(true)
+            dialogBuilder.setMessage("**동행 정보**\n$utf8Start - $utf8Middle - $utf8Final\n\n**아이 인적사항**\n이름: $kidName\n전화번호: $phoneNumber\n주민등록번호: $rrn\n\n**아이 상태**\n$utf8Status")
+//                .setCancelable(true)
                 .setPositiveButton("동행") { dialog, _ ->
                     // 버튼 눌렀을 때 동작
                     val intent = Intent(holder.itemView.context, AdminServiceActivity::class.java) // 지도 액티비티로 이동!
@@ -178,6 +173,9 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
                     intent.putExtra("rrn",rrn)
                     intent.putExtra("status",utf8Status)
                     holder.itemView.context.startActivity(intent)
+                }
+                .setNegativeButton("취소") { dialog, _ ->
+                    dialog.dismiss() // 다이얼로그를 닫습니다.
                 }
 
             val alertDialog = dialogBuilder.create()
@@ -199,7 +197,8 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val button: Button = itemView.findViewById(R.id.service_result_button)
+//        val button: Button = itemView.findViewById(R.id.service_result_button)
+        val layout: ConstraintLayout = itemView.findViewById(R.id.list_item)
         val textView: TextView? = itemView.findViewById(R.id.service_result_text)
     }
 }
