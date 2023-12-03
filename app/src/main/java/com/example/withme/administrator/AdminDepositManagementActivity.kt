@@ -22,7 +22,7 @@ class AdminDepositManagementActivity : AppCompatActivity() {
         val sharedPreference = getSharedPreferences("other", 0)  // SharedPreferences 인스턴스
         val userId = sharedPreference.getString("id", "")
 
-        val url = resources.getString(R.string.ip) + "/money_deposit/"
+        val url = resources.getString(R.string.ip) + "/modify_deposit/"
 
         val params = JSONObject()
         params.put("id", userId)
