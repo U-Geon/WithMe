@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from kids_guard.views import register, login, apply_service, select_state, select_deposit, edit_account_info, delete_account, get_faq, send_location, modify_state, select_kid_info, hospital_result, select_name_money_count_phone_number, complete_service, get_location, modify_deposit, daum_address, find_password, main_result
+from kids_guard.views import register, login, apply_service, select_state, select_deposit, edit_account_info, delete_account, get_faq, send_location, modify_state, select_kid_info, hospital_result, select_name_money_count_phone_number, complete_service, get_location, modify_deposit, daum_address, find_password, main_result, find_all_account, get_apply_service_list, service_history
 
 urlpatterns = [
     # 사용자 전용
@@ -29,16 +29,19 @@ urlpatterns = [
     path('delete_account/', delete_account, name = 'delete_account'),
     path('get_faq/', get_faq, name = 'get_faq'), 
     path('main_result', main_result, name='main_result'),
+    path('service_history', service_history, name='service_history'),
 
     # 관리자 전용
     path('send_location/', send_location, name = 'send_location'), 
     path('modify_state/', modify_state, name = 'modify_state'), 
     path('select_kid_info/', select_kid_info, name = 'select_kid_info'),
     path('hospital_result/', hospital_result, name='hospital_result'), 
-    path('select_name_money_count/', select_name_money_count_phone_number, name='select_name_money_count'),
+    path('select_name_money_count_phone_number/', select_name_money_count_phone_number, name='select_name_money_count'),
     path('complete_service/', complete_service, name='complete_service'),
     path('get_location/', get_location, name= 'get_location'),
     path('modify_deposit/', modify_deposit, name='modify_deposit'),
+    path('find_all_account/', find_all_account, name='find_all_account'),
+    path('admin/', get_apply_service_list, name = 'get_apply_service_list'),
     
     # 주소 검색을 위한 api
     path('daum_address.html/', daum_address, name='daum_address'),

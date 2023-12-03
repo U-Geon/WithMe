@@ -8,6 +8,8 @@ import json
 # from .models import Account
 
 # Create your views here.
+
+# 회원가입 api (사용자 사용)
 @csrf_exempt
 def register(request):
     # all_records = Account.objects.all()
@@ -28,7 +30,7 @@ def register(request):
     zip_code = data['zip_code']
     phone_number = data['phone_number']
     family = data['family']
-    print(family)
+    # print(family)
     # name = '최선우'
     # zip_code = '12345'
     # phone_number = '01052980568'
@@ -38,6 +40,7 @@ def register(request):
                             values ('{id}', '{password}', '{name}', '{zip_code}', '{phone_number}') ;""")
     return HttpResponse("OK", status = 200)
 
+# 로그인 api (사용자 사용)
 @csrf_exempt
 def login(request):
     data = json.loads(request.body)
@@ -46,8 +49,7 @@ def login(request):
     print(id)
     print(password)
     with connection.cursor() as cursor:
-        cursor.execute(f"""select count(id), case when manager is NULL then 0
-                            when manager is not NULL then 1 end
+        cursor.execute(f"""select count(id), manager
                             from account
                             where id = '{id}' and password = '{password}' ;""")
         result = cursor.fetchone()
@@ -59,12 +61,13 @@ def login(request):
     # return HttpResponse("OK", status = 200)
     if login == 1 :
         if admin == 1:
-            return JsonResponse({'success': True, 'admin': True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+            return JsonResponse({'success': True, 'isAdmin': True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
         else:
-            return JsonResponse({'success': True, 'admin': False}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+            return JsonResponse({'success': True, 'isAdmin': False}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
     else :
-        return JsonResponse({'success': False, 'admin': False}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+        return JsonResponse({'success': False, 'isAdmin': False}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
+# 비밀번호 찾기 api (사용자 사용)
 def find_password(request):
     #request
     #id, name, phone
@@ -82,6 +85,7 @@ def find_password(request):
 
     return JsonResponse({'password' : password}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
+# 서비스 신청 api (사용자 사용)
 @csrf_exempt
 def apply_service(request):
 
@@ -122,6 +126,7 @@ def apply_service(request):
 # def modify_state(request):
 #     return JsonResponse({'상태 변경 완료': 1}, content_type ='application/json; charest=utf-8')
 
+# 삭제된 api(사용 xx)
 @csrf_exempt
 def select_state(request):
     data = json.loads(request.body)
@@ -148,30 +153,43 @@ def select_state(request):
 
     return JsonResponse({'states': state}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
+# 예치금 사용 내역 api (사용자 사용)
 @csrf_exempt
 def select_deposit(request):
     
-    requestdata = json.loads(request.body)
-    account_id = requestdata['account_id']
+    account_id = request.GET.get('userId', '')
+    print(account_id)
 
     # account_id = request.GET.get['account_id']
 
     with connection.cursor() as cursor:
-        cursor.execute(f"""SELECT date, change_amount, money
+        cursor.execute(f"""SELECT date(date), change_amount, money
                             FROM money_history
                             WHERE account_id = '{account_id}'
                             ORDER BY 1 ;""")
     
         data = cursor.fetchall()
-        json_data = {"예치금목록": [{"날짜": date, "지출": expenditure, "잔액": balance} for date, expenditure, balance in data]}
+        print(data)
+        json_data = {"예치금목록": [{"날짜": str(date), "지출": expenditure, "잔액": balance} for date, expenditure, balance in data]}
+        print(json_data)
         return JsonResponse(json_data, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
-    
+
+# 이름과 예치금, 이용 횟수, 전화번호를 전송하는 api (사용자, 관리자 사용)
 @csrf_exempt
 def select_name_money_count_phone_number(request):
     data = json.loads(request.body)
     id = data['id']
     with connection.cursor() as cursor:
-        cursor.execute(f"""select account.name, account.money, count(relax_service.id) count, account.phone_number
+        cursor.execute(f"""select count(*)
+                            from account
+                            join relax_service on account.id = relax_service.child_account_id
+                            where account.id = "{id}" ;""")
+        if cursor.fetchone()[0] == 0:
+            cursor.execute(f"""select name, money, 0, phone_number
+						from account
+						where account.id = "{id}" ;""")
+        else:
+            cursor.execute(f"""select account.name, account.money, count(relax_service.id) count, account.phone_number
                             from account
                             join relax_service on account.id = relax_service.child_account_id
                             where account.id = "{id}" ;""")
@@ -179,7 +197,7 @@ def select_name_money_count_phone_number(request):
     print(data)
     return JsonResponse({'name':data[0], 'money':data[1], 'uses':data[2], 'phone_number':data[3]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
-
+# 계정 수정을 위한 api (사용자 사용)
 @csrf_exempt
 def edit_account_info(request):
     data = json.loads(request.body)
@@ -201,6 +219,7 @@ def edit_account_info(request):
 
     return JsonResponse({"success": True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
+# 계정 삭제를 위한 api (사용자 사용)
 @csrf_exempt
 def delete_account(request):
 
@@ -215,6 +234,7 @@ def delete_account(request):
                             WHERE id = '{id}';""")
     return JsonResponse({"success": True, "message": "Account deleted"}, status = 200)
 
+# faq를 전송하는 api (사용자 사용)
 @csrf_exempt
 def get_faq(request):
     
@@ -228,21 +248,22 @@ def get_faq(request):
         
     return JsonResponse(json_data, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
-# test 아직 안함
+# 사용자가 관리자의 위치를 받기 위한 api (사용자 사용)
 @csrf_exempt
 def send_location(request):
 
-    requestdata = json.loads(request.body)
+    requestdata = request
 
-    id = requestdata['id']
+    id = 'admin'
 
 
     with connection.cursor() as cursor:
         cursor.execute(f"""SELECT latitude, longitude
                             FROM real_time_location
-                            WHERE status_relax_service_id = (SELECT MAX(id) FROM relax_service WHERE id = (SELECT id FROM relax_service WHERaccount_id = '{id}'));""")
+                            WHERE status_relax_service_id = (SELECT MAX(id) FROM relax_service WHERE id = (SELECT id FROM relax_service WHERE account_id = '{id}'));""")
 
         data = cursor.fetchall()
+        print(data)
 
         if data == ():
             json_data = {"success" : False}
@@ -252,7 +273,7 @@ def send_location(request):
 
         return JsonResponse(json_data, status = 200, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
-#test 아직 안함
+# 서비스 상태를 변경하는 api (관리자 사용)
 @csrf_exempt
 def modify_state(request):
 
@@ -269,6 +290,7 @@ def modify_state(request):
 
     return JsonResponse(json_data, status = 200, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
+# 아이 정보를 보기 위한 api (관리자 사용)
 @csrf_exempt
 def select_kid_info(request):
     data = json.loads(request.body)
@@ -283,6 +305,7 @@ def select_kid_info(request):
 
     return JsonResponse({'name': kid_info[0], 'age': kid_info[1], 'phone_number': kid_info[2], 'personal_data': kid_info[3]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
+# 아이의 병원 결과를 업데이트하는 api (관리자 전용)
 @csrf_exempt
 def hospital_result(request):
 
@@ -301,7 +324,8 @@ def hospital_result(request):
 
     return JsonResponse({'success': True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
-
+# 서비스를 완료했다고 알리기 위한 api (관리자 전용)
+@csrf_exempt
 def complete_service(request):
 
     data = json.loads(request.body)
@@ -322,8 +346,11 @@ def complete_service(request):
 
     return JsonResponse({'success': True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
+# 서비스가 끝나고 예치금을 변경하기 위한 api (관리자 전용)
+@csrf_exempt
 def modify_deposit(request):
     requestdata = json.loads(request.body)
+    print(requestdata)
     id = requestdata['id']
     amount = requestdata['amount']
 
@@ -334,27 +361,74 @@ def modify_deposit(request):
         cursor.execute(f"""UPDATE account SET money = money + '{amount}' WHERE id = '{id}';""")
 
         return JsonResponse({"success": True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
-    
+
+# 관리자의 위치를 사용자에게 보내주는 api (관리자 전용)
+@csrf_exempt
 def get_location(request):
     
     requestdata = json.loads(request.body)
-    id = requestdata['id']
-    latitude = requestdata['latitude']
-    longitude = requestdata['longitude']
+    print(requestdata)
+    id = 'csw1234'
+    latitude = requestdata['lat']
+    longitude = requestdata['lon']
+    status = requestdata['status']
 
         
     with connection.cursor() as cursor:
+        cursor.execute(f"""select status
+                                from status 
+                                where relax_service_id = (SELECT MAX(id) FROM relax_service WHERE child_account_id = '{id}') 
+                                order by time desc;""")
+        s = [i[0] for i in cursor.fetchall()]
+        if status == 0 and '승인전' not in s:
+                cursor.execute(f"""insert into status (status, time, relax_service_id)
+                                    values ('승인전', NOW() ,(SELECT MAX(id) 
+                                                            FROM relax_service
+                                                            where finish = 0 and child_account_id = '{id}'));""")
+        elif status == 1 and '픽업시작'not in s:
+                cursor.execute(f"""insert into status (status, time, relax_service_id)
+                                    values ('픽업시작', NOW() ,(SELECT MAX(id) 
+                                                            FROM relax_service
+                                                            where finish = 0 and child_account_id = '{id}'));""")
+        elif status == 2 and '픽업완료'not in s:
+                cursor.execute(f"""insert into status (status, time, relax_service_id)
+                                    values ('픽업완료', NOW() ,(SELECT MAX(id) 
+                                                            FROM relax_service
+                                                            where finish = 0 and child_account_id = '{id}'));""")
+        elif status == 3 and '병원호송완료'not in s:
+                cursor.execute(f"""insert into status (status, time, relax_service_id)
+                                    values ('병원호송완료', NOW() ,(SELECT MAX(id) 
+                                                            FROM relax_service
+                                                            where finish = 0 and child_account_id = '{id}'));""")
+        elif status == 4 and '귀가완료'not in s:
+                cursor.execute(f"""insert into status (status, time, relax_service_id)
+                                    values ('귀가완료', NOW() ,(SELECT MAX(id) 
+                                                            FROM relax_service
+                                                            where finish = 0 and child_account_id = '{id}'));""")
+        
+        print(s)
         cursor.execute(f"""insert into real_time_location (time, status_status, status_relax_service_id, latitude, longitude)
-                            values (NOW() , (SELECT status FROM status WHERE time = (SELECT MAX(time) FROM status WHERE relax_service_id = (SELECT MAX(id) FROM relax_service WHERE child_account_id = '{id}'))), (SELECT MAX(id) FROM relax_service WHERE child_account_id = '{id}'), '{latitude}', '{longitude}');""")
+                            values (NOW() , 
+								(SELECT status 
+                                FROM status 
+                                WHERE time = (SELECT MAX(time) 
+											FROM status 
+                                            WHERE relax_service_id = (SELECT MAX(id) 
+																	FROM relax_service 
+                                                                    WHERE child_account_id = '{id}'))), 
+								(SELECT MAX(id) FROM relax_service WHERE child_account_id = '{id}'), 
+                                '{latitude}', 
+                                '{longitude}');""")
         
 
         return JsonResponse({"success": True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
 
+# 위치 api를 사용하기 위한 api (둘다 사용)
 def daum_address(request):
     return render(request, 'main/daum_address.html')\
     
-# 사용자가 결과 보는 api
+# 사용자가 결과 보는 api (사용자 전용)
 def main_result(request): #get
     requestdata = json.loads(request.body)
     id = requestdata['id']
@@ -369,3 +443,54 @@ def main_result(request): #get
         result = cursor.fetchall()[0]
 
         return JsonResponse({"result": result[0]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+
+# 서비스 사용 내역 확인 (사용자 전용)
+@csrf_exempt
+def service_history(request):
+    account_id = request.GET.get('userId', '')
+    with connection.cursor() as cursor:
+        cursor.execute(f"""select distinct date(time), relax_service.hospital, relax_service.result
+                            from relax_service
+                            join status on status.relax_service_id = relax_service.id
+                            where child_account_id = '{account_id}'
+                            order by 1 desc ;""")
+        result = {'result': [ {'date':str(i[0]), 'hospital':i[1], 'detail':i[2]} for i in cursor.fetchall()]}
+    print(result)
+    return JsonResponse(result, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+
+# 모든 계정 정보를 보기 위한 api (관리자 전용)
+@csrf_exempt
+def find_all_account(request):
+    requestdata = json.loads(request.body)
+
+    with connection.cursor() as cursor:
+        cursor.execute(f"""SELECT id, name
+                            FROM account
+                            WHERE id != 'admin'
+                            ORDER BY 1 ;""")
+        
+        result = cursor.fetchall()
+
+        json_data = {"data": [{"id": id, "name": name} for id, name in result]}
+
+        return JsonResponse(json_data, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+
+# 관리자가 서비스 신청한 사용자들을 보기 위한 api (관리자 전용)
+def get_apply_service_list(request):
+    with connection.cursor() as cursor:
+        cursor.execute(f"""select start_location, hospital, arrival_location, child_name, child.phone_number, child.resident_registration_number, real_time_personal_data
+                            from relax_service
+                            join child on relax_service.child_name = child.name
+                            where finish != 1 ;""")
+# *          "start" : 출발 장소 이름,
+# *          "middle" : 중간 장소 이름,
+# *          "final" : 도착 장소 이름,
+# *          "kidName": 아이 이름,
+# *          "phoneNumber": 전화번호,
+# *          "rrn": 주민등록번호,
+# *          "status": 아이 상태
+        result = [{'start':i[0], 'middle':i[1], 'final':i[2], 'kidName':i[3], 'phoneNumber':i[4], 'rrn':i[5], 'status':i[6]} for i in cursor.fetchall()]
+    print(result)
+
+
+    return JsonResponse({'result' : result}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
