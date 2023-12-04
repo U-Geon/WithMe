@@ -258,11 +258,12 @@ def send_location(request):
 
     with connection.cursor() as cursor:
 
-        cursor.execute(f"""SELECT latitude, longitude, time
+        cursor.execute(f"""SELECT latitude, longitude, status.status ,time
                             FROM real_time_location
+                            join status on status.relax_service_id = real_time_location.status_relax_service_id
                             WHERE status_relax_service_id = (SELECT MAX(id) 
 																FROM relax_service 
-                                                                WHERE child_account_id = '{id}')
+                                                                WHERE child_account_id = 'csw1234')
 							order by 3 desc
                             limit 1;""")
         data = cursor.fetchall()
@@ -275,7 +276,7 @@ def send_location(request):
             json_data = {"success" : False}
 
         else:
-            json_data = {"success" : True, "latitude": data[0], "longitude": data[1]}
+            json_data = {"success" : True, "latitude": data[0], "longitude": data[1], 'status' : data[2]}
 
         return JsonResponse(json_data, status = 200, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
