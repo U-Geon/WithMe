@@ -50,7 +50,7 @@ class SignupActivity : AppCompatActivity() {
                 params.put("name", name)
                 params.put("phone_number", phonenum)
                 params.put("zip_code", address)
-                params.put("family", family)
+//                params.put("family", family)
 
                 val request = JsonObjectRequest(
                     Request.Method.POST,
