@@ -10,7 +10,7 @@
     <string name="RRN">주민등록번호</string>
     <string name="next">다음</string>
     <string name="okay">확인</string>
-    <string name="ip">http://192.168.80.102:8000</string>
+    <string name="ip">http://15.164.94.136:8000</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

@@ -42,7 +42,6 @@ class AdminKidInformationActivity : AppCompatActivity() {
         val rrn = binding.rrn
         val status = binding.status
 
-
         val stringRequest = object : StringRequest(
             Method.GET, url,
             Response.Listener { response ->
@@ -56,9 +55,9 @@ class AdminKidInformationActivity : AppCompatActivity() {
                     val result3 = jsonObject.getString("rrn")
                     val result4 = jsonObject.getString("status")
 
-                    kidName.text = result1
+                    kidName.text = "이름: $result1"
                     phoneNumber.text = result2
-                    rrn.text = result3
+                    rrn.text = "주민등록번호: $result3"
                     status.text = result4
 
 
