@@ -359,12 +359,11 @@ def modify_deposit(request):
     print(requestdata)
     id = requestdata['id']
     amount = requestdata['amount']
-
     with connection.cursor() as cursor:
         cursor.execute(f"""insert into money_history (date, money, change_amount, account_id)
                             values (NOW() , ((SELECT money FROM account WHERE id = '{id}') + '{amount}'), '{amount}', '{id}');""")
         
-        cursor.execute(f"""UPDATE account SET money = money + '{amount}' WHERE id = '{id}';""")
+        cursor.execute(f"""UPDATE account SET money = money + {amount} WHERE id = '{id}';""")
 
         return JsonResponse({"success": True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
