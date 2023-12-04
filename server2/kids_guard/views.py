@@ -316,7 +316,7 @@ def select_kid_info(request):
     account_id = request.GET.get('id', '')
  
     with connection.cursor() as cursor:
-        cursor.execute(f"""select name, resident_registration_number, phone_number, personal_data, relax_service.id ,relax_service.real_time_personal_data
+        cursor.execute(f"""select name, resident_registration_number, phone_number, relax_service.real_time_personal_data, relax_service.id
                             from child
                             join relax_service on child.account_id =  '{account_id}'
                             order by 5 desc
