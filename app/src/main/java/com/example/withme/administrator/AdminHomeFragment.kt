@@ -32,7 +32,8 @@ data class Service (
     val kidName: String,
     val phoneNumber: String,
     val rrn: String,
-    val status: String
+    val status: String,
+    val id: String
 )
 
 class AdminHomeFragment: Fragment() {
@@ -75,7 +76,8 @@ class AdminHomeFragment: Fragment() {
                                 serviceResultObject.getString("kidName"), // 아이 이름
                                 serviceResultObject.getString("phoneNumber"), // 전화번호
                                 serviceResultObject.getString("rrn"), // 주민등록번호
-                                serviceResultObject.getString("status") // 아이 상태
+                                serviceResultObject.getString("status"), // 아이 상태
+                                serviceResultObject.getString("id"),
                             )
                         )
                     }
@@ -154,6 +156,7 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
                     intent.putExtra("phoneNumber",phoneNumber)
                     intent.putExtra("rrn",rrn)
                     intent.putExtra("status",utf8Status)
+                    intent.putExtra("userId", service.id)
                     holder.itemView.context.startActivity(intent)
                 }
                 .setNegativeButton("취소") { dialog, _ ->

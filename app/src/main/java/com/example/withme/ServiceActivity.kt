@@ -68,6 +68,9 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         bind = ActivityServiceBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
+        val sharedPrefs: SharedPreferences = getSharedPreferences("status", Context.MODE_PRIVATE)
+        sharedPrefs.edit().putBoolean("status", true).apply()
+
         if (!hasPermission()) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
         } else {
@@ -212,9 +215,6 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun requestData()
     {
-        val sharedPrefs: SharedPreferences = getSharedPreferences("status", Context.MODE_PRIVATE)
-        sharedPrefs.edit().putBoolean("status", true).apply()
-
         thread(start = true) {
             var over: Boolean = false
             while (!over) {
@@ -231,11 +231,12 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                         val result = response.getBoolean("success")
                         if(!result)
                         {
-                            Toast.makeText(this, "관리자가 요청을 수락하지 않음", Toast.LENGTH_SHORT).show()
+                            // Toast.makeText(this, "관리자가 요청을 수락하지 않음", Toast.LENGTH_SHORT).show()
                         } else {
-                            val lat = response.getString("latitude")
-                            val lon = response.getString("longitude")
-                            val status = response.getString("status")
+                            val lat = response.getDouble("latitude")
+                            val lon = response.getDouble("longitude")
+                            val status = response.getInt("status")
+                            Log.d("statusTest", lat.toString() + " / " + lon.toString() + " / " + status.toString())
 
                             if(status.toInt() == 0)
                                 bind.currentStatus.text = "픽업하는 중"
@@ -267,11 +268,12 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        val sharedPrefs: SharedPreferences = getSharedPreferences("status", Context.MODE_PRIVATE)
         sharedPrefs.edit().putBoolean("status", false).apply()
     }
 
-    private fun movePosition(lat: String, lon: String){
-        val position = LatLng(lat.toDouble(), lon.toDouble())
+    private fun movePosition(lat: Double, lon: Double){
+        val position = LatLng(lat, lon)
 
         if(serviceMarker == null) {
             val marker = Marker()

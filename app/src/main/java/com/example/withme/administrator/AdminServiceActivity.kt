@@ -31,6 +31,8 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
 
+    private lateinit var userId: String;
+
     private var currentLat: Double = 0.0
     private var currentLon: Double = 0.0
     // adminStatus -1 : 시작 안함 / 0 : 픽업 중 / 1 : 병원 데려다주는 중 / 2 : 집 데려다주는 중 / 3 : 서비스 완료
@@ -39,7 +41,11 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val sharedPrefs: SharedPreferences = getSharedPreferences("status", Context.MODE_PRIVATE)
+        sharedPrefs.edit().putBoolean("status", true).apply()
+
         bind = ActivityAdminServiceBinding.inflate(layoutInflater)
+        userId = intent.getStringExtra("userId").toString()
 
         setContentView(bind.root)
 
@@ -72,6 +78,8 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                 bind.proceedButton.text = "귀가 완료"
             } else {
                 bind.statusText.text = "귀가 완료함"
+                val sharedPrefs: SharedPreferences = getSharedPreferences("status", Context.MODE_PRIVATE)
+                sharedPrefs.edit().putBoolean("status", false).apply()
                 // 서비스 종료하기
             }
             adminStatus++
@@ -128,8 +136,7 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         params.put("lat", lat.toString())
         params.put("lon", lon.toString())
         params.put("status", status);
-        val sharedPrefs: SharedPreferences = getSharedPreferences("id", Context.MODE_PRIVATE)
-        params.put("id", sharedPrefs.getString("id", ""));
+        params.put("id", userId);
 
         val request = JsonObjectRequest(
             Request.Method.POST,
