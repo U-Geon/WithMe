@@ -47,7 +47,6 @@ class ServiceResultActivity : AppCompatActivity() {
 
                     // json value값 받아서 text로 넣기.
                     val result = jsonObject.getString("result")
-
                     val utf8Result = String(result.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
                     resultText.text = utf8Result
 
