@@ -12,6 +12,7 @@
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,8 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WithMe"
         android:usesCleartextTraffic="true"
-        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
+        <activity
+            android:name=".FaqActivity"
+            android:exported="true" />
         <activity
             android:name=".AddressSearchActivity"
             android:exported="true" />
@@ -36,32 +39,25 @@
             android:exported="true" />
         <activity
             android:name=".administrator.AdminServiceResultWriteActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".administrator.AdminKidInformationActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".administrator.AdminMainActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".DepositChargingHistoryActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".ServiceUsageHistoryActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".ServiceResultActivity"
             android:exported="true" />
         <activity
             android:name=".KidInformationActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".LoginActivity"
             android:exported="true">

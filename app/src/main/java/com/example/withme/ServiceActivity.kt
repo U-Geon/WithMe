@@ -245,7 +245,7 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                                 bind.currentStatus.text = "병원 이동 중"
                             else if(status.toInt() == 2)
                                 bind.currentStatus.text = "아이 귀가 중"
-                            else {
+                            else if(status.toInt() == 3){
                                 bind.currentStatus.text = "귀가 완료"
                                 bind.checkResultButton.visibility = View.VISIBLE
                                 over = true
