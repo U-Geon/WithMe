@@ -165,7 +165,7 @@ def select_deposit(request):
     # account_id = request.GET.get['account_id']
 
     with connection.cursor() as cursor:
-        cursor.execute(f"""SELECT date(date), change_amount, money
+        cursor.execute(f"""SELECT date, change_amount, money
                             FROM money_history
                             WHERE account_id = '{account_id}'
                             ORDER BY 1 ;""")
