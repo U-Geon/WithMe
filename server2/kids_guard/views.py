@@ -316,13 +316,15 @@ def select_kid_info(request):
     account_id = request.GET.get('id', '')
  
     with connection.cursor() as cursor:
-        cursor.execute(f"""select name, resident_registration_number, phone_number, personal_data
+        cursor.execute(f"""select name, resident_registration_number, phone_number, personal_data, relax_service.id ,relax_service.real_time_personal_data
                             from child
-                            where account_id = '{account_id}' ;""")
+                            join relax_service on child.account_id =  '{account_id}'
+                            order by 5 desc
+                            limit 1;""")
         kid_info = cursor.fetchall()[0]
     print(kid_info)
 
-    return JsonResponse({'name': kid_info[0], 'rrn': kid_info[1], 'phone_number': kid_info[2], 'personal_data': kid_info[3]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
+    return JsonResponse({'name': kid_info[0], 'rrn': str(kid_info[1]), 'phone_number': kid_info[2], 'personal_data': kid_info[3]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
 # 아이의 병원 결과를 업데이트하는 api (관리자 전용)
 @csrf_exempt
