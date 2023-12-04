@@ -34,6 +34,7 @@
 > ### 회원가입 페이지 (activity_signup.xml, SignupActivity.kt) (하은영)
   - ConstraintLayout 사용.
   - 아이디, 비밀번호, 이름, 전화번호, 주소 입력할 수 있는 editText 사용.
+  - 본인인증을 위한 iamport api 사용.
   - 가족 관계 증명서 이미지를 올리기 위한 ImageView, READ_MEDIA_IMAGES 사용.
   - 회원가입 버튼 클릭 시, 서버로 데이터 전송.
 
