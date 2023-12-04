@@ -62,24 +62,6 @@ class AdminHomeFragment: Fragment() {
             Response.Listener { response ->
                 // 응답 처리
                 try {
-
-                    /**
-                     * {
-                     *   "result" : [
-                     *      {
-                     *          "start" : 출발 장소 이름,
-                     *          "middle" : 중간 장소 이름,
-                     *          "final" : 도착 장소 이름,
-                     *          "kidName": 아이 이름,
-                     *          "phoneNumber": 전화번호,
-                     *          "rrn": 주민등록번호,
-                     *          "status": 아이 상태
-                     *       }
-                     *       ...
-                     *   ],
-                     * }
-                     */
-
                     val jsonObject = JSONObject(response)
                     val serviceResult = jsonObject.getJSONArray("result") // jsonArray 받아오기
 
@@ -161,10 +143,7 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
             val status = service.status
             val utf8Status = String(status.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
 
-
-
             dialogBuilder.setMessage("**동행 정보**\n$utf8Start - $utf8Middle - $utf8Final\n\n**아이 인적사항**\n이름: $kidName\n전화번호: $phoneNumber\n주민등록번호: $rrn\n\n**아이 상태**\n$utf8Status")
-//                .setCancelable(true)
                 .setPositiveButton("동행") { dialog, _ ->
                     // 버튼 눌렀을 때 동작
                     val intent = Intent(holder.itemView.context, AdminServiceActivity::class.java) // 지도 액티비티로 이동!
@@ -197,7 +176,6 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        val button: Button = itemView.findViewById(R.id.service_result_button)
         val layout: ConstraintLayout = itemView.findViewById(R.id.list_item)
         val textView: TextView? = itemView.findViewById(R.id.service_result_text)
     }

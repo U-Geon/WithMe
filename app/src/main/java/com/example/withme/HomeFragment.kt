@@ -58,17 +58,15 @@ class HomeFragment : Fragment() {
             alertDialogBuilder.setMessage("로그아웃하시겠습니까?")
 
             alertDialogBuilder.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
-                var sharedPreferences : SharedPreferences = (activity as AppCompatActivity).getPreferences(Context.MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.remove("id")
-                editor.apply()
+                var sharedPreferences : SharedPreferences ?= (activity as AppCompatActivity).getSharedPreferences("other", Context.MODE_PRIVATE)
+                sharedPreferences?.edit()?.remove("id")?.apply()
 
                 val intent = Intent(requireActivity(), LoginActivity::class.java)  // 로그아웃 후, 로그인 액티비티로 이동
                 startActivity(intent)
             })
 
             alertDialogBuilder.setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->
-                Toast.makeText(requireContext(), "취소되었습니다.", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
             })
 
             alertDialogBuilder.create().show()

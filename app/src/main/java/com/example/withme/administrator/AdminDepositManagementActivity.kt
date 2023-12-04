@@ -96,8 +96,8 @@ class AdminDepositManagementActivity : AppCompatActivity() {
         )
         // Volley 요청을 큐에 추가
         Volley.newRequestQueue(this).add(request)
-
-        // 예치금 플러스 관련
+        
+      // 예치금 플러스 관련
         val plusDepositEdit: EditText = findViewById(R.id.et_plus_deposit)
         val plusDepositButton: Button = findViewById(R.id.btn_plus_deposit)
         plusDepositButton.setOnClickListener {
