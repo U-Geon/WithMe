@@ -252,7 +252,7 @@ def get_faq(request):
 @csrf_exempt
 def send_location(request):
 
-    requestdata = json.loads(request.body())
+    requestdata = json.loads(request.body)
     ##id도 보내줘요 ㅠㅠ
     id = requestdata['id']
 
@@ -263,7 +263,7 @@ def send_location(request):
                             join status on status.relax_service_id = real_time_location.status_relax_service_id
                             WHERE status_relax_service_id = (SELECT MAX(id) 
 																FROM relax_service 
-                                                                WHERE child_account_id = 'csw1234')
+                                                                WHERE child_account_id = '{id}')
 							order by 3 desc
                             limit 1;""")
         data = cursor.fetchall()
