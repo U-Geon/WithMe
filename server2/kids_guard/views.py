@@ -461,6 +461,7 @@ def main_result(request): #get
                             where child_account_id = '{id}');""")
         
         result = cursor.fetchall()[0]
+        print(result)
 
         return JsonResponse({"result": result[0]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
