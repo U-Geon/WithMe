@@ -249,6 +249,8 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                                 bind.currentStatus.text = "귀가 완료"
                                 bind.checkResultButton.visibility = View.VISIBLE
                                 over = true
+                                val sharedPrefs: SharedPreferences = getSharedPreferences("status", Context.MODE_PRIVATE)
+                                sharedPrefs.edit().putBoolean("status", false).apply()
                             }
 
                             Toast.makeText(this, "관리자 위치 : $lat . $lon", Toast.LENGTH_SHORT).show()
@@ -268,9 +270,6 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                 Thread.sleep(2000)
             }
         }
-
-        val sharedPrefs: SharedPreferences = getSharedPreferences("status", Context.MODE_PRIVATE)
-        sharedPrefs.edit().putBoolean("status", false).apply()
     }
 
     private fun movePosition(lat: Double, lon: Double){

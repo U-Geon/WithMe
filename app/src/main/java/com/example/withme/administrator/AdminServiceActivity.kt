@@ -17,6 +17,7 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.withme.MainActivity
+import com.example.withme.ServiceActivity
 import org.json.JSONObject
 import org.json.JSONException
 import kotlin.concurrent.thread
@@ -69,10 +70,13 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                         sendLocation(currentLat, currentLon, adminStatus)
                         Thread.sleep(2000)
 
-                        if(adminStatus == 3)
+                        if(adminStatus == 3) {
+                            sendLocation(currentLat, currentLon, adminStatus)
                             break
+                        }
                     }
                     val intent = Intent(this, AdminServiceResultWriteActivity::class.java)
+                    intent.putExtra("userId", userId)
                     startActivity(intent)
                 }
             } else if(adminStatus == 0) {

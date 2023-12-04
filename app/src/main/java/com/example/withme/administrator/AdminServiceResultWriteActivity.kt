@@ -35,10 +35,11 @@ class AdminServiceResultWriteActivity : AppCompatActivity() {
 
             if(text.isNotEmpty()) {
 
-                val url = resources.getString(R.string.ip) + "/admin/result"
-
+                val url = resources.getString(R.string.ip) + "/hospital_result/"
+                var userId = intent.getStringExtra("userId").toString()
                 val params = JSONObject()
                 params.put("result", text)
+                params.put("account_id", userId)
 
                 val request = object : JsonObjectRequest (
                     Method.POST, url, params,
