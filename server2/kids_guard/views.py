@@ -252,7 +252,7 @@ def get_faq(request):
 @csrf_exempt
 def send_location(request):
 
-    requestdata = json.loads(request)
+    requestdata = json.loads(request.body())
     ##id도 보내줘요 ㅠㅠ
     id = requestdata['id']
 
