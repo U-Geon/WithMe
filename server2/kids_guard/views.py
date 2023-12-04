@@ -38,7 +38,7 @@ def register(request):
     with connection.cursor() as cursor:
         cursor.execute(f"""insert into account (id, password, name, zip_code, phone_number)
                             values ('{id}', '{password}', '{name}', '{zip_code}', '{phone_number}') ;""")
-    return HttpResponse("OK", status = 200)
+    return JsonResponse({"success":True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
 # 로그인 api (사용자 사용)
 @csrf_exempt
@@ -256,17 +256,18 @@ def send_location(request):
     ##id도 보내줘요 ㅠㅠ
     id = 'csw1234'
 
-
     with connection.cursor() as cursor:
+
         cursor.execute(f"""SELECT latitude, longitude, time
                             FROM real_time_location
                             WHERE status_relax_service_id = (SELECT MAX(id) 
 																FROM relax_service 
-                                                                WHERE child_account_id = 'csw1234')
+                                                                WHERE child_account_id = '{id}')
 							order by 3 desc
                             limit 1;""")
-
-        data = [i for i in cursor.fetchall()[0]]
+        data = cursor.fetchall()
+        if len(data) != 0:
+            data = [i for i in cursor.fetchall()[0]]
         print(data)
 
         if data == ():
