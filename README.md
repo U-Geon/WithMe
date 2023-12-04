@@ -2,15 +2,15 @@
 2023 - 2학기 모바일프로그래밍 성동구 우리 아이 안심 서비스 앱 (WithMe)
 
 ## 개발 주제
-맞벌이 가정을 위해 병원에 가야하는 아이를 위한 아이 안심 동행 서비스
+맞벌이 가정을 위해 병원에 가야 하는 아이를 위한 아이 안심 동행 서비스
 
 ## 개발 기간
-- 23.09.12 ~ 23.12.6
+- 23.09.12 ~ 23.12.5
 
 ## 개발 환경
 - Tool: Android Studio
 - Language: Kotlin
-- Real Device: 2개 Galaxy Z flip 3
+- Real Device: Galaxy Z flip 3 2개
 - Android Virtual Device (AVD) : Pixel 2 API 29
 
 ## 설치 및 실행 방법
