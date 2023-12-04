@@ -252,9 +252,9 @@ def get_faq(request):
 @csrf_exempt
 def send_location(request):
 
-    requestdata = request
+    requestdata = json.loads(request)
     ##id도 보내줘요 ㅠㅠ
-    id = 'csw1234'
+    id = requestdata['id']
 
     with connection.cursor() as cursor:
 
@@ -384,7 +384,7 @@ def get_location(request):
     
     requestdata = json.loads(request.body)
     print(requestdata)
-    id = 'csw1234'
+    id = requestdata['id']
     latitude = requestdata['lat']
     longitude = requestdata['lon']
     status = requestdata['status']
