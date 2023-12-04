@@ -16,7 +16,7 @@ import org.json.JSONObject
 
 class AdminDepositManagementActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdminDepositManagementBinding
-    private var moneyInt: Int = 0
+    private var money: Int = 0
 
     private fun sendMoneyUpdateRequest(updatedMoney: Int) {
         val sharedPreference = getSharedPreferences("other", 0)  // SharedPreferences 인스턴스
@@ -83,9 +83,8 @@ class AdminDepositManagementActivity : AppCompatActivity() {
                             val phonenum = response.getString("phone_number")
                             binding.tvUserNamePhone.text = "($name, $phonenum)"
 
-                            val money = response.getString("money")
-                            moneyInt = money.toInt()
-                            binding.tvCurrentDeposit.text = "현재 예치금: ${moneyInt}원"
+                            money = response.getInt("money")
+                            binding.tvCurrentDeposit.text = "현재 예치금: ${money}원"
                         } catch (e: JSONException) {
                             e.printStackTrace()
                         }
@@ -110,8 +109,8 @@ class AdminDepositManagementActivity : AppCompatActivity() {
             // 입력된 숫자가 비어있지 않다면 더하도록
             if (depositAmountText.isNotEmpty()) {
                 val depositAmount: Int = depositAmountText.toInt()
-                moneyInt += depositAmount
-                binding.tvCurrentDeposit.text = "현재 예치금: ${moneyInt}원"
+                money += depositAmount
+                binding.tvCurrentDeposit.text = "현재 예치금: ${money}원"
             }
         }
 
@@ -121,10 +120,10 @@ class AdminDepositManagementActivity : AppCompatActivity() {
         minusDepositButton.setOnClickListener {
             val depositAmountText: String = minusDepositEdit.text.toString()
             // 입력된 숫자가 비어있지 않고, 현재 예치금에서 입력된 숫자를 뺐을 때 0 이상일 때만 빼도록
-            if (depositAmountText.isNotEmpty() && moneyInt - depositAmountText.toInt() >= 0) {
+            if (depositAmountText.isNotEmpty() && money - depositAmountText.toInt() >= 0) {
                 val depositAmount: Int = depositAmountText.toInt()
-                moneyInt -= depositAmount
-                binding.tvCurrentDeposit.text = "현재 예치금: ${moneyInt}원"
+                money -= depositAmount
+                binding.tvCurrentDeposit.text = "현재 예치금: ${money}원"
             }
         }
 
@@ -132,7 +131,7 @@ class AdminDepositManagementActivity : AppCompatActivity() {
         val signupFinButton: Button = findViewById(R.id.btn_signup_fin)
         signupFinButton.setOnClickListener {
             // 서버에 moneyInt 값을 업데이트
-            sendMoneyUpdateRequest(moneyInt)
+            sendMoneyUpdateRequest(money)
         }
     }
 }
