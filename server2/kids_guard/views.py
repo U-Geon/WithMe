@@ -268,10 +268,11 @@ def send_location(request):
 							order by 4 desc
                             limit 1;""")
         data = cursor.fetchall()
+        print(data)
         print('-------------------------')
         if len(data) != 0:
             data = [i for i in data[0]]
-        print(data)
+        
 
         if data == ():
             json_data = {"success" : False}
@@ -511,3 +512,22 @@ def get_apply_service_list(request):
 
 
     return JsonResponse({'result' : result}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
+
+def search_users(request):
+    requestdata = json.loads(request.body)
+
+    id = requestdata['search_query']
+
+
+
+    with connection.cursor() as cursor:
+        cursor.execute(f"""SELECT id, name
+                            FROM account
+                            WHERE id = '{id}'""")
+        
+        
+        result = cursor.fetchall()[0]
+
+        json_data = {"id" : result[0], "name" : result[1]}
+
+        return JsonResponse(json_data, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')

@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from kids_guard.views import register, login, apply_service, select_state, select_deposit, edit_account_info, delete_account, get_faq, send_location, modify_state, select_kid_info, hospital_result, select_name_money_count_phone_number, complete_service, get_location, modify_deposit, daum_address, find_password, main_result, find_all_account, get_apply_service_list, service_history
+from kids_guard.views import register, login, apply_service, select_state, select_deposit, edit_account_info, delete_account, get_faq, send_location, modify_state, select_kid_info, hospital_result, select_name_money_count_phone_number, complete_service, get_location, modify_deposit, daum_address, find_password, main_result, find_all_account, get_apply_service_list, service_history, search_users
 
 urlpatterns = [
     # 사용자 전용
@@ -45,5 +45,6 @@ urlpatterns = [
     
     # 주소 검색을 위한 api
     path('daum_address.html/', daum_address, name='daum_address'),
+    path('search_users/',search_users, name='search_users' )
 
 ]
