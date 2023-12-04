@@ -58,10 +58,12 @@ class AdminKidInformationActivity : DialogFragment() {
                     val result3 = jsonObject.getString("rrn")
                     val result4 = jsonObject.getString("personal_data")
 
-                    kidName.text = "이름: $result1"
+                    val Kidname = String(result1.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
+                    kidName.text = "이름: $Kidname"
                     phoneNumber.text = result2
                     rrn.text = "주민등록번호: $result3"
-                    status.text = result4
+                    val Status = String(result4.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
+                    status.text = Status
 
 
                 } catch (e: JSONException) {
