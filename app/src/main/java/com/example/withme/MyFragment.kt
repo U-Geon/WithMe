@@ -92,7 +92,7 @@ class MyFragment : Fragment() {
             } else if (item.mytext == "예치금 충전 내역") {
                 val intent = Intent(requireContext(), DepositChargingHistoryActivity::class.java)
                 startActivity(intent)
-            } else if (item.mytext == "아동상태 및 병원동행 결과 모아보기") {
+            } else if (item.mytext == "서비스 사용 내역") {
                 val intent = Intent(requireContext(), ServiceUsageHistoryActivity::class.java)
                 startActivity(intent)
             }
