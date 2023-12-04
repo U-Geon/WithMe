@@ -172,7 +172,7 @@ def select_deposit(request):
     
         data = cursor.fetchall()
         print(data)
-        json_data = {"service": [{"date": str(date), "amount": int(expenditure), "balalce": int(balance)} for date, expenditure, balance in data]}
+        json_data = {"service": [{"date": str(date), "amount": int(expenditure), "balance": int(balance)} for date, expenditure, balance in data]}
         print(json_data)
         return JsonResponse(json_data, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
