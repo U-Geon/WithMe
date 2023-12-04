@@ -106,6 +106,7 @@ class AdminDepositManagementActivity : AppCompatActivity() {
             if (depositAmountText.isNotEmpty()) {
                 val depositAmount: Int = depositAmountText.toInt()
                 money = originMoney + depositAmount
+                originMoney = money
                 binding.tvExpectationDeposit.text = "최종 예치금: ${money}원"
             }
         }
@@ -118,7 +119,8 @@ class AdminDepositManagementActivity : AppCompatActivity() {
             // 입력된 숫자가 비어있지 않고, 현재 예치금에서 입력된 숫자를 뺐을 때 0 이상일 때만 빼도록
             if (depositAmountText.isNotEmpty() && money - depositAmountText.toInt() >= 0) {
                 val depositAmount: Int = depositAmountText.toInt()
-                money = originMoney + depositAmount
+                money = originMoney - depositAmount
+                originMoney = money
                 binding.tvExpectationDeposit.text = "최종 예치금: ${money}원"
             }
         }
@@ -128,6 +130,9 @@ class AdminDepositManagementActivity : AppCompatActivity() {
         signupFinButton.setOnClickListener {
             // 서버에 moneyInt 값을 업데이트
             sendMoneyUpdateRequest(money)
+            binding.etPlusDeposit.text = null
+            binding.etMinusDeposit.text = null
+            Toast.makeText(this, "최종 예치금 ${money}로 수정 완료", Toast.LENGTH_SHORT).show()
         }
     }
 }
