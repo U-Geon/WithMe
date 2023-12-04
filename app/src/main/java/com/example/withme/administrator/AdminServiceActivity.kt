@@ -59,6 +59,7 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                         if(adminStatus == 3) {
                             val intent = Intent(this, AdminServiceResultWriteActivity::class.java)
                             startActivity(intent)
+                            break
                         }
                     }
                 }
