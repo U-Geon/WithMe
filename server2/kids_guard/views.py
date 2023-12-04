@@ -451,8 +451,7 @@ def daum_address(request):
     
 # 사용자가 결과 보는 api (사용자 전용)
 def main_result(request): #get
-    requestdata = json.loads(request.body)
-    id = requestdata['id']
+    id = request.GET.get('userId', '')
 
     with connection.cursor() as cursor:
         cursor.execute(f"""SELECT result
