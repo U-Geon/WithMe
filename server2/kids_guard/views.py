@@ -255,6 +255,7 @@ def send_location(request):
     requestdata = request.GET.get('id', '')
     ##id도 보내줘요 ㅠㅠ
     id = requestdata
+    print(id)
 
     with connection.cursor() as cursor:
 
