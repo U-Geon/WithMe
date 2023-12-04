@@ -129,7 +129,8 @@ class AdminDepositManagementActivity : AppCompatActivity() {
         val signupFinButton: Button = findViewById(R.id.btn_signup_fin)
         signupFinButton.setOnClickListener {
             // 서버에 moneyInt 값을 업데이트
-            sendMoneyUpdateRequest(money)
+            val amount = money-originMoney
+            sendMoneyUpdateRequest(amount)
             binding.etPlusDeposit.text = null
             binding.etMinusDeposit.text = null
             Toast.makeText(this, "최종 예치금 ${money}로 수정 완료", Toast.LENGTH_SHORT).show()
