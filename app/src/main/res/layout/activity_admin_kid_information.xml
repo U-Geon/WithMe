@@ -53,12 +53,6 @@
             android:layout_gravity="center" />
 
         <TextView
-            android:id="@+id/phone_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-        <TextView
             android:id="@+id/rrn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
