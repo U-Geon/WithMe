@@ -139,13 +139,14 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
             val utf8Final = String(final.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
 
             val kidName = service.kidName
+            val utf8KidName = String(kidName.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
             val phoneNumber = service.phoneNumber
             val rrn = service.rrn
 
             val status = service.status
             val utf8Status = String(status.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
 
-            dialogBuilder.setMessage("**동행 정보**\n$utf8Start - $utf8Middle - $utf8Final\n\n**아이 인적사항**\n이름: $kidName\n전화번호: $phoneNumber\n주민등록번호: $rrn\n\n**아이 상태**\n$utf8Status")
+            dialogBuilder.setMessage("**동행 정보**\n$utf8Start - $utf8Middle - $utf8Final\n\n**아이 인적사항**\n이름: $utf8KidName\n전화번호: $phoneNumber\n주민등록번호: $rrn\n\n**아이 상태**\n$utf8Status")
                 .setPositiveButton("동행") { dialog, _ ->
                     // 버튼 눌렀을 때 동작
                     val intent = Intent(holder.itemView.context, AdminServiceActivity::class.java) // 지도 액티비티로 이동!
