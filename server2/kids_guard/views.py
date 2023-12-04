@@ -313,8 +313,7 @@ def modify_state(request):
 # 아이 정보를 보기 위한 api (관리자 사용)
 @csrf_exempt
 def select_kid_info(request):
-    data = json.loads(request.body)
-    account_id = data['account_id']
+    account_id = request.GET.get('id', '')
 
     with connection.cursor() as cursor:
         cursor.execute(f"""select name, age, phone_number, personal_data
