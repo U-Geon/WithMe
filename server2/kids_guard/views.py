@@ -80,6 +80,7 @@ def find_password(request):
                             from account
                             where id = "{id}" ;""")
         password = (cursor.fetchone())[0]
+        print(password)
 
     #response
     #password
