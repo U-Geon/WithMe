@@ -471,7 +471,7 @@ def service_history(request):
         cursor.execute(f"""select distinct date(time), relax_service.hospital, relax_service.result
                             from relax_service
                             join status on status.relax_service_id = relax_service.id
-                            where child_account_id = '{account_id}'
+                            where child_account_id = '{account_id}' and finish = 1
                             order by 1 desc ;""")
         result = {'service': [ {'date':str(i[0]), 'hospital':i[1], 'detail':i[2]} for i in cursor.fetchall()]}
     print(result)
