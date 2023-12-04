@@ -21,7 +21,7 @@ urlpatterns = [
     # 사용자 전용
     path('register/', register, name = 'register'), 
     path('login/', login, name = 'login'),
-    path('find_password/', find_password, name = 'find_password'), #비밀번호 찾기
+    path('find_pw/', find_password, name = 'find_password'), #비밀번호 찾기
     path('apply_service/', apply_service, name='apply_service'), # 출발 장소, 도착 장소를 필수로 입력 받고, 병원 정보, 신청 시점의 아이 정보를 입력으로 받음 -> db에 잘 들어갔으면 response로 신청완료됐다 응답
     path('select_state/', select_state, name = 'select_state'), #
     path('select_deposit/', select_deposit, name ='select_dsposit'),
