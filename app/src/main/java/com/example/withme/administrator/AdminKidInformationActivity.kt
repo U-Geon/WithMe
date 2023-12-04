@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +37,8 @@ class AdminKidInformationActivity : DialogFragment() {
          */
 
         // 아이 정보 받아오기
-        val url = resources.getString(R.string.ip) + "/admin_kid_info"
+        Log.d("test", arguments?.getString("id").toString())
+        val url = resources.getString(R.string.ip) + "/select_kid_info?id=" + arguments?.getString("id").toString()
 
         val phoneNumber = binding.phoneNumber
         val kidName = binding.kidName
@@ -51,10 +53,10 @@ class AdminKidInformationActivity : DialogFragment() {
                     val jsonObject = JSONObject(response)
 
                     // json value값 받아서 text로 넣기.
-                    val result1 = jsonObject.getString("kidName")
-                    val result2 = jsonObject.getString("phoneNumber")
+                    val result1 = jsonObject.getString("name")
+                    val result2 = jsonObject.getString("phone_number")
                     val result3 = jsonObject.getString("rrn")
-                    val result4 = jsonObject.getString("status")
+                    val result4 = jsonObject.getString("personal_data")
 
                     kidName.text = "이름: $result1"
                     phoneNumber.text = result2

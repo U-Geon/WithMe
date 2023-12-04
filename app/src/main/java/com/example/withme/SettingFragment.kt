@@ -47,6 +47,11 @@ class SettingFragment : Fragment() {
         val sharedPreference : SharedPreferences = (activity as AppCompatActivity).getSharedPreferences("other", 0)
         val userId = sharedPreference.getString("id", "")
 
+        binding.faqButton.setOnClickListener {
+            val intent = Intent(requireActivity(), FaqActivity::class.java)  // 로그아웃 후, 로그인 액티비티로 이동
+            startActivity(intent)
+        }
+
         binding.notificationToggle.setOnCheckedChangeListener { _, isChecked ->
             editor.putBoolean("NotificationEnable", isChecked)
         }

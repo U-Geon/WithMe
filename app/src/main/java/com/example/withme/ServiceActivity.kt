@@ -68,9 +68,6 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         bind = ActivityServiceBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
-        val sharedPrefs: SharedPreferences = getSharedPreferences("status", Context.MODE_PRIVATE)
-        sharedPrefs.edit().putBoolean("status", true).apply()
-
         if (!hasPermission()) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
         } else {
@@ -94,12 +91,16 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         bind.checkResultButton.setOnClickListener {
             val intent = Intent(this, ServiceResultActivity::class.java)
             val sharedPrefs: SharedPreferences = getSharedPreferences("other", 0)
-            intent.putExtra("userId", sharedPrefs.getString("id", ""))
+            intent.putExtra("userId", sharedPrefs.getString("id",
+                ""))
             startActivity(intent)
         }
 
         val sharedPreference = getSharedPreferences("other", 0)
         val userId = sharedPreference.getString("id", "")
+
+        val sharedPrefs: SharedPreferences = getSharedPreferences("status", Context.MODE_PRIVATE)
+        sharedPrefs.edit().putBoolean("status", true).apply()
 
         bind.finalSubmitButton.setOnClickListener {
             val url = resources.getString(R.string.ip) + "/apply_service/"

@@ -49,7 +49,7 @@ class HomeFragment : Fragment() {
         // 동행상황 바로가기 버튼 클릭 시
         binding?.btnSituation?.setOnClickListener {
             if (sharedPrefs.getBoolean("status", false) == true) {
-                val intent = Intent(ServiceActivity(), ServiceActivity::class.java)
+                val intent = Intent(requireActivity(), ServiceActivity::class.java)
                 startActivity(intent)
             } else {
                 Toast.makeText(activity, "서비스 사용 중이 아닙니다.", Toast.LENGTH_SHORT).show()

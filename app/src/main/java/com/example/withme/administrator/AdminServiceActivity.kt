@@ -58,6 +58,9 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
 
         bind.checkStatusButton.setOnClickListener {
             var dialog = AdminKidInformationActivity()
+            val args = Bundle()
+            args.putString("id", userId)
+            dialog.arguments = args
             dialog.show(supportFragmentManager, "AdminKidInformationActivity")
         }
 
