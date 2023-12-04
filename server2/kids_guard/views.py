@@ -259,12 +259,12 @@ def send_location(request):
 
     with connection.cursor() as cursor:
 
-        cursor.execute(f"""SELECT latitude, longitude, status.status ,real_time_location.time
+        cursor.execute(f"""SELECT latitude, longitude, status.status ,status.time
                             FROM real_time_location
                             join status on status.relax_service_id = real_time_location.status_relax_service_id
                             WHERE status_relax_service_id = (SELECT MAX(id) 
 																FROM relax_service 
-                                                                WHERE child_account_id = '{id}')
+                                                                WHERE child_account_id = 'a')
 							order by 4 desc
                             limit 1;""")
         data = cursor.fetchall()
@@ -285,7 +285,7 @@ def send_location(request):
                 data[2] = 0
             elif(data[2] == '픽업완료'):
                 data[2] = 1
-            elif(data[2] == '픽업시작'):
+            elif(data[2] == '병원호송완료'):
                 data[2] = 2
             elif(data[2] == '귀가완료'):
                 data[2] = 3
@@ -334,12 +334,14 @@ def hospital_result(request):
     result = data['result']
 
     with connection.cursor() as cursor:
+
         cursor.execute(f"""update relax_service
                             set result = '{result}'
                             where id = (select id
                                         from (select max(id) id
                                                 from relax_service
                                                 where child_account_id = '{account_id}') tmp) ;""")
+        cursor.execute(f"""UPDATE relax_service SET finish = 1 WHERE id = (select MAX(tmp.ID) FROM (SELECT id ID FROM relax_service WHERE child_account_id = '{account_id}') tmp);""")
     
 
     return JsonResponse({'success': True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
@@ -423,7 +425,7 @@ def get_location(request):
                 cursor.execute(f"""insert into status (status, time, relax_service_id)
                                     values ('귀가완료', NOW() ,(SELECT MAX(id) 
                                                             FROM relax_service
-                                                            where finish = 1 and child_account_id = '{id}'));""")
+                                                            where finish = 0 and child_account_id = '{id}'));""")
         
         print(s)
         cursor.execute(f"""insert into real_time_location (time, status_status, status_relax_service_id, latitude, longitude)
