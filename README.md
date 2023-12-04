@@ -38,7 +38,7 @@
   - 가족 관계 증명서 이미지를 올리기 위한 ImageView, READ_MEDIA_IMAGES 사용.
   - 회원가입 버튼 클릭 시, 서버로 데이터 전송.
 
-> ### 아이디 / 비밀번호 찾기 페이지 (IdFindFragment.kt, PwFindFragment.kt) (곽우진)
+> ### 아이디 / 비밀번호 찾기 페이지 (fragment_id_find.xml, IdFindFragment.kt, fragment_pw_find.xml, PwFindFragment.kt) (곽우진)
   - 아이디 찾기, 비밀번호 찾기 프라그먼트 사용
   - 
 
@@ -70,7 +70,7 @@
   - 이름, 전화번호, 주민등록번호, 아이 상태 입력할 수 있는 editText 사용 
   - 이후 입력한 정보를 다음 메인 서비스 액티비티에 putExtra로 값을 넘겨줌.
 
-> ### 서비스 페이지 (곽우진)
+> ### 서비스 페이지 (activity_service.xml, ServiceActivity.kt) (곽우진)
   - 여기에 작성해줘
   - ㅁㄴㅇㄹ
 
@@ -83,23 +83,23 @@
   - 사용자의 정보(이름, 서비스 이용 횟수, 현재 예치금)을 확인할 수 있는 페이지.
   - RecyclerView를 사용하여 예치금 입금하기, 예치금 충전 내역, 서비스 사용 내역 리스트 구현 -> 각각의 기능이 있는 페이지를 라우팅.
 
-> ### 예치금 결제하기 (PaymentActivity.kt) (하은영)
+> ### 예치금 결제하기 (activity_payment.xml, PaymentActivity.kt) (하은영)
   - 결제 api, 가상계좌의 방법 모색 -> 실제로 사용하려면 사업자 등록증 혹은 비용 문제 발생: 사용자가 관리자 계좌로 입금하게 되면, 관리자가 직접 예치금을 관리하는 방식으로 구현.
   - TextView를 사용하여 계좌번호 안내.
   - 자세한 방식은 이후 관리자앱에서 설명.
 
-> ### 예치금 내역 페이지(DepositChargingHistoryActivity.kt) (유 건)
+> ### 예치금 내역 페이지 (activity_deposit_charging_history.xml DepositChargingHistoryActivity.kt) (유 건)
   - 사용자가 사용한 예치금 내역을 볼 수 있는 페이지
   - RecyclerView를 사용하여 예치금 내역을 보여주는 item 여러 개 반복 생성 
   - item에는 예치금 사용 날짜, 사용 금액, 남은 잔액 등을 나타냄. 
 
-> ### 서비스 사용 내역 페이지(ServiceUsageHistoryActivity.kt) (유 건)
+> ### 서비스 사용 내역 페이지 (activity_service_usage_history.xml, ServiceUsageHistoryActivity.kt) (유 건)
   - 사용자가 사용한 서비스 내역을 볼 수 있는 페이지
   - RecyclerView를 사용하여 서비스 사용 내역을 볼 수 있는 item을 여러 개 반복 생성
   - 각 item에는 서비스 사용 날짜, 서비스 사용 병원, 우측 버튼이 위치합니다.
     - 우측 버튼 클릭 시 괸리자가 입력한 세부 내역을 볼 수 있습니다.
    
-> ### 메인 페이지 - 설정 프래그먼트(SettingFragment.kt) (곽우진)
+> ### 메인 페이지 - 설정 프래그먼트 (fragment_setting.xml, SettingFragment.kt) (곽우진)
   - 앱의 설정 기능을 담당하는 페이지
   - 여기다 적어줘
 
@@ -112,7 +112,7 @@
     - 동행 버튼 클릭 시 관리자 서비스 페이지로 이동할 수 있음.
     - 취소 시 모달창을 닫을 수 있음.
 
-> ### 서비스 페이지(AdminServiceActivity.kt) (곽우진)
+> ### 서비스 페이지(activity_admin_service.xml, AdminServiceActivity.kt) (곽우진)
   - 여기에 작성해줘
   - ㅁㄴㅇㄹ
     
