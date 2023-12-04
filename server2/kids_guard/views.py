@@ -265,7 +265,7 @@ def send_location(request):
                             WHERE status_relax_service_id = (SELECT MAX(id) 
 																FROM relax_service 
                                                                 WHERE child_account_id = '{id}')
-							order by 3 desc
+							order by 4 desc
                             limit 1;""")
         data = cursor.fetchall()
         print('--------------')
@@ -423,7 +423,7 @@ def get_location(request):
                 cursor.execute(f"""insert into status (status, time, relax_service_id)
                                     values ('귀가완료', NOW() ,(SELECT MAX(id) 
                                                             FROM relax_service
-                                                            where finish = 0 and child_account_id = '{id}'));""")
+                                                            where finish = 1 and child_account_id = '{id}'));""")
         
         print(s)
         cursor.execute(f"""insert into real_time_location (time, status_status, status_relax_service_id, latitude, longitude)
@@ -437,7 +437,7 @@ def get_location(request):
                                                                     WHERE child_account_id = '{id}'))), 
 								(SELECT MAX(id) FROM relax_service WHERE child_account_id = '{id}'), 
                                 '{latitude}', 
-                                '{longitude}');""")
+                                '{longitude}') ;""")
         
 
         return JsonResponse({"success": True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
