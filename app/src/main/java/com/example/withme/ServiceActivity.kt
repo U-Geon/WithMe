@@ -221,6 +221,8 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                 Log.d("test", "실시간 위치 요청")
                 val url = resources.getString(R.string.ip) + "/send_location/"
                 val params = JSONObject()
+                val sharedPrefs: SharedPreferences = getSharedPreferences("id", Context.MODE_PRIVATE)
+                params.put("id", sharedPrefs.getString("id", ""));
                 val request = JsonObjectRequest(
                     Request.Method.GET,
                     url,

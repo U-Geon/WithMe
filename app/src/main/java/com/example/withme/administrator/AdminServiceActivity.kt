@@ -1,6 +1,8 @@
 package com.example.withme.administrator
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import com.example.withme.R
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
@@ -126,7 +128,8 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         params.put("lat", lat.toString())
         params.put("lon", lon.toString())
         params.put("status", status);
-
+        val sharedPrefs: SharedPreferences = getSharedPreferences("id", Context.MODE_PRIVATE)
+        params.put("id", sharedPrefs.getString("id", ""));
 
         val request = JsonObjectRequest(
             Request.Method.POST,
