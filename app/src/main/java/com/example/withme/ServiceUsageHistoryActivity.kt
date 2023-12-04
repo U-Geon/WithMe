@@ -107,14 +107,16 @@ class UsageHistoryAdapter(private val activity: Activity) : RecyclerView.Adapter
 
         // 첫 번째, 두 번째 값은 TextView에 띄운다.
         holder.dateTextView.text = usage.date
-        holder.hospitalTextView.text = usage.hospital
+        val hospital = String(usage.hospital.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
+        holder.hospitalTextView.text = hospital
 
         // 세 번째 값은 화살표를 누르면 세부적으로 볼 수 있게끔 한다.
         holder.detailButton.setOnClickListener {
             // 세부 내역을 보여주는 팝업 창을 띄운다.
             val dialogBuilder = AlertDialog.Builder(holder.itemView.context)
 
-            dialogBuilder.setMessage(usage.detail)
+            val detail = String(usage.detail.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
+            dialogBuilder.setMessage(detail)
                 .setTitle("세부 내역")
                 .setCancelable(true)
                 .setNegativeButton("닫기") { dialog, _ ->
