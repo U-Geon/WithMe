@@ -79,7 +79,7 @@ class MyFragment : Fragment() {
         val MyList = arrayListOf(
             MyList("예치금 입금하기"),
             MyList("예치금 충전 내역"),
-            MyList("아동상태 및 병원동행 결과 모아보기"),
+            MyList("서비스 사용 내역"),
         )
 
         binding.rvMy.layoutManager = LinearLayoutManager(requireContext())
