@@ -68,6 +68,7 @@ def login(request):
         return JsonResponse({'success': False, 'isAdmin': False}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
 # 비밀번호 찾기 api (사용자 사용)
+@csrf_exempt
 def find_password(request):
     #request
     #id, name, phone
