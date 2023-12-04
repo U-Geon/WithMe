@@ -219,15 +219,16 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
             var over: Boolean = false
             while (!over) {
                 Log.d("test", "실시간 위치 요청")
-                val url = resources.getString(R.string.ip) + "/send_location/"
+                val sharedPrefs: SharedPreferences = getSharedPreferences("other", 0)
+                Log.d("test", "아이디 : " + sharedPrefs.getString("id", ""))
+                val url = resources.getString(R.string.ip) + "/send_location?id=" + sharedPrefs.getString("id", "");
                 val params = JSONObject()
-                val sharedPrefs: SharedPreferences = getSharedPreferences("id", Context.MODE_PRIVATE)
-                params.put("id", sharedPrefs.getString("id", ""));
                 val request = JsonObjectRequest(
                     Request.Method.GET,
                     url,
                     params,
                     Response.Listener { response -> try {
+                        Log.d("help", response.toString())
                         val result = response.getBoolean("success")
                         if(!result)
                         {

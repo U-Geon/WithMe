@@ -1,7 +1,14 @@
 package com.example.withme.administrator
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -10,20 +17,14 @@ import com.example.withme.databinding.ActivityAdminKidInformationBinding
 import org.json.JSONException
 import org.json.JSONObject
 
-class AdminKidInformationActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivityAdminKidInformationBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+class AdminKidInformationActivity : DialogFragment() {
 
-        // 툴바 생성
-        val toolbar = binding.toolbar
-        setSupportActionBar(toolbar)
+    private var binding: ActivityAdminKidInformationBinding? = null
 
-        val actionBar = supportActionBar
-        actionBar?.setDisplayHomeAsUpEnabled(true) // 뒤로가기 아이콘 활성화
-        actionBar?.setHomeAsUpIndicator(R.drawable.back_button)
-        actionBar?.title = "아이 정보 확인하기"
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        var binding = ActivityAdminKidInformationBinding.inflate(inflater, container, false)
+        // dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         /**
          * {
@@ -71,7 +72,14 @@ class AdminKidInformationActivity : AppCompatActivity() {
         ){}
 
         // 요청 대기열에 요청 추가
-        Volley.newRequestQueue(this).add(stringRequest)
+        Volley.newRequestQueue(requireContext()).add(stringRequest)
 
+
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }

@@ -55,6 +55,11 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
             initMapView()
         }
 
+        bind.checkStatusButton.setOnClickListener {
+            var dialog = AdminKidInformationActivity()
+            dialog.show(supportFragmentManager, "AdminKidInformationActivity")
+        }
+
         bind.proceedButton.setOnClickListener {
             if(adminStatus == -1) {
                 bind.proceedButton.text = "픽업 완료"
