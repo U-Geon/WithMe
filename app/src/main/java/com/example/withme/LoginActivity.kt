@@ -19,6 +19,17 @@ class LoginActivity : AppCompatActivity() {
         val loginBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(loginBinding.root)
 
+        // 자동 로그인 여부 확인
+        val savedUserId = getSharedPreferences("other", 0).getString("id", null);
+
+        if(savedUserId != null) {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+
+
         loginBinding.signUp.setOnClickListener {
             val intent = Intent(this, SignupActivity::class.java)
             startActivity(intent)
@@ -40,7 +51,6 @@ class LoginActivity : AppCompatActivity() {
                 params.put("id", userId)
                 params.put("password", password)
 
-
                 val request = JsonObjectRequest(
                     Request.Method.POST,
                     url,
@@ -61,9 +71,7 @@ class LoginActivity : AppCompatActivity() {
                                 // 로그인 성공 후 메인 액티비티로!
 
                                 val sharedPreference = getSharedPreferences("other", 0)
-                                val editor = sharedPreference.edit()
-                                editor.putString("id", userId)
-                                editor.apply()
+                                sharedPreference.edit().putString("id", userId).apply()
 
                                 val intent = Intent(this, MainActivity::class.java)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
