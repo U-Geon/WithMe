@@ -494,7 +494,7 @@ def find_all_account(request):
 # 관리자가 서비스 신청한 사용자들을 보기 위한 api (관리자 전용)
 def get_apply_service_list(request):
     with connection.cursor() as cursor:
-        cursor.execute(f"""select start_location, hospital, arrival_location, child_name, child.phone_number, child.resident_registration_number, real_time_personal_data
+        cursor.execute(f"""select start_location, hospital, arrival_location, child_name, child.phone_number, child.resident_registration_number, real_time_personal_data, relax_service.child_account_id
                             from relax_service
                             join child on relax_service.child_name = child.name
                             where finish != 1 ;""")
@@ -505,7 +505,7 @@ def get_apply_service_list(request):
 # *          "phoneNumber": 전화번호,
 # *          "rrn": 주민등록번호,
 # *          "status": 아이 상태
-        result = [{'start':i[0], 'middle':i[1], 'final':i[2], 'kidName':i[3], 'phoneNumber':i[4], 'rrn':i[5], 'status':i[6]} for i in cursor.fetchall()]
+        result = [{'start':i[0], 'middle':i[1], 'final':i[2], 'kidName':i[3], 'phoneNumber':i[4], 'rrn':i[5], 'status':i[6], 'id' : i[7]} for i in cursor.fetchall()]
     print(result)
 
 
