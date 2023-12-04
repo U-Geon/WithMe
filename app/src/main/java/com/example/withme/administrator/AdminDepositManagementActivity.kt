@@ -106,7 +106,6 @@ class AdminDepositManagementActivity : AppCompatActivity() {
             if (depositAmountText.isNotEmpty()) {
                 val depositAmount: Int = depositAmountText.toInt()
                 money = originMoney + depositAmount
-                originMoney = money
                 binding.tvExpectationDeposit.text = "최종 예치금: ${money}원"
             }
         }
@@ -120,7 +119,6 @@ class AdminDepositManagementActivity : AppCompatActivity() {
             if (depositAmountText.isNotEmpty() && money - depositAmountText.toInt() >= 0) {
                 val depositAmount: Int = depositAmountText.toInt()
                 money = originMoney - depositAmount
-                originMoney = money
                 binding.tvExpectationDeposit.text = "최종 예치금: ${money}원"
             }
         }
