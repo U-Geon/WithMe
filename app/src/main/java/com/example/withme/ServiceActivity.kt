@@ -226,14 +226,13 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                     url,
                     params,
                     Response.Listener { response -> try {
-                        val result = response.getString("result")
-                        Log.d("resulttest", result)
-                        if(result == "NO")
+                        val result = response.getBoolean("success")
+                        if(!result)
                         {
                             Toast.makeText(this, "관리자가 요청을 수락하지 않음", Toast.LENGTH_SHORT).show()
                         } else {
-                            val lat = response.getString("lat")
-                            val lon = response.getString("lon")
+                            val lat = response.getString("latitude")
+                            val lon = response.getString("longitude")
                             val status = response.getString("status")
 
                             if(status.toInt() == 0)
