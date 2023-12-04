@@ -265,7 +265,7 @@ def send_location(request):
                             WHERE status_relax_service_id = (SELECT MAX(id) 
 																FROM relax_service 
                                                                 WHERE child_account_id = '{id}')
-							order by 3 desc
+							order by 4 desc
                             limit 1;""")
         data = cursor.fetchall()
         print('-------------------------')
