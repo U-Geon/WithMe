@@ -29,7 +29,7 @@ def register(request):
     name = data['name']
     zip_code = data['zip_code']
     phone_number = data['phone_number']
-    family = data['family']
+    # family = data['family']
     # print(family)
     # name = '최선우'
     # zip_code = '12345'
@@ -266,8 +266,9 @@ def send_location(request):
 							order by 3 desc
                             limit 1;""")
         data = cursor.fetchall()
+        print('-------------------------')
         if len(data) != 0:
-            data = [i for i in cursor.fetchall()[0]]
+            data = [i for i in data]
         print(data)
 
         if data == ():
