@@ -26,12 +26,17 @@ class HomeFragment : Fragment() {
     // 뷰가 생성되었을 때 - 프레그먼트와 레이아웃을 연결시켜주는 부분
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val sharedPrefs: SharedPreferences = (activity as AppCompatActivity).getSharedPreferences("status", Context.MODE_PRIVATE)
 
         // 안심동행 신청 버튼 클릭 시
         binding?.btnEnroll?.setOnClickListener {
-            // 다음 액티비티로 이동하는 인텐트 생성
-            val intent = Intent(requireActivity(), KidInformationActivity::class.java)
-            startActivity(intent)
+            if (sharedPrefs.getBoolean("status", false) == false) {
+                // 다음 액티비티로 이동하는 인텐트 생성
+                val intent = Intent(requireActivity(), KidInformationActivity::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(activity, "서비스 사용 중입니다.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // 예치금 입금 바로가기 버튼 클릭 시
@@ -43,9 +48,8 @@ class HomeFragment : Fragment() {
 
         // 동행상황 바로가기 버튼 클릭 시
         binding?.btnSituation?.setOnClickListener {
-            val sharedPrefs: SharedPreferences = (activity as AppCompatActivity).getSharedPreferences("status", Context.MODE_PRIVATE)
-            if(sharedPrefs.getBoolean("status", false)) {
-                val intent = Intent(ServiceActivity(), PaymentActivity::class.java)
+            if (sharedPrefs.getBoolean("status", false) == true) {
+                val intent = Intent(ServiceActivity(), ServiceActivity::class.java)
                 startActivity(intent)
             } else {
                 Toast.makeText(activity, "서비스 사용 중이 아닙니다.", Toast.LENGTH_SHORT).show()
