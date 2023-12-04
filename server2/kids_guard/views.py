@@ -270,9 +270,11 @@ def send_location(request):
         print('-------------------------')
         if len(data) != 0:
             data = [i for i in data[0]]
+        print('-----------')
         print(data)
+        print('------------')
 
-        if data == ():
+        if len(data) == 0 :
             json_data = {"success" : False}
 
         else:
