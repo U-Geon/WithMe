@@ -69,10 +69,14 @@ class SettingFragment : Fragment() {
 
                         val request = JsonObjectRequest(
                             Request.Method.POST,
-                            resources.getString(R.string.ip) + "/delete_account",
+                            resources.getString(R.string.ip) + "/delete_account/",
                             params,
                             Response.Listener { response ->
                                 try {
+                                    val sharedPreference : SharedPreferences = (activity as AppCompatActivity).getSharedPreferences("other", 0)
+                                    val editor = sharedPreference.edit()
+                                    editor.clear()
+                                    editor.apply()
                                     val intent = Intent(requireContext(), LoginActivity::class.java)
                                     startActivity(intent)
                                 } catch (e: JSONException) {

@@ -59,16 +59,17 @@ class DepositChargingHistoryActivity : AppCompatActivity() {
             Response.Listener { response ->
                 // 응답 처리
                 try {
+                    Log.d("test", response)
                     val jsonObject = JSONObject(response)
-                    val usageHistory = jsonObject.getJSONArray("예치금목록") // jsonArray 받아오기
+                    val usageHistory = jsonObject.getJSONArray("service") // jsonArray 받아오기
 
                     for (i in 0 until usageHistory.length()) {
                         val usageObject = usageHistory.getJSONObject(i)
                         adapter.addItem(
                             DepositChargeHistory(
-                                usageObject.getString("날짜"), // 날짜
-                                usageObject.getInt("잔액"), // 잔액
-                                usageObject.getInt("지출") // 사용 금액
+                                usageObject.getString("date"), // 날짜
+                                usageObject.getInt("balance"), // 잔액
+                                usageObject.getInt("amount") // 사용 금액
                             )
                         )
                     }

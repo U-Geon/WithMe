@@ -1,6 +1,7 @@
 package com.example.withme
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -28,7 +29,7 @@ class PwFindFragment : Fragment() {
             if(bind.idText.text.toString() == "" || bind.nameText.text.toString() == "" || bind.phoneText.text.toString() == "") {
                 Toast.makeText(activity, "모든 정보를 입력해 주세요!", Toast.LENGTH_SHORT).show()
             } else {
-                val url = resources.getString(R.string.ip) + "/find_pw"
+                val url = resources.getString(R.string.ip) + "/find_pw/"
                 val params = JSONObject()
                 params.put("id", bind.idText.text.toString())
                 params.put("name", bind.nameText.text.toString())
@@ -39,9 +40,10 @@ class PwFindFragment : Fragment() {
                     url,
                     params,
                     { response -> try {
-                        val password = response.getJSONObject("password")
+                        val password = response.getString("password")
                         // { password : 값 }
-                        Toast.makeText(requireContext(), password.toString(), Toast.LENGTH_SHORT).show()
+                        Log.d("test", password)
+                        Toast.makeText(activity, password, Toast.LENGTH_SHORT).show()
 
                     } catch(error: JSONException) {
                         error.printStackTrace()
