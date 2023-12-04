@@ -253,23 +253,27 @@ def get_faq(request):
 def send_location(request):
 
     requestdata = request
-
-    id = 'admin'
+    ##id도 보내줘요 ㅠㅠ
+    id = 'csw1234'
 
 
     with connection.cursor() as cursor:
-        cursor.execute(f"""SELECT latitude, longitude
+        cursor.execute(f"""SELECT latitude, longitude, time
                             FROM real_time_location
-                            WHERE status_relax_service_id = (SELECT MAX(id) FROM relax_service WHERE id = (SELECT id FROM relax_service WHERE account_id = '{id}'));""")
+                            WHERE status_relax_service_id = (SELECT MAX(id) 
+																FROM relax_service 
+                                                                WHERE child_account_id = 'csw1234')
+							order by 3 desc
+                            limit 1;""")
 
-        data = cursor.fetchall()
+        data = [i for i in cursor.fetchall()[0]]
         print(data)
 
         if data == ():
             json_data = {"success" : False}
 
         else:
-            json_data = {"success" : True, "latitude": data[0]['latitude'], "longitude": data[0]['longitude']}
+            json_data = {"success" : True, "latitude": data[0], "longitude": data[1]}
 
         return JsonResponse(json_data, status = 200, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
@@ -454,7 +458,7 @@ def service_history(request):
                             join status on status.relax_service_id = relax_service.id
                             where child_account_id = '{account_id}'
                             order by 1 desc ;""")
-        result = {'result': [ {'date':str(i[0]), 'hospital':i[1], 'detail':i[2]} for i in cursor.fetchall()]}
+        result = {'service': [ {'date':str(i[0]), 'hospital':i[1], 'detail':i[2]} for i in cursor.fetchall()]}
     print(result)
     return JsonResponse(result, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
