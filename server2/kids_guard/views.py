@@ -267,11 +267,12 @@ def send_location(request):
 							order by 3 desc
                             limit 1;""")
         data = cursor.fetchall()
+        print(data)
         print('-------------------------')
         if len(data) != 0:
             data = [i for i in data[0]]
         print('-----------')
-        print(data)
+        # print(data)
         print('------------')
 
         if len(data) == 0 :
