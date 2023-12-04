@@ -494,6 +494,7 @@ def find_all_account(request):
         return JsonResponse(json_data, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
 # 관리자가 서비스 신청한 사용자들을 보기 위한 api (관리자 전용)
+@csrf_exempt
 def get_apply_service_list(request):
     with connection.cursor() as cursor:
         cursor.execute(f"""select start_location, hospital, arrival_location, child_name, child.phone_number, child.resident_registration_number, real_time_personal_data, relax_service.child_account_id
@@ -513,6 +514,7 @@ def get_apply_service_list(request):
 
     return JsonResponse({'result' : result}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
+@csrf_exempt
 def search_users(request):
     requestdata = json.loads(request.body)
 
