@@ -168,7 +168,7 @@ def select_deposit(request):
         cursor.execute(f"""SELECT date, change_amount, money
                             FROM money_history
                             WHERE account_id = '{account_id}'
-                            ORDER BY 1 ;""")
+                            ORDER BY 1 desc ;""")
     
         data = cursor.fetchall()
         print(data)
