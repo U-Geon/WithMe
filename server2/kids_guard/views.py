@@ -276,6 +276,16 @@ def send_location(request):
             json_data = {"success" : False}
 
         else:
+            if(data[2] == "승인전"):
+                data[2] = -1
+            elif(data[2] == '픽업시작'):
+                data[2] = 0
+            elif(data[2] == '픽업완료'):
+                data[2] = 1
+            elif(data[2] == '픽업시작'):
+                data[2] = 2
+            elif(data[2] == '귀가완료'):
+                data[2] = 3
             json_data = {"success" : True, "latitude": data[0], "longitude": data[1], 'status' : data[2]}
 
         return JsonResponse(json_data, status = 200, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
@@ -386,27 +396,27 @@ def get_location(request):
                                 where relax_service_id = (SELECT MAX(id) FROM relax_service WHERE child_account_id = '{id}') 
                                 order by time desc;""")
         s = [i[0] for i in cursor.fetchall()]
-        if status == 0 and '승인전' not in s:
+        if status == -1 and '승인전' not in s:
                 cursor.execute(f"""insert into status (status, time, relax_service_id)
                                     values ('승인전', NOW() ,(SELECT MAX(id) 
                                                             FROM relax_service
                                                             where finish = 0 and child_account_id = '{id}'));""")
-        elif status == 1 and '픽업시작'not in s:
+        elif status == 0 and '픽업시작'not in s:
                 cursor.execute(f"""insert into status (status, time, relax_service_id)
                                     values ('픽업시작', NOW() ,(SELECT MAX(id) 
                                                             FROM relax_service
                                                             where finish = 0 and child_account_id = '{id}'));""")
-        elif status == 2 and '픽업완료'not in s:
+        elif status == 1 and '픽업완료'not in s:
                 cursor.execute(f"""insert into status (status, time, relax_service_id)
                                     values ('픽업완료', NOW() ,(SELECT MAX(id) 
                                                             FROM relax_service
                                                             where finish = 0 and child_account_id = '{id}'));""")
-        elif status == 3 and '병원호송완료'not in s:
+        elif status == 2 and '병원호송완료'not in s:
                 cursor.execute(f"""insert into status (status, time, relax_service_id)
                                     values ('병원호송완료', NOW() ,(SELECT MAX(id) 
                                                             FROM relax_service
                                                             where finish = 0 and child_account_id = '{id}'));""")
-        elif status == 4 and '귀가완료'not in s:
+        elif status == 3 and '귀가완료'not in s:
                 cursor.execute(f"""insert into status (status, time, relax_service_id)
                                     values ('귀가완료', NOW() ,(SELECT MAX(id) 
                                                             FROM relax_service
