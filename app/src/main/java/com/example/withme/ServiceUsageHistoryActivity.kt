@@ -3,6 +3,8 @@ package com.example.withme
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,11 +13,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.withme.databinding.ActivityServiceUsageHistoryBinding
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.withme.administrator.AdminServiceActivity
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -43,8 +47,17 @@ class ServiceUsageHistoryActivity : AppCompatActivity() {
 
         // JSON 데이터 요청
 
-        val url = "https://15.164.94.136:8000/main/serviceUsageHistory" // GET 매핑할 URL
+        val adapter = UsageHistoryAdapter(this)
+        binding!!.recyclerView.adapter = adapter
 
+        // RecyclerView에 LinearLayoutManager 설정
+        val layoutManager = LinearLayoutManager(this)
+        binding!!.recyclerView.layoutManager = layoutManager
+
+        val sharedPreference = getSharedPreferences("other", 0)
+        val userId = sharedPreference.getString("id", "")
+
+        val url = resources.getString(R.string.ip) + "/service_history" + "?userId=" + userId
         val stringRequest = object : StringRequest(
             Method.GET, url,
             Response.Listener { response ->
@@ -52,8 +65,6 @@ class ServiceUsageHistoryActivity : AppCompatActivity() {
                 try {
                     val jsonObject = JSONObject(response)
                     val usageHistory = jsonObject.getJSONArray("service") // jsonArray 받아오기
-
-                    val adapter = UsageHistoryAdapter(this)
 
                     for (i in 0 until usageHistory.length()) {
                         val usageObject = usageHistory.getJSONObject(i)
@@ -66,8 +77,7 @@ class ServiceUsageHistoryActivity : AppCompatActivity() {
                         )
                     }
 
-                    // RecyclerView를 뷰에 추가
-                    binding.recyclerView.adapter = adapter
+                    adapter.notifyDataSetChanged()
 
                 } catch (e: JSONException) {
                     // json 객체 에러
@@ -102,7 +112,17 @@ class UsageHistoryAdapter(private val activity: Activity) : RecyclerView.Adapter
         // 세 번째 값은 화살표를 누르면 세부적으로 볼 수 있게끔 한다.
         holder.detailButton.setOnClickListener {
             // 세부 내역을 보여주는 팝업 창을 띄운다.
-            showModalDialog(usage.detail)
+            val dialogBuilder = AlertDialog.Builder(holder.itemView.context)
+
+            dialogBuilder.setMessage(usage.detail)
+                .setTitle("세부 내역")
+                .setCancelable(true)
+                .setNegativeButton("닫기") { dialog, _ ->
+                    dialog.dismiss() // 다이얼로그를 닫습니다.
+                }
+
+            val alertDialog = dialogBuilder.create()
+            alertDialog.show()
         }
     }
 
@@ -112,25 +132,7 @@ class UsageHistoryAdapter(private val activity: Activity) : RecyclerView.Adapter
 
     fun addItem(item: UsageHistoryItem) {
         usageHistoryList.add(item)
-    }
-
-    // 세부 내역을 보여주는 팝업 창을 띄우는 메서드
-    private fun showModalDialog(detail: String) {
-        // 팝업 창을 생성한다.
-        val alertDialog: AlertDialog? = activity?.let {
-            val builder = AlertDialog.Builder(it)
-            builder.apply {
-                setNegativeButton("닫기",
-                    DialogInterface.OnClickListener { dialog, id ->
-                        // User cancelled the dialog
-                    })
-            }
-            // Set other dialog properties
-            builder?.setMessage(detail)?.setTitle("세부 내역")
-
-            // Create the AlertDialog
-            builder.create()
-        }
+        notifyDataSetChanged()
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

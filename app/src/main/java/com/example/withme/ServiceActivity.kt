@@ -1,6 +1,8 @@
 package com.example.withme
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.withme.databinding.ActivityServiceBinding
@@ -95,7 +97,7 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
         val userId = sharedPreference.getString("id", "")
 
         bind.finalSubmitButton.setOnClickListener {
-            val url = "http://15.164.94.136:8000/apply_service"
+            val url = resources.getString(R.string.ip) + "/apply_service/"
 
             val params = JSONObject()
             params.put("startAddress", startAddress)
@@ -210,11 +212,14 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun requestData()
     {
+        val sharedPrefs: SharedPreferences = getSharedPreferences("status", Context.MODE_PRIVATE)
+        sharedPrefs.edit().putBoolean("status", true).apply()
+
         thread(start = true) {
             var over: Boolean = false
             while (!over) {
                 Log.d("test", "실시간 위치 요청")
-                val url = "http://15.164.94.136:8000/"
+                val url = resources.getString(R.string.ip) + "/send_location/"
                 val params = JSONObject()
                 val request = JsonObjectRequest(
                     Request.Method.GET,
@@ -260,6 +265,8 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                 Thread.sleep(2000)
             }
         }
+
+        sharedPrefs.edit().putBoolean("status", false).apply()
     }
 
     private fun movePosition(lat: String, lon: String){

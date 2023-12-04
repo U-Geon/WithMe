@@ -42,7 +42,7 @@ class SignupActivity : AppCompatActivity() {
             val family = base64Image
 
             if (userId.isNotEmpty() && password.isNotEmpty()) {
-                val url = "http://192.168.1.72:8000/register"
+                val url = resources.getString(R.string.ip) + "/register/"
 
                 val params = JSONObject()
                 params.put("id", userId)
@@ -59,7 +59,7 @@ class SignupActivity : AppCompatActivity() {
                     Response.Listener { response ->
                         try {
                             // 회원가입 성공 후 메인 액티비티로
-                            val intent = Intent(this, MainActivity::class.java)
+                            val intent = Intent(this, LoginActivity::class.java)
                             startActivity(intent)
                         } catch (e: JSONException) {
                             e.printStackTrace()
@@ -77,7 +77,11 @@ class SignupActivity : AppCompatActivity() {
                 Toast.makeText(this, "모든 필드를 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
         }
-        
+
+        signupBinding.imgbtnBack.setOnClickListener {
+            finish()
+        }
+
         // 본인 인증 - 버튼 클릭 시
         val phoneButton: Button = findViewById(R.id.btn_phone)
         phoneButton.setOnClickListener {

@@ -35,7 +35,7 @@ class AdminServiceResultWriteActivity : AppCompatActivity() {
 
             if(text.isNotEmpty()) {
 
-                val url = "http://15.164.94.136:8000/admin/result" // POST 매핑할 URL
+                val url = resources.getString(R.string.ip) + "/admin/result"
 
                 val params = JSONObject()
                 params.put("result", text)

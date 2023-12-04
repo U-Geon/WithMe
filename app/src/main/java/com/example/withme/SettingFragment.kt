@@ -64,7 +64,7 @@ class SettingFragment : Fragment() {
 
                         val request = JsonObjectRequest(
                             Request.Method.POST,
-                            "http://15.164.94.136:8000/delete_account",
+                            resources.getString(R.string.ip) + "/delete_account",
                             params,
                             Response.Listener { response ->
                                 try {

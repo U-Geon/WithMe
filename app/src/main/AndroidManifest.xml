@@ -20,6 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WithMe"
         android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
         <activity
             android:name=".AddressSearchActivity"
@@ -35,26 +36,32 @@
             android:exported="true" />
         <activity
             android:name=".administrator.AdminServiceResultWriteActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
         <activity
             android:name=".administrator.AdminKidInformationActivity"
             android:exported="true">
         </activity>
         <activity
             android:name=".administrator.AdminMainActivity"
-            android:exported="true" />
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".DepositChargingHistoryActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
         <activity
             android:name=".ServiceUsageHistoryActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
         <activity
             android:name=".ServiceResultActivity"
             android:exported="true" />
         <activity
             android:name=".KidInformationActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
         <activity
             android:name=".LoginActivity"
             android:exported="true">
