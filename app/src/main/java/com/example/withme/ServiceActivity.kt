@@ -93,6 +93,8 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
 
         bind.checkResultButton.setOnClickListener {
             val intent = Intent(this, ServiceResultActivity::class.java)
+            val sharedPrefs: SharedPreferences = getSharedPreferences("other", 0)
+            intent.putExtra("userId", sharedPrefs.getString("id", ""))
             startActivity(intent)
         }
 

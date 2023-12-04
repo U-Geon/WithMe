@@ -3,6 +3,7 @@ package com.example.withme
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.withme.databinding.ActivityServiceResultBinding
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -33,7 +34,8 @@ class ServiceResultActivity : AppCompatActivity() {
         }
 
         // 아이 정보 받아오기
-        val url = resources.getString(R.string.ip) + "/main_result"
+        val url = resources.getString(R.string.ip) + "/main_result?id=" + intent.getStringExtra("userId").toString()
+        Log.d("test", url)
         val resultText = binding.resultText
 
         val stringRequest = object : StringRequest(
