@@ -314,15 +314,15 @@ def modify_state(request):
 @csrf_exempt
 def select_kid_info(request):
     account_id = request.GET.get('id', '')
-
+ 
     with connection.cursor() as cursor:
-        cursor.execute(f"""select name, age, phone_number, personal_data
+        cursor.execute(f"""select name, resident_registration_number, phone_number, personal_data
                             from child
                             where account_id = '{account_id}' ;""")
         kid_info = cursor.fetchall()[0]
     print(kid_info)
 
-    return JsonResponse({'name': kid_info[0], 'age': kid_info[1], 'phone_number': kid_info[2], 'personal_data': kid_info[3]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
+    return JsonResponse({'name': kid_info[0], 'rrn': kid_info[1], 'phone_number': kid_info[2], 'personal_data': kid_info[3]}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8', status = 200)
 
 # 아이의 병원 결과를 업데이트하는 api (관리자 전용)
 @csrf_exempt
