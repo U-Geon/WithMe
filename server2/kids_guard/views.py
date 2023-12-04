@@ -268,7 +268,7 @@ def send_location(request):
         data = cursor.fetchall()
         print('-------------------------')
         if len(data) != 0:
-            data = [i for i in data]
+            data = [i for i in data[0]]
         print(data)
 
         if data == ():
