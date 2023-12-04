@@ -56,12 +56,11 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                         sendLocation(currentLat, currentLon, adminStatus)
                         Thread.sleep(2000)
 
-                        if(adminStatus == 3) {
-                            val intent = Intent(this, AdminServiceResultWriteActivity::class.java)
-                            startActivity(intent)
+                        if(adminStatus == 3)
                             break
-                        }
                     }
+                    val intent = Intent(this, AdminServiceResultWriteActivity::class.java)
+                    startActivity(intent)
                 }
             } else if(adminStatus == 0) {
                 bind.proceedButton.text = "병원 호송 완료"
