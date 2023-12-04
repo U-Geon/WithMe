@@ -55,6 +55,7 @@
 > ### 바텀 네비게이션 (activity_main.xml, MainActivity.kt) (하은영)
   - BottomNavigationView 및 화면이 표시되는 부분을 구현하기 위해 FrameLayout 사용.
   - home, my, setting의 총 세 가지의 옵션: 각각 프래그먼트로 개발.
+  - 기본 화면을 home으로 설정.
      
 > ### 메인 페이지 - 홈 프라그먼트 (fragment_home.xml, HomeFragment.kt) (하은영)
   - 안심동행 신청 버튼: 안심 동행을 신청하기 위한 아이 인적사항 입력 페이지를 라우팅.
