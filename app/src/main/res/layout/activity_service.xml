@@ -155,13 +155,12 @@
                         android:layout_centerInParent="true"
                         android:background="@drawable/destination" />
 
-                    <TextView
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerInParent="true"
-                        android:layout_marginLeft="60dp"
-                        android:text="a" />
+                        android:layout_marginLeft="60dp"/>
 
                     <TextView
                         android:id="@+id/startInput"
@@ -175,15 +174,15 @@
                         android:textColor="#999999"
                         android:textSize="7pt" />
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/startButton"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerInParent="true"
                         android:layout_marginRight="50dp"
-                        android:background="#00ff0000"
-                        android:text="a" />
+                        android:src="@drawable/go_button"
+                        android:background="@drawable/back_button"/>
                 </RelativeLayout>
 
             </LinearLayout>
@@ -218,8 +217,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerInParent="true"
-                        android:layout_marginLeft="60dp"
-                        android:text="a" />
+                        android:layout_marginLeft="60dp"/>
 
                     <TextView
                         android:id="@+id/hospitalInput"
@@ -233,15 +231,15 @@
                         android:textColor="#999999"
                         android:textSize="7pt" />
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/hospitalButton"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerInParent="true"
                         android:layout_marginRight="50dp"
-                        android:background="#00ff0000"
-                        android:text="a" />
+                        android:src="@drawable/go_button"
+                        android:background="@drawable/back_button"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -275,8 +273,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerInParent="true"
-                        android:layout_marginLeft="60dp"
-                        android:text="a" />
+                        android:layout_marginLeft="60dp"/>
 
                     <TextView
                         android:id="@+id/endInput"
@@ -290,15 +287,15 @@
                         android:textColor="#999999"
                         android:textSize="7pt" />
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/endButton"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerInParent="true"
                         android:layout_marginRight="50dp"
-                        android:background="#00ff0000"
-                        android:text="a" />
+                        android:src="@drawable/go_button"
+                        android:background="@drawable/back_button"/>
                 </RelativeLayout>
             </LinearLayout>
 
