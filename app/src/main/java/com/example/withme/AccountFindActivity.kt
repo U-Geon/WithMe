@@ -1,5 +1,6 @@
 package com.example.withme
 
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -27,6 +28,8 @@ class AccountFindActivity : AppCompatActivity() {
 
         bind.idFind.setOnClickListener {
             bind.idFind.background = selectedBackground
+            bind.idFind.setTextColor(Color.BLUE)
+            bind.pwFind.setTextColor(Color.BLACK)
             bind.pwFind.background = defaultBackground
 
             supportFragmentManager.beginTransaction()
@@ -37,7 +40,8 @@ class AccountFindActivity : AppCompatActivity() {
         bind.pwFind.setOnClickListener {
             bind.idFind.background = defaultBackground
             bind.pwFind.background = selectedBackground
-
+            bind.idFind.setTextColor(Color.BLACK)
+            bind.pwFind.setTextColor(Color.BLUE)
             supportFragmentManager.beginTransaction()
                 .replace(R.id.accountFind, PwFindFragment())
                 .commit()
