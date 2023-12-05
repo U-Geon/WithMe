@@ -27,7 +27,6 @@ class KidInformationActivity : AppCompatActivity() {
 
         // 주민번호 뒷자리 *처리
         val rrn = binding.inputRRN
-        var originalRRN = ""
 
         rrn.addTextChangedListener(object : TextWatcher {
 
@@ -68,7 +67,7 @@ class KidInformationActivity : AppCompatActivity() {
             val intent = Intent(this, ServiceActivity::class.java)
             intent.putExtra("kidName", kidName)
             intent.putExtra("phoneNumber", phoneNumber)
-            intent.putExtra("rrn", originalRRN)
+            intent.putExtra("rrn", rrn.toString())
             intent.putExtra("status", status)
             startActivity(intent)
         }
