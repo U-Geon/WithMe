@@ -7,6 +7,7 @@ import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.withme.databinding.ActivityAddressBinding
 import com.example.withme.databinding.ActivitySignupBinding
@@ -14,19 +15,18 @@ import com.example.withme.databinding.ActivitySignupBinding
 class AddressActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddressBinding
     private lateinit var binding2: ActivitySignupBinding
+    private var addressData: String? = null
 
     inner class MyJavaScriptInterface {
         @JavascriptInterface
         // 주소 검색창에서 주소를 선택하면 그 결과값이 data에 들어옴
         fun processDATA(data: String?) {
             runOnUiThread {
+                addressData = data
                 // EditText에 데이터 설정
-                binding2.editAddress.setText(data)
+                Toast.makeText(this@AddressActivity, "주소: ${addressData}", Toast.LENGTH_SHORT).show()
+                binding2.editAddress2.setText(addressData)
             }
-            val intent = Intent()
-            intent.putExtra("data", data)
-            setResult(RESULT_OK, intent)
-            finish()
         }
     }
 
