@@ -49,16 +49,14 @@ class KidInformationActivity : AppCompatActivity() {
                         rrn.setSelection(newText.length)
                     } else if (s.length > 7) {
                         val originalText = s.toString()
-                        val firstPart = originalText.substring(0, 7)
-                        val lastPart = originalText.substring(7)
 
-                        originalRRN = firstPart + lastPart
-                        val maskedText = firstPart + "*".repeat(lastPart.length)
+                        originalRRN = originalText
 
+                        val filteredText = filterText(originalText)
                         rrn.removeTextChangedListener(this) // TextWatcher 임시로 제거
-                        rrn.setText(maskedText)
+                        rrn.setText(filteredText)
                         rrn.addTextChangedListener(this) // TextWatcher 다시 등록
-                        rrn.setSelection(maskedText.length)
+                        rrn.setSelection(filteredText.length)
                     }
                 }
             }
@@ -84,5 +82,19 @@ class KidInformationActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+}
+
+private fun filterText(inputText: String): String {
+    // '-'을 제외한 숫자만 추출
+    val digitsOnly = inputText.replace("-", "")
+
+    // '*'로 가리기
+    return if (digitsOnly.length >= 7) {
+        val visiblePart = digitsOnly.substring(0, digitsOnly.length - 7)
+        val hiddenPart = "*".repeat(7)
+        "$visiblePart$hiddenPart"
+    } else {
+        digitsOnly
     }
 }
