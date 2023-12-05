@@ -93,6 +93,7 @@ def apply_service(request):
 
     # 이름, 아이 핸드폰 번호, 부모 id
     requestdata = json.loads(request.body)
+    print(requestdata)
 
     startAddress = requestdata['startAddress']
     hospitalAddress = requestdata['hospitalAddress']
