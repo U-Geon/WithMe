@@ -266,7 +266,7 @@ def send_location(request):
                             join status on status.relax_service_id = real_time_location.status_relax_service_id
                             WHERE status_relax_service_id = (SELECT MAX(id) 
 																FROM relax_service 
-                                                                WHERE child_account_id = 'a')
+                                                                WHERE child_account_id = '{id}')
 							order by 4 desc
                             limit 1;""")
         data = cursor.fetchall()
