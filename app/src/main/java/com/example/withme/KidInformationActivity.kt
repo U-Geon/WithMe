@@ -67,7 +67,7 @@ class KidInformationActivity : AppCompatActivity() {
             val intent = Intent(this, ServiceActivity::class.java)
             intent.putExtra("kidName", kidName)
             intent.putExtra("phoneNumber", phoneNumber)
-            intent.putExtra("rrn", rrn.toString())
+            intent.putExtra("rrn", rrn.text)
             intent.putExtra("status", status)
             startActivity(intent)
         }
