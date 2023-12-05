@@ -262,13 +262,13 @@ def send_location(request):
 
     with connection.cursor() as cursor:
 
-        cursor.execute(f"""SELECT latitude, longitude, status.status ,status.time
+        cursor.execute(f"""SELECT latitude, longitude, status.status ,status.time, real_time_location.time
                             FROM real_time_location
                             join status on status.relax_service_id = real_time_location.status_relax_service_id
                             WHERE status_relax_service_id = (SELECT MAX(id) 
 																FROM relax_service 
                                                                 WHERE child_account_id = '{id}')
-							order by 4 desc
+                            order by 5 desc, 4 desc
                             limit 1;""")
         data = cursor.fetchall()
         print('--------------')
