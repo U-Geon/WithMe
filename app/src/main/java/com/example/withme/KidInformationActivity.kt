@@ -27,7 +27,6 @@ class KidInformationActivity : AppCompatActivity() {
 
         // 주민번호 뒷자리 *처리
         val rrn = binding.inputRRN
-        var originalRRN = ""
 
         rrn.addTextChangedListener(object : TextWatcher {
 
@@ -47,16 +46,6 @@ class KidInformationActivity : AppCompatActivity() {
                         val newText = "$s-"
                         rrn.setText(newText)
                         rrn.setSelection(newText.length)
-                    } else if (s.length > 7) {
-                        val originalText = s.toString()
-
-                        originalRRN = originalText
-
-                        val filteredText = filterText(originalText)
-                        rrn.removeTextChangedListener(this) // TextWatcher 임시로 제거
-                        rrn.setText(filteredText)
-                        rrn.addTextChangedListener(this) // TextWatcher 다시 등록
-                        rrn.setSelection(filteredText.length)
                     }
                 }
             }
@@ -73,7 +62,7 @@ class KidInformationActivity : AppCompatActivity() {
             val intent = Intent(this, ServiceActivity::class.java)
             intent.putExtra("kidName", kidName)
             intent.putExtra("phoneNumber", phoneNumber)
-            intent.putExtra("rrn", originalRRN)
+            intent.putExtra("rrn", rrn.toString())
             intent.putExtra("status", status)
             startActivity(intent)
         }
