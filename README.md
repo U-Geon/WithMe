@@ -10,18 +10,42 @@
 ## 개발 환경
 - Tool: Android Studio
 - Language: Kotlin
-- Real Device: Galaxy Z flip 3 2개
+- Physical Device: Galaxy Z flip 3 2개
 - Android Virtual Device (AVD) : Pixel 2 API 29
 
 ## 설치 및 실행 방법
 - Github Repository Clone 및 Android Studio Run 'app'
 
 ## 프로젝트 팀원
-- 최선우 (팀장)
-- 서준형
-- 유건
-- 곽우진
-- 하은영
+<table>
+      <thead>
+          <tr>
+              <th colspan="5"> 팀원 목록 </th>
+          </tr>
+        <tr>
+              <th colspan="2"> 백엔드 </th>
+              <th colspan="3"> 프론트엔드 </th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+            <tr>
+              <td align='center'>최선우 | 팀장</td>
+              <td align='center'>서준형</td>
+              <td align='center'>하은영</td>
+              <td align='center'>곽우진</td>
+              <td align='center'>유 건</td>
+            </tr>
+            <tr>
+              <td align='center'>소프트웨어학부</td>
+              <td align='center'>소프트웨어학부</td>
+              <td align='center'>소프트웨어학부</td>
+              <td align='center'>소프트웨어학부</td>
+              <td align='center'>소프트웨어학부</td>
+            </tr>
+          </tr>
+      </tbody>
+  </table>
 
 ## 서버 및 데이터베이스
 > ### Model
@@ -38,9 +62,9 @@
   - 가족 관계 증명서 이미지를 올리기 위한 ImageView, READ_MEDIA_IMAGES 사용.
   - 회원가입 버튼 클릭 시, 서버로 데이터 전송.
 
-> ### 아이디 / 비밀번호 찾기 페이지 (fragment_id_find.xml, IdFindFragment.kt, fragment_pw_find.xml, PwFindFragment.kt) (곽우진)
+> ### 아이디 / 비밀번호 찾기 페이지 (activity_account_find_kt, activity_account_find.xml, fragment_id_find.xml, IdFindFragment.kt, fragment_pw_find.xml, PwFindFragment.kt) (곽우진)
   - 아이디 찾기, 비밀번호 찾기 프라그먼트 사용
-  - 
+  - AccountFindActivity 에서 아이디 찾기 / 비밀번호 찾기 버튼을 누르면 해당하는 프래그먼트를 화면에 표시.
 
 > ### 로그인 페이지 (activity_login.xml, LoginActivity.kt) (유 건)
   - LinearLayout 사용.
@@ -71,12 +95,18 @@
   - 이후 입력한 정보를 다음 메인 서비스 액티비티에 putExtra로 값을 넘겨줌.
 
 > ### 서비스 페이지 (activity_service.xml, ServiceActivity.kt) (곽우진)
-  - 여기에 작성해줘
-  - ㅁㄴㅇㄹ
+  - 먼저 로그인 화면에서 위치 사용에 관한 권한 요청을 받아야 함.
+  - 네이버 지도 API를 호출하여 현재 자신의 위치를 표시하고, 아이가 있는 장소, 아이가 가야 할 병원, 아이가 귀가할 장소를 입력 후 서비스를 신청함.
+  - 주소 입력 창은 SlidingDrawer를 사용해 스와이프로 올리고 내릴 수 있게 구현.
+  - 주소 입력 시 서버에 업로드해 둔 카카오 우편번호 페이지를 호출하여 해당 위치의 전체 주소와 이름을 반환함.
+  - 모든 장소를 입력 후 최종 신청이 제출되면 1초마다 현재 서비스의 진행 상황을 묻는 요청을 보내는 스레드가 시작됨.
+  - 관리자가 동행을 수락한 순간부터 마커 (네이버 지도) 가 생성되고, 관리자의 현재 위치를 표시함.
+  - 관리자가 동행을 완료 후 결과를 입력하면 해당 결과를 서버에서 받아볼 수 있음.
+  - 진행 중엔 status라는 boolean 변수를 sharedPreferences에 저장해, 메인 페이지 (HomeFragment) 에서 사용.
 
 > ### 아동상태 및 병원 동행 결과 (activity_service_result.xml, ServiceResultActivity.kt) (유 건)
   - 관리자가 입력한 병원 동행 결과를 볼 수 있는 페이지
-  - 동행 완료 버튼 클릭 시 현재 액티비티로 이동됌.
+  - 동행 완료 버튼 클릭 시 현재 액티비티로 이동됨.
   - 확인 버튼 누를 시 새로운 서비스를 위해 다시 메인 페이지로 이동. 
 
 > ### 메인 페이지 - 마이 프라그먼트 (fragment_my.xml, MyFragment.kt, MyList.kt, MyListAdapter.kt) (하은영)
@@ -99,9 +129,12 @@
   - 각 item에는 서비스 사용 날짜, 서비스 사용 병원, 우측 버튼이 위치합니다.
     - 우측 버튼 클릭 시 괸리자가 입력한 세부 내역을 볼 수 있습니다.
    
-> ### 메인 페이지 - 설정 프래그먼트 (fragment_setting.xml, SettingFragment.kt) (곽우진)
+> ### 메인 페이지 - 설정 프래그먼트 (fragment_setting.xml, SettingFragment.kt, FaqActivity.kt, activity_faq.xml) (곽우진)
   - 앱의 설정 기능을 담당하는 페이지
-  - 여기다 적어줘
+  - 푸시 알림은 토글을 사용. 토글 값이 바뀔 때마다 토글이 켜져있는지 / 꺼져있는지를 저장하는 bool 변수를 sharedPreference에 저장함.
+  - FAQ 버튼 클릭 시 자주 묻는 질문 액티비티를 연결.
+  - 회원 탈퇴 버튼 클릭 시 정말 탈퇴할 것인지를 묻는 다이얼로그가 출력되고, 이를 수락하면 데이터베이스에서 로그인된 계정을 삭제함.
+  - 이때 sharedPreferences에 저장된 로그인 정보를 함께 삭제 후, 로그인 창으로 복귀함.
 
 ## 관리자 앱
 > ### 메인 액티비티 - 홈 프라그먼트 (fragment_admin_home.xml, AdminHomeFragment.kt) (유 건, 하은영 도움)
@@ -112,9 +145,14 @@
     - 동행 버튼 클릭 시 관리자 서비스 페이지로 이동할 수 있음.
     - 취소 시 모달창을 닫을 수 있음.
 
-> ### 서비스 페이지(activity_admin_service.xml, AdminServiceActivity.kt) (곽우진)
-  - 여기에 작성해줘
-  - ㅁㄴㅇㄹ
+> ### 서비스 페이지(activity_admin_service.xml, AdminServiceActivity.kt, AdminKidInformationActivity.kt, activity_admin_kid_information.xml) (곽우진)
+  - 관리자가 메인 페이지에서 요청된 서비스 리스트를 확인 후 특정 서비스를 수락하면 본 페이지로 이동됨.
+  - 아이 정보 확인하기 버튼을 눌러 해당 서비스에서 동행할 아이의 인적사항을 확인할 수 있음.
+  - 아이 정보 확인하기 창은 DialogFragment 기능을 활용하여 아예 다른 페이지로 이동하는 것이 아닌 서비스 화면에서 간단하게 확인할 수 있도록 구현함.
+  - 픽업 시작 버튼을 누르면 해당 서비스에 대한 관리자의 실시간 위치와 진행 상황을 서버에 전달함. 사용자는 이 정보를 서버에 요청하는 것.
+  - 진행 상황은 Integer 변수로 구분. -1은 대기 중, 0은 픽업 중, 1은 병원 동행 중, 2는 귀가 중, 3은 귀가 완료를 의미함.
+  - 이 변수는 사용자에게 전달될 때 ServiceActivity 에서 일치하는 텍스트로 변환되어 출력됨.
+  - 관리자가 서비스를 완료 후 마지막으로 귀가 완료 버튼을 누르면 서비스는 종료되고 병원 동행 결과 작성 페이지로 이동함.
     
 > ### 아동 상태 및 병원 동행 결과 작성 페이지 (activity_admin_service_result_write.xml, AdminServiceResultWriteActivity.kt) (유 건)
   - 관리자가 서비스 동행 완료 시 넘어가지는 페이지
