@@ -26,8 +26,8 @@ def register(request):
     # phone_number = '01052980568'
 
     with connection.cursor() as cursor:
-        cursor.execute(f"""insert into account (id, password, name, zip_code, phone_number)
-                            values ('{id}', '{password}', '{name}', '{zip_code}', '{phone_number}') ;""")
+        cursor.execute(f"""insert into account (id, password, name, zip_code, phone_number, family_relation_certificate)
+                            values ('{id}', '{password}', '{name}', '{zip_code}', '{phone_number}', '{family}') ;""")
     return JsonResponse({"success":True}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
 # 로그인 api (사용자 사용)
