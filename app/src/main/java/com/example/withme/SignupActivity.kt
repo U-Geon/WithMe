@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
@@ -21,6 +23,7 @@ import com.android.volley.toolbox.Volley
 import com.example.withme.databinding.ActivitySignupBinding
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 
 
 class SignupActivity : AppCompatActivity() {
@@ -50,7 +53,7 @@ class SignupActivity : AppCompatActivity() {
                 params.put("name", name)
                 params.put("phone_number", phonenum)
                 params.put("zip_code", address)
-//                params.put("family", family)
+                params.put("family",family)
 
                 val request = JsonObjectRequest(
                     Request.Method.POST,
@@ -59,6 +62,7 @@ class SignupActivity : AppCompatActivity() {
                     Response.Listener { response ->
                         try {
                             // 회원가입 성공 후 메인 액티비티로
+                            Toast.makeText(this@SignupActivity, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show()
                             val intent = Intent(this, LoginActivity::class.java)
                             startActivity(intent)
                         } catch (e: JSONException) {
@@ -214,7 +218,7 @@ class SignupActivity : AppCompatActivity() {
             val selectedImageUri = data?.data
 
             // 선택한 이미지를 Base64로 변환
-            base64Image = encodeImage(selectedImageUri)
+            base64Image = compressImage(selectedImageUri)
 
             // 선택한 이미지를 이미지뷰에 설정
             val albumImage: ImageView = findViewById(R.id.iv_family)
@@ -222,10 +226,21 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 
-    private fun encodeImage(selectedImageUri: Uri?): String {
-        val inputStream = contentResolver.openInputStream(selectedImageUri!!)
-        val bytes = inputStream?.readBytes()
-        return Base64.encodeToString(bytes, Base64.DEFAULT)
+    fun compressImage(imageUri: Uri?): String {
+        val inputStream = contentResolver.openInputStream(imageUri!!)
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+
+        // 이미지를 원하는 크기로 변경
+        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, true)
+
+        // 이미지의 품질을 조정하여 압축
+        val outputStream = ByteArrayOutputStream()
+        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
+
+        // Base64로 변환
+        val compressedImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
+
+        return compressedImage
     }
 
 }
