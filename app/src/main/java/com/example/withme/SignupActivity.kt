@@ -13,6 +13,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -100,22 +102,20 @@ class SignupActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // 카카오 api 연결
+        val getResult: ActivityResultLauncher<Intent> = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) { result ->
+            val address: String? = result.data?.getStringExtra("address")
+            val addressButton: EditText = findViewById(R.id.edit_address)
+            addressButton.setText(address)
+        }
 
-        // 우편번호, 주소, 상세주소 클릭 시
+        // 주소 클릭 시
         val addressButton: EditText = findViewById(R.id.edit_address)
         addressButton.setOnClickListener {
-            val intent = Intent(this, AddressActivity::class.java)
+            val intent = Intent(this, AddressSearchActivity::class.java)
             startActivity(intent)
-        }
-        val addressButton2: EditText = findViewById(R.id.edit_address2)
-        addressButton2.setOnClickListener {
-            val intent = Intent(this, AddressActivity::class.java)
-            startActivity(intent)
-        }
-        val addressButton3: EditText = findViewById(R.id.edit_address3)
-        addressButton3.setOnClickListener {
-            val intent = Intent(this, AddressActivity::class.java)
-            startActivity(intent)
+            getResult.launch(intent)
         }
 
 

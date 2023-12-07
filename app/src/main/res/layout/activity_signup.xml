@@ -203,37 +203,26 @@
             app:layout_constraintTop_toBottomOf="@+id/img_auth" />
 
         <TextView
-            android:id="@+id/tv_zipcode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="60dp"
-            android:gravity="center"
-            android:text="우편번호"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_phone" />
-
-        <TextView
             android:id="@+id/tv_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="34dp"
+            android:layout_marginTop="70dp"
             android:gravity="center"
             android:text="주소"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_zipcode" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_phone" />
 
         <EditText
             android:id="@+id/edit_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="60dp"
             android:layout_marginEnd="32dp"
             android:ems="10"
-            android:hint="우편번호"
+            android:hint="주소"
             android:inputType="text"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -246,23 +235,10 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:ems="10"
-            android:hint="주소"
-            android:inputType="text"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_address" />
-
-        <EditText
-            android:id="@+id/edit_address3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:ems="10"
             android:hint="상세 주소"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_address2" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_address" />
 
         <TextView
             android:id="@+id/tv_family"
@@ -273,7 +249,7 @@
             android:gravity="center"
             android:text="가족 관계 증명서"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_address3" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_address2" />
 
         <ImageView
             android:id="@+id/iv_family"

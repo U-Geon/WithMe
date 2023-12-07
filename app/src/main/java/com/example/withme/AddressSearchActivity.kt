@@ -10,6 +10,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.withme.databinding.ActivityAddressSearchBinding
 
@@ -77,12 +78,23 @@ class AddressSearchActivity : AppCompatActivity() {
         finish()
     }
 
+    public fun sendData_signup(data: List<String>)
+    {
+        val intent = Intent(this, SignupActivity::class.java)
+        val extra : Bundle = Bundle()
+        extra.putString("address", data[0])
+        intent.putExtras(extra)
+        setResult(RESULT_OK, intent)
+        finish()
+    }
+
     class AndroidBridge(private val fragment: AddressSearchActivity){
         @JavascriptInterface
         @SuppressWarnings("unused")
         public fun processDATA(roadAdd: String) {
             val parts = roadAdd.split("@")
             fragment.sendData(parts)
+            fragment.sendData_signup(parts)
         }
     }
 }
