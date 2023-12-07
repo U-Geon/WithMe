@@ -12,25 +12,15 @@ import json
 # 회원가입 api (사용자 사용)
 @csrf_exempt
 def register(request):
-    # all_records = Account.objects.all()
-    # for i in all_records:
-    #     print(i.id)
-    #     print(i.passward)
-    #     print(i.name)
-    # return HttpResponse("OK", status = 200)
-    # data = json.loads(request.body)
-    # print(data)
-    # print(data['key1'])
-    # print(data['key2'])
-    # return HttpResponse("OK", status = 200)
+
     data = json.loads(request.body)
     id = data['id']
     password = data['password']
     name = data['name']
     zip_code = data['zip_code']
     phone_number = data['phone_number']
-    # family = data['family']
-    # print(family)
+    family = data['family']
+    print(family)
     # name = '최선우'
     # zip_code = '12345'
     # phone_number = '01052980568'
