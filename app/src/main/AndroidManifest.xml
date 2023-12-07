@@ -36,7 +36,8 @@
             android:exported="true" />
         <activity
             android:name=".administrator.AdminDepositManagementActivity"
-            android:exported="true" />
+            android:exported="true" >
+        </activity>
         <activity
             android:name=".administrator.AdminServiceResultWriteActivity"
             android:exported="true"></activity>
@@ -58,16 +59,14 @@
         <activity
             android:name=".KidInformationActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".LoginActivity"
             android:exported="true">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".PersonalAuthActivity"
@@ -81,7 +80,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:usesCleartextTraffic="true" />
+            android:usesCleartextTraffic="true" >
+        </activity>
         <activity
             android:name=".ServiceActivity"
             android:exported="true" />

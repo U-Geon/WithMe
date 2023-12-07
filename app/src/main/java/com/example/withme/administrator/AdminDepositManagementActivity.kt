@@ -2,6 +2,7 @@ package com.example.withme.administrator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -97,7 +98,7 @@ class AdminDepositManagementActivity : AppCompatActivity() {
         // Volley 요청을 큐에 추가
         Volley.newRequestQueue(this).add(request)
         
-      // 예치금 플러스 관련
+        // 예치금 플러스 관련
         val plusDepositEdit: EditText = findViewById(R.id.et_plus_deposit)
         val plusDepositButton: Button = findViewById(R.id.btn_plus_deposit)
         plusDepositButton.setOnClickListener {
@@ -106,7 +107,11 @@ class AdminDepositManagementActivity : AppCompatActivity() {
             if (depositAmountText.isNotEmpty()) {
                 val depositAmount: Int = depositAmountText.toInt()
                 money = originMoney + depositAmount
+                originMoney = money
                 binding.tvExpectationDeposit.text = "최종 예치금: ${money}원"
+                plusDepositEdit.text = Editable.Factory.getInstance().newEditable("")  // 입력창 비우기
+            } else {
+                Toast.makeText(this@AdminDepositManagementActivity, "값을 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -116,10 +121,18 @@ class AdminDepositManagementActivity : AppCompatActivity() {
         minusDepositButton.setOnClickListener {
             val depositAmountText: String = minusDepositEdit.text.toString()
             // 입력된 숫자가 비어있지 않고, 현재 예치금에서 입력된 숫자를 뺐을 때 0 이상일 때만 빼도록
-            if (depositAmountText.isNotEmpty() && money - depositAmountText.toInt() >= 0) {
-                val depositAmount: Int = depositAmountText.toInt()
-                money = originMoney - depositAmount
-                binding.tvExpectationDeposit.text = "최종 예치금: ${money}원"
+            if (depositAmountText.isNotEmpty()) {
+                if (originMoney - depositAmountText.toInt() >= 0) {
+                    val depositAmount: Int = depositAmountText.toInt()
+                    money = originMoney - depositAmount
+                    originMoney = money
+                    binding.tvExpectationDeposit.text = "최종 예치금: ${money}원"
+                    minusDepositEdit.text = Editable.Factory.getInstance().newEditable("")
+                } else {
+                    Toast.makeText(this@AdminDepositManagementActivity, "현재 예치금보다 큰 값이기 때문에 뺄 수 없습니다.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this@AdminDepositManagementActivity, "값을 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -127,7 +140,7 @@ class AdminDepositManagementActivity : AppCompatActivity() {
         val signupFinButton: Button = findViewById(R.id.btn_signup_fin)
         signupFinButton.setOnClickListener {
             // 서버에 moneyInt 값을 업데이트
-            val amount = money-originMoney
+            val amount = money - originMoney
             sendMoneyUpdateRequest(amount)
             binding.etPlusDeposit.text = null
             binding.etMinusDeposit.text = null
