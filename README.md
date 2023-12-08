@@ -50,6 +50,8 @@
 ## 서버 및 데이터베이스
 > ### 프로그램 구조도
 ![image](https://github.com/U-Geon/WithMe/assets/105338988/1af5f202-c35c-4c4e-9410-0d5275e7b0db)
+> ### DB ERD
+![image](https://github.com/U-Geon/WithMe/assets/105338988/a5d313ca-b687-41c2-9d41-c3af960f01e6)
 
 
 
