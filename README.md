@@ -55,10 +55,6 @@
 
 
 
-
-> ### Service
-
-
 ## 페이지별 화면 설명 및 주요 기능 설명
 > ### 회원가입 페이지 (activity_signup.xml, SignupActivity.kt) (하은영)
   - ConstraintLayout 사용.
