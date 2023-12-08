@@ -70,6 +70,7 @@
 > ### 아이디 / 비밀번호 찾기 페이지 (activity_account_find_kt, activity_account_find.xml, fragment_id_find.xml, IdFindFragment.kt, fragment_pw_find.xml, PwFindFragment.kt) (곽우진)
   - 아이디 찾기, 비밀번호 찾기 프라그먼트 사용
   - AccountFindActivity 에서 아이디 찾기 / 비밀번호 찾기 버튼을 누르면 해당하는 프래그먼트를 화면에 표시.
+  - find_pw API를 통해 비밀번호 전달 (최선우)
 
 > ### 로그인 페이지 (activity_login.xml, LoginActivity.kt) (유 건)
   - LinearLayout 사용.
@@ -80,6 +81,7 @@
     - 미리 만들어진 관리자 ID로 로그인 시 관리자 액티비티로 넘어감.
     - 사용자 ID로 로그인 시 사용자 메인 액티비티로 넘어감.
       - 로그인 시 세션 기능을 위해 SharedPreference에 사용자 ID 저장.
+      - login API를 통해 로그인 성공 확인 (최선우)
      
 > ### 바텀 네비게이션 (activity_main.xml, MainActivity.kt) (하은영)
   - BottomNavigationView 및 화면이 표시되는 부분을 구현하기 위해 FrameLayout 사용.
@@ -104,19 +106,23 @@
   - 네이버 지도 API를 호출하여 현재 자신의 위치를 표시하고, 아이가 있는 장소, 아이가 가야 할 병원, 아이가 귀가할 장소를 입력 후 서비스를 신청함.
   - 주소 입력 창은 SlidingDrawer를 사용해 스와이프로 올리고 내릴 수 있게 구현.
   - 주소 입력 시 서버에 업로드해 둔 카카오 우편번호 페이지를 호출하여 해당 위치의 전체 주소와 이름을 반환함.
+  - apply_service API를 통해 서비스 신청 (최선우)
   - 모든 장소를 입력 후 최종 신청이 제출되면 1초마다 현재 서비스의 진행 상황을 묻는 요청을 보내는 스레드가 시작됨.
   - 관리자가 동행을 수락한 순간부터 마커 (네이버 지도) 가 생성되고, 관리자의 현재 위치를 표시함.
   - 관리자가 동행을 완료 후 결과를 입력하면 해당 결과를 서버에서 받아볼 수 있음.
   - 진행 중엔 status라는 boolean 변수를 sharedPreferences에 저장해, 메인 페이지 (HomeFragment) 에서 사용.
+  - send_laction API를 통해 관리자 위치 및 서비스 진행 상황 전달 (최선우)
 
 > ### 아동상태 및 병원 동행 결과 (activity_service_result.xml, ServiceResultActivity.kt) (유 건)
   - 관리자가 입력한 병원 동행 결과를 볼 수 있는 페이지
   - 동행 완료 버튼 클릭 시 현재 액티비티로 이동됨.
-  - 확인 버튼 누를 시 새로운 서비스를 위해 다시 메인 페이지로 이동. 
+  - 확인 버튼 누를 시 새로운 서비스를 위해 다시 메인 페이지로 이동.
+  - hospital_result API를 통해 병원 동행 결과를 전달 (최선우)
 
 > ### 메인 페이지 - 마이 프라그먼트 (fragment_my.xml, MyFragment.kt, MyList.kt, MyListAdapter.kt) (하은영)
   - 사용자의 정보(이름, 서비스 이용 횟수, 현재 예치금)을 확인할 수 있는 페이지.
   - RecyclerView를 사용하여 예치금 입금하기, 예치금 충전 내역, 서비스 사용 내역 리스트 구현 -> 각각의 기능이 있는 페이지를 라우팅.
+  - select_name_money_history_count_phone_number API를 통해 사용자의 정보 전달 (최선우)
 
 > ### 예치금 결제하기 (activity_payment.xml, PaymentActivity.kt) (하은영)
   - 결제 api, 가상계좌의 방법 모색 -> 실제로 사용하려면 사업자 등록증 혹은 비용 문제 발생: 사용자가 관리자 계좌로 입금하게 되면, 관리자가 직접 예치금을 관리하는 방식으로 구현.
@@ -133,6 +139,7 @@
   - RecyclerView를 사용하여 서비스 사용 내역을 볼 수 있는 item을 여러 개 반복 생성
   - 각 item에는 서비스 사용 날짜, 서비스 사용 병원, 우측 버튼이 위치합니다.
     - 우측 버튼 클릭 시 괸리자가 입력한 세부 내역을 볼 수 있습니다.
+  - service_history API를 통해 사용자의 서비스 내역 전달 (최선우)
    
 > ### 메인 페이지 - 설정 프래그먼트 (fragment_setting.xml, SettingFragment.kt, FaqActivity.kt, activity_faq.xml) (곽우진)
   - 앱의 설정 기능을 담당하는 페이지
@@ -149,10 +156,12 @@
     - 모달창에는 동행 정보와 아이 인적사항 (이름, 전화번호, 주민등록번호), 당시 아이 상태를 확인할 수 있음.
     - 동행 버튼 클릭 시 관리자 서비스 페이지로 이동할 수 있음.
     - 취소 시 모달창을 닫을 수 있음.
+    - get_apply_service_list API를 통해 신청한 서비스 리스트 전달 (최선우)
 
 > ### 서비스 페이지(activity_admin_service.xml, AdminServiceActivity.kt, AdminKidInformationActivity.kt, activity_admin_kid_information.xml) (곽우진)
   - 관리자가 메인 페이지에서 요청된 서비스 리스트를 확인 후 특정 서비스를 수락하면 본 페이지로 이동됨.
   - 아이 정보 확인하기 버튼을 눌러 해당 서비스에서 동행할 아이의 인적사항을 확인할 수 있음.
+        - select_kid_info API를 통해 아이 인적사항 전달 (최선우)
   - 아이 정보 확인하기 창은 DialogFragment 기능을 활용하여 아예 다른 페이지로 이동하는 것이 아닌 서비스 화면에서 간단하게 확인할 수 있도록 구현함.
   - 픽업 시작 버튼을 누르면 해당 서비스에 대한 관리자의 실시간 위치와 진행 상황을 서버에 전달함. 사용자는 이 정보를 서버에 요청하는 것.
   - 진행 상황은 Integer 변수로 구분. -1은 대기 중, 0은 픽업 중, 1은 병원 동행 중, 2는 귀가 중, 3은 귀가 완료를 의미함.
