@@ -14,8 +14,20 @@
 - Android Virtual Device (AVD) : Pixel 2 API 29
 
 ## 설치 및 실행 방법
-- Github Repository Clone 및 Android Studio Run 'app'
+- 안드로이드 스튜디오
 
+      1. 본 프로젝트를 로컬 저장소에 Clone 또는 다운로드합니다.
+      2. 안드로이드 스튜디오를 실행 후, 프로젝트 폴더의 루트 경로에서 오픈합니다.
+      3. 가상 또는 실제 디바이스를 준비하여 실행합니다.
+  
+- 실제 디바이스에 설치
+
+[다운로드 링크](https://drive.google.com/file/d/1miBCEC8j2sG9Zc9NPZE1DhBv-DW4PJER/view?usp=sharing)
+
+      1 - 1. 본 프로젝트를 로컬 저장소에 Clone 또는 다운로드 후, build_apk 폴더의 압축 파일을 찾습니다.
+      1 - 2. 상단 다운로드 링크에 접속해 압축 파일을 다운로드합니다.
+      2. 파일 압축을 해제 후, apk 파일을 디바이스에 설치 후 실행합니다.
+      
 ## 프로젝트 팀원
 <table>
       <thead>
