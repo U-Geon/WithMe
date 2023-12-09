@@ -74,6 +74,7 @@
   - 본인인증을 위한 iamport api 사용.
   - 가족 관계 증명서 이미지를 올리기 위한 ImageView, READ_MEDIA_IMAGES 사용.
   - 회원가입 버튼 클릭 시, 서버로 데이터 전송.
+  - register API를 통해 전송받은 사용자 계정 데이터를 DB에 저장 (서준형)
 
 > ### 아이디 / 비밀번호 찾기 페이지 (activity_account_find_kt, activity_account_find.xml, fragment_id_find.xml, IdFindFragment.kt, fragment_pw_find.xml, PwFindFragment.kt) (곽우진)
   - 아이디 찾기, 비밀번호 찾기 프라그먼트 사용
@@ -120,12 +121,13 @@
   - 관리자가 동행을 완료 후 결과를 입력하면 해당 결과를 서버에서 받아볼 수 있음.
   - 진행 중엔 status라는 boolean 변수를 sharedPreferences에 저장해, 메인 페이지 (HomeFragment) 에서 사용.
   - send_laction API를 통해 관리자 위치 및 서비스 진행 상황 전달 (최선우)
+  - 위치 api 사용을 위해 daum_address API를 이용해 페이지를 렌더링 함 (서준형)
 
 > ### 아동상태 및 병원 동행 결과 (activity_service_result.xml, ServiceResultActivity.kt) (유 건)
   - 관리자가 입력한 병원 동행 결과를 볼 수 있는 페이지
   - 동행 완료 버튼 클릭 시 현재 액티비티로 이동됨.
   - 확인 버튼 누를 시 새로운 서비스를 위해 다시 메인 페이지로 이동.
-  - hospital_result API를 통해 병원 동행 결과를 전달 (최선우)
+  - main_result API를 통해 현재 서비스의 동행 결과를 DB에서 추출해 전달 (서준형)
 
 > ### 메인 페이지 - 마이 프라그먼트 (fragment_my.xml, MyFragment.kt, MyList.kt, MyListAdapter.kt) (하은영)
   - 사용자의 정보(이름, 서비스 이용 횟수, 현재 예치금)을 확인할 수 있는 페이지.
@@ -140,7 +142,8 @@
 > ### 예치금 내역 페이지 (activity_deposit_charging_history.xml DepositChargingHistoryActivity.kt) (유 건)
   - 사용자가 사용한 예치금 내역을 볼 수 있는 페이지
   - RecyclerView를 사용하여 예치금 내역을 보여주는 item 여러 개 반복 생성 
-  - item에는 예치금 사용 날짜, 사용 금액, 남은 잔액 등을 나타냄. 
+  - item에는 예치금 사용 날짜, 사용 금액, 남은 잔액 등을 나타냄.
+  - select_deposit API를 통해 전송받은 요청 데이터(id)를 통해 사용자를 검색 후 예치금 내역을 전달 (서준형)
 
 > ### 서비스 사용 내역 페이지 (activity_service_usage_history.xml, ServiceUsageHistoryActivity.kt) (유 건)
   - 사용자가 사용한 서비스 내역을 볼 수 있는 페이지
@@ -155,6 +158,7 @@
   - FAQ 버튼 클릭 시 자주 묻는 질문 액티비티를 연결.
   - 회원 탈퇴 버튼 클릭 시 정말 탈퇴할 것인지를 묻는 다이얼로그가 출력되고, 이를 수락하면 데이터베이스에서 로그인된 계정을 삭제함.
   - 이때 sharedPreferences에 저장된 로그인 정보를 함께 삭제 후, 로그인 창으로 복귀함.
+  - delete_account API를 통해 요청한 사용자의 데이터를 DB에서 제거 후 성공 여부를 전달함 (서준형) 
 
 ## 관리자 앱
 > ### 메인 액티비티 - 홈 프라그먼트 (fragment_admin_home.xml, AdminHomeFragment.kt) (유 건, 하은영 도움)
@@ -174,22 +178,27 @@
   - 픽업 시작 버튼을 누르면 해당 서비스에 대한 관리자의 실시간 위치와 진행 상황을 서버에 전달함. 사용자는 이 정보를 서버에 요청하는 것.
   - 진행 상황은 Integer 변수로 구분. -1은 대기 중, 0은 픽업 중, 1은 병원 동행 중, 2는 귀가 중, 3은 귀가 완료를 의미함.
   - 이 변수는 사용자에게 전달될 때 ServiceActivity 에서 일치하는 텍스트로 변환되어 출력됨.
+  - get_location API를 통해 관리자의 실시간 위치와 진행 상황을 데이터 베이스에 저장 (서준형)
   - 관리자가 서비스를 완료 후 마지막으로 귀가 완료 버튼을 누르면 서비스는 종료되고 병원 동행 결과 작성 페이지로 이동함.
     
 > ### 아동 상태 및 병원 동행 결과 작성 페이지 (activity_admin_service_result_write.xml, AdminServiceResultWriteActivity.kt) (유 건)
   - 관리자가 서비스 동행 완료 시 넘어가지는 페이지
   - 이 곳에 서비스 결과 (병원 방문 이후 아이 상태, 검진 내역, 약제비 & 진료비 등) 를 입력할 수 있게 EditText 설정.
   - 확인 버튼 누를 시 서버에 동행 결과 데이터를 전송하며 사용자의 서비스 마지막 페이지에 동행 완료 버튼을 보이게 하고 클릭할 수 있게끔 설정.
+  - hospital_result API를 통해 병원 동행 결과를 데이터 베이스에 저장함. (최선우)
 
 > ### 예치금 관리 페이지1 (fragment_admin_deposit.xml, AdminDepositFragment.kt) (하은영)
   - RecyclerView를 사용하여, 모든 사용자들의 정보(아이디, 이름)을 확인할 수 있는 리스트 구현.
   - 리스트 클릭 시, 해당 사용자의 예치금을 관리할 수 있는 페이지를 라우팅.
   - SearchView를 사용하여, 아이디로 사용자를 검색할 수 있는 검색창 기능 구현.
+  - find_all_account API를 통해 DB에서 모든 사용자 계정의 정보를 전달 (서준형)
+  - search_users API를 통해 요청데이터(id 정보)로 찾고자 하는 계정의 데이터만 추출해 전달 (서준형)
 
 > ### 예치금 관리 페이지2 (activity_admin_deposit_management.xml, AdminDepositManagementActivity.kt) (하은영)
   - 사용자의 정보(아이디, 이름, 전화번호, 현재 예치금) 확인 및 예치금을 관리할 수 있는 페이지.
   - +버튼 및 - 버튼: 예치금 입금을 받았을 때 더할 수 있는 기능과, 병원에서 사용한 만큼 뺄 수 있는 기능. -> 각각의 버튼 클릭 시, 페이지에서 수정된 예치금을 미리 확인 가능.
   - 수정 완료 버튼: 수정된 예치금 정보와 해당 사용자의 아이디 정보를 서버로 전송하여, 사용자 각각의 예치금을 관리.
+  - modify_deposit API를 통해 예치금 수정 요청을 보낸 사용자의 예치금을 수정해 DB에 업데이트 하고, 성공여부를 전달 (서준형)
 
 ## 기능 위주 실행화면 예시
 > 앱 초반 실행 후 메인 서비스 신청 후 인적사항 입력
