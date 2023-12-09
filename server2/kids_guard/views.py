@@ -64,16 +64,15 @@ def find_password(request):
     #id, name, phone
     data = json.loads(request.body) 
     id = data['id']
+    name = data['name']
+    phone = data['phone']
 
     with connection.cursor() as cursor:
         cursor.execute(f"""select password
                             from account
-                            where id = "{id}" ;""")
+                            where id = "{id}" and name = "{name}" and phone = "{phone}" ;""")
         password = (cursor.fetchone())[0]
         print(password)
-
-    #response
-    #password
 
     return JsonResponse({'password' : password}, json_dumps_params={'ensure_ascii': False}, content_type = 'application/json; charest=utf-8')
 
