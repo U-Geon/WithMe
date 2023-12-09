@@ -1,3 +1,5 @@
+backend/server2/server2/secret.py
+*.pyc
 *.iml
 .gradle
 frontend/local.properties
