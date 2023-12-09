@@ -70,17 +70,6 @@ class AdminServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                 bind.statusText.text= "아이를 데리러 가는 중"
                 thread(start = true) {
                     while (true) {
-                        if(adminStatus == 0) {
-                            currentLat = 37.6108694
-                            currentLon = 126.9972889
-                        } else if (adminStatus == 1) {
-                            currentLat = 37.6105619
-                            currentLon = 127.0093854
-                        } else if (adminStatus == 2) {
-                            currentLat = 37.6053117
-                            currentLon = 127.0247301
-                        }
-
                         sendLocation(currentLat, currentLon, adminStatus)
                         Thread.sleep(2000)
 

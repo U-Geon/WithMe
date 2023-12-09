@@ -255,8 +255,6 @@ class ServiceActivity : AppCompatActivity(), OnMapReadyCallback {
                                 val sharedPrefs: SharedPreferences = getSharedPreferences("status", Context.MODE_PRIVATE)
                                 sharedPrefs.edit().putBoolean("status", false).apply()
                             }
-
-                            Toast.makeText(this, "관리자 위치 : $lat . $lon", Toast.LENGTH_SHORT).show()
                             movePosition(lat, lon)
                         }
                     } catch(error: JSONException) {
