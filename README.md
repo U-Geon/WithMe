@@ -12,6 +12,9 @@
 - Language: Kotlin
 - Physical Device: Galaxy Z flip 3 2개
 - Android Virtual Device (AVD) : Pixel 2 API 29
+- backend
+    - server : aws EC2(Django)
+    - database : mysql
 
 ## 설치 및 실행 방법
 - 안드로이드 스튜디오
